@@ -13,7 +13,7 @@ Goals
 
 Overview
 ===
-There 5 aspects of this notation
+There are 5 aspects of this notation
 
 
 unquoted string
