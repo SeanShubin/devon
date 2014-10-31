@@ -2,7 +2,7 @@ DeVoN - Developers Value Notation
 ===
 - A simple, language neutral notation for representing structured values.
 - My main motivation for creating this was to overcome the [json](http://www.json.org) limitation of only allowing string names in its name/value pairs for objects.
-- I did look at [edn](https://github.com/edn-format/edn), but decided on a simpler notation.
+- I did look at [edn](https://github.com/edn-format/edn), but decided a simpler notation was better suited to my needs.  Be sure to think about what you are doing, examine your options, and choose the option better suited to your needs.
 
 Goals
 ===
@@ -131,3 +131,34 @@ Features almost rejected in favor of simplicity, but kept out of necessity
 ===
 - null support
 
+Sample
+===
+A complex object, followed by an array, then a string, then a null
+
+{a{b c}\[d \[e f\]\](){()\[f{g h}()\]{}i}j}\[\[k l\]\[\]m\]n()
+
+    {
+      a {b c}
+      [
+        d
+        [e f]
+      ]
+      ()
+      {
+        ()
+        [
+          f
+          {g h}
+          ()
+        ]
+        {} i
+      }
+      j
+    }
+    [
+      [k l]
+      []
+      m
+    ]
+    n
+    ()
