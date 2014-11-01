@@ -17,4 +17,18 @@ class TokenizerRulesTest extends FunSuite {
     assert(result4 === Seq())
     assert(cursor4.isEnd === true)
   }
+  test("unexpected end") {
+    val text = ""
+    val charIterator = text.toIterator
+    val cursor = Cursor.fromIterator(charIterator)
+    val result = TokenizerRules.matchToken(cursor)
+    assert(result === MatchFail("word or whitespace-block expected"))
+  }
+  test("expected end but didn't get it") {
+    val text = "foo"
+    val charIterator = text.toIterator
+    val cursor = Cursor.fromIterator(charIterator)
+    val result = TokenizerRules.matchEnd(cursor)
+    assert(result === MatchFail("end of input expected"))
+  }
 }

@@ -1,22 +1,22 @@
 package com.seanshubin.devon.core
 
-object TokenizerRules extends Rules {
-  def matchWhitespace(cursor: Cursor[Char]): MatchResult = {
+object TokenizerRules extends Rules[Char] {
+  def matchWhitespace(cursor: Cursor[Char]): MatchResult[Char] = {
     val result = matchChar(cursor, ' ')
     result
   }
 
-  def matchWhitespaceBlock(cursor: Cursor[Char]): MatchResult = {
+  def matchWhitespaceBlock(cursor: Cursor[Char]): MatchResult[Char] = {
     val result = matchOneOrMore(cursor, matchWhitespace)
     result
   }
 
-  def matchWordChar(cursor: Cursor[Char]): MatchResult = {
+  def matchWordChar(cursor: Cursor[Char]): MatchResult[Char] = {
     val result = matchNotChar(cursor, ' ')
     result
   }
 
-  def matchWord(cursor: Cursor[Char]): MatchResult = {
+  def matchWord(cursor: Cursor[Char]): MatchResult[Char] = {
     val result = matchOneOrMore(cursor, matchWordChar) match {
       case MatchSuccess(newCursor, _) =>
         val wordText = Cursor.values(cursor, newCursor).mkString
@@ -27,8 +27,8 @@ object TokenizerRules extends Rules {
     result
   }
 
-  def matchToken(cursor: Cursor[Char]): MatchResult = {
-    val result = matchOneOf(cursor, matchWord, matchWhitespaceBlock)
+  def matchToken(cursor: Cursor[Char]): MatchResult[Char] = {
+    val result = matchOneOf(cursor, "word or whitespace-block expected", matchWord, matchWhitespaceBlock)
     result
   }
 }

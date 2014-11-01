@@ -1,7 +1,7 @@
 package com.seanshubin.devon.core
 
-sealed trait MatchResult
+sealed trait MatchResult[ItemType]
 
-case class MatchSuccess(cursor: Cursor[Char], tokens: Seq[Token]) extends MatchResult
+case class MatchSuccess[ItemType](cursor: Cursor[ItemType], tokens: Seq[Token]) extends MatchResult[ItemType]
 
-case object MatchFail extends MatchResult
+case class MatchFail[ItemType](message: String) extends MatchResult[ItemType]
