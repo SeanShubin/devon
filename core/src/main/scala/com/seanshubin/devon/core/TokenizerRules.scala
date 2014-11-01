@@ -4,7 +4,7 @@ object TokenizerRules {
   def matchChar(cursor: Cursor[Char], ch: Char): MatchResult = {
     val result =
       if (cursor.isEnd) MatchFail
-      else if (cursor.value == ch) MatchSuccess(cursor.next)
+      else if (cursor.value == ch) MatchSuccess(cursor.next, Nil)
       else MatchFail
     result
   }
@@ -21,7 +21,7 @@ object TokenizerRules {
 
   def matchOneOrMore(cursor: Cursor[Char], f: Cursor[Char] => MatchResult): MatchResult = {
     val result = f(cursor) match {
-      case MatchSuccess(newCursor) => matchZeroOrMore(newCursor, f)
+      case MatchSuccess(newCursor, _) => matchZeroOrMore(newCursor, f)
       case MatchFail => MatchFail
     }
     result
@@ -29,8 +29,8 @@ object TokenizerRules {
 
   def matchZeroOrMore(cursor: Cursor[Char], f: Cursor[Char] => MatchResult): MatchResult = {
     val result = f(cursor) match {
-      case MatchSuccess(newCursor) => matchZeroOrMore(newCursor, f)
-      case MatchFail => MatchSuccess(cursor)
+      case MatchSuccess(newCursor, _) => matchZeroOrMore(newCursor, f)
+      case MatchFail => MatchSuccess(cursor, Nil)
     }
     result
   }
@@ -39,7 +39,7 @@ object TokenizerRules {
     val result =
       if (cursor.isEnd) MatchFail
       else if (cursor.value == ch) MatchFail
-      else MatchSuccess(cursor.next)
+      else MatchSuccess(cursor.next, Nil)
     result
   }
 
@@ -50,7 +50,13 @@ object TokenizerRules {
   }
 
   def matchWord(cursor: Cursor[Char]): MatchResult = {
-    val result = matchOneOrMore(cursor, matchWordChar)
+    val result = matchOneOrMore(cursor, matchWordChar) match {
+      case MatchSuccess(newCursor, _) =>
+        val wordText = Cursor.values(cursor, newCursor).mkString
+        val wordToken = TokenWord(wordText)
+        MatchSuccess(newCursor, Seq(wordToken))
+      case x => x
+    }
     result
   }
 
@@ -75,7 +81,7 @@ object TokenizerRules {
 
   def matchEnd(cursor: Cursor[Char]): MatchResult = {
     val result =
-      if (cursor.isEnd) MatchSuccess(cursor)
+      if (cursor.isEnd) MatchSuccess(cursor, Nil)
       else MatchFail
     result
   }
