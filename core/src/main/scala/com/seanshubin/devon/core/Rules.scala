@@ -1,55 +1,61 @@
 package com.seanshubin.devon.core
 
-trait Rules[ItemType] {
-  final def matchChar(cursor: Cursor[ItemType], ch: ItemType): MatchResult[ItemType] = {
-    val result: MatchResult[ItemType] =
+trait Rules[A] {
+  final def matchChar(cursor: Cursor[A], ch: A): MatchResult[A] = {
+    val result: MatchResult[A] =
       if (cursor.isEnd) MatchFail("unexpected end of input")
-      else if (cursor.value == ch) MatchSuccess(cursor.next, Nil)
-      else MatchFail(s"expected $ch, but got ${cursor.next}")
+      else if (cursor.value == ch) MatchSuccess(cursor, cursor.next)
+      else MatchFail(s"expected $ch, but got ${cursor.value}")
     result
   }
 
-  final def matchOneOrMore(cursor: Cursor[ItemType], f: Cursor[ItemType] => MatchResult[ItemType]): MatchResult[ItemType] = {
-    val result = f(cursor) match {
-      case MatchSuccess(newCursor, _) => matchZeroOrMore(newCursor, f)
+  final def matchOneOrMore(cursor0: Cursor[A], f: Cursor[A] => MatchResult[A]): MatchResult[A] = {
+    val result = f(cursor0) match {
+      case MatchSuccess(_, cursor1) =>
+        matchZeroOrMore(cursor1, f) match {
+          case MatchSuccess(_, cursor2) => MatchSuccess(cursor0, cursor2)
+          case x => x
+        }
       case x => x
     }
     result
   }
 
-  final def matchZeroOrMore(cursor: Cursor[ItemType], f: Cursor[ItemType] => MatchResult[ItemType]): MatchResult[ItemType] = {
-    val result = f(cursor) match {
-      case MatchSuccess(newCursor, _) => matchZeroOrMore(newCursor, f)
-      case _ => MatchSuccess(cursor, Nil)
+  final def matchZeroOrMore(cursor: Cursor[A], f: Cursor[A] => MatchResult[A]): MatchResult[A] = {
+    val firstMatch = f(cursor)
+    firstMatch match {
+      case MatchSuccess(startCursor, endCursor) =>
+        val MatchSuccess(_, newEndCursor) = matchZeroOrMore(endCursor, f)
+        MatchSuccess(cursor, newEndCursor)
+      case _ => MatchSuccess(cursor, cursor)
     }
-    result
   }
 
-  final def matchNotChar(cursor: Cursor[ItemType], ch: ItemType): MatchResult[ItemType] = {
-    val result: MatchResult[ItemType] =
+  final def matchNotChar(cursor: Cursor[A], ch: A): MatchResult[A] = {
+    val result: MatchResult[A] =
       if (cursor.isEnd) MatchFail("unexpected end of input")
       else if (cursor.value == ch) MatchFail(s"expected not $ch")
-      else MatchSuccess(cursor.next, Nil)
+      else MatchSuccess(cursor, cursor.next)
     result
   }
 
-  final def matchOneOf(cursor: Cursor[ItemType], message: String, functions: (Cursor[ItemType] => MatchResult[ItemType])*): MatchResult[ItemType] = {
-    val result: MatchResult[ItemType] =
+  final def matchOneOf(cursor: Cursor[A], message: String, functions: (Cursor[A] => MatchResult[A])*): MatchResult[A] = {
+    val result: MatchResult[A] =
       if (functions.isEmpty) MatchFail(message)
       else {
         val headFunction = functions.head
         val headFunctionResult = headFunction(cursor)
         headFunctionResult match {
-          case x: MatchSuccess[ItemType] => x
+          case x: MatchSuccess[A] => x
           case _ => matchOneOf(cursor, message, functions.tail: _*)
         }
       }
     result
   }
 
-  final def matchEnd(cursor: Cursor[ItemType]): MatchResult[ItemType] = {
-    val result: MatchResult[ItemType] =
-      if (cursor.isEnd) MatchSuccess[ItemType](cursor, Nil)
+  final def matchEnd(cursor: Cursor[A]): MatchResult[A] = {
+    val result: MatchResult[A] =
+      if (cursor.isEnd) MatchSuccess[A](cursor, cursor)
       else MatchFail("end of input expected")
     result
   }

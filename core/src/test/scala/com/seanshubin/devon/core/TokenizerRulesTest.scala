@@ -6,16 +6,16 @@ class TokenizerRulesTest extends FunSuite {
   test("two simple words") {
     val text = "ab cd"
     val charIterator = text.toIterator
-    val cursor0 = Cursor.fromIterator(charIterator)
-    val MatchSuccess(cursor1, result1) = TokenizerRules.matchToken(cursor0)
-    val MatchSuccess(cursor2, result2) = TokenizerRules.matchToken(cursor1)
-    val MatchSuccess(cursor3, result3) = TokenizerRules.matchToken(cursor2)
-    val MatchSuccess(cursor4, result4) = TokenizerRules.matchEnd(cursor3)
-    assert(result1 === Seq(TokenWord("ab")))
-    assert(result2 === Seq())
-    assert(result3 === Seq(TokenWord("cd")))
-    assert(result4 === Seq())
-    assert(cursor4.isEnd === true)
+    val cursorEnd0 = Cursor.fromIterator(charIterator)
+    val MatchSuccess(cursorStart1, cursorEnd1) = TokenizerRules.matchToken(cursorEnd0)
+    val MatchSuccess(cursorStart2, cursorEnd2) = TokenizerRules.matchToken(cursorEnd1)
+    val MatchSuccess(cursorStart3, cursorEnd3) = TokenizerRules.matchToken(cursorEnd2)
+    val MatchSuccess(cursorStart4, cursorEnd4) = TokenizerRules.matchEnd(cursorEnd3)
+    assert(Cursor.values(cursorStart1, cursorEnd1) === Seq('a', 'b'))
+    assert(Cursor.values(cursorStart2, cursorEnd2) === Seq(' '))
+    assert(Cursor.values(cursorStart3, cursorEnd3) === Seq('c', 'd'))
+    assert(Cursor.values(cursorStart4, cursorEnd4) === Seq())
+    assert(cursorEnd4.isEnd === true)
   }
   test("unexpected end") {
     val text = ""

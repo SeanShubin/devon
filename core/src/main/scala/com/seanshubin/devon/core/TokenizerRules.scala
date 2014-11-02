@@ -18,10 +18,8 @@ object TokenizerRules extends Rules[Char] {
 
   def matchWord(cursor: Cursor[Char]): MatchResult[Char] = {
     val result = matchOneOrMore(cursor, matchWordChar) match {
-      case MatchSuccess(newCursor, _) =>
-        val wordText = Cursor.values(cursor, newCursor).mkString
-        val wordToken = TokenWord(wordText)
-        MatchSuccess(newCursor, Seq(wordToken))
+      case MatchSuccess(_, newCursor) =>
+        MatchSuccess(cursor, newCursor)
       case x => x
     }
     result
