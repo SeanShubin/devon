@@ -12,6 +12,7 @@
     <modules>
         <module>core</module>
         <module>console</module>
+        <module>prototype</module>
     </modules>
     <repositories>
         <repository>
