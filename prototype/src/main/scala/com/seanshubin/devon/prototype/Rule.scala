@@ -1,5 +1,5 @@
 package com.seanshubin.devon.prototype
 
-class Rule {
-
+trait Rule[A] {
+  def apply(ruleLookup:RuleLookup[A], cursor:Cursor[A]):MatchResult[A]
 }

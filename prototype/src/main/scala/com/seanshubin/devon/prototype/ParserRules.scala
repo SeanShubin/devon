@@ -1,19 +1,19 @@
 package com.seanshubin.devon.prototype
 
 class ParserRules {
-  def singleToken(token: Token): Rule = ???
+  def singleToken(token: Token): Rule[AbstractSyntaxTree] = ???
 
-  def oneOf(ruleNames: String*): Rule = ???
+  def oneOf(ruleNames: String*): Rule[AbstractSyntaxTree] = ???
 
-  def not(ruleName: String): Rule = ???
+  def not(ruleName: String): Rule[AbstractSyntaxTree] = ???
 
-  def zeroOrMore(ruleName: String): Rule = ???
+  def zeroOrMore(ruleName: String): Rule[AbstractSyntaxTree] = ???
 
-  def sequence(ruleNames: String*): Rule = ???
+  def sequence(ruleNames: String*): Rule[AbstractSyntaxTree] = ???
 
-  def oneOrMore(ruleName: String): Rule = ???
+  def oneOrMore(ruleName: String): Rule[AbstractSyntaxTree] = ???
 
-  val rules: Map[String, Rule] = Map(
+  val rules: Map[String, Rule[AbstractSyntaxTree]] = Map(
     "pair" -> sequence("element", "element"),
     "pairs" -> zeroOrMore("pair"),
     "object" -> sequence("open-brace", "pairs", "close-brace"),
