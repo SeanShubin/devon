@@ -1,0 +1,203 @@
+diff --git a/core/src/main/scala/com/seanshubin/devon/core/Rules.scala b/core/src/main/scala/com/seanshubin/devon/core/Rules.scala
+index fdfba2c..21d46bd 100644
+--- a/core/src/main/scala/com/seanshubin/devon/core/Rules.scala
++++ b/core/src/main/scala/com/seanshubin/devon/core/Rules.scala
+@@ -31,7 +31,7 @@ trait Rules[A] {
+     }
+   }
+ 
+-  final def matchNotChar(cursor: Cursor[A], ch: A): MatchResult[A] = {
++  final def matchAnyCharExcept(cursor: Cursor[A], ch: A): MatchResult[A] = {
+     val result: MatchResult[A] =
+       if (cursor.isEnd) MatchFail("unexpected end of input")
+       else if (cursor.value == ch) MatchFail(s"expected not $ch")
+diff --git a/core/src/main/scala/com/seanshubin/devon/core/TokenizerRules.scala b/core/src/main/scala/com/seanshubin/devon/core/TokenizerRules.scala
+index 0a71e99..564a510 100644
+--- a/core/src/main/scala/com/seanshubin/devon/core/TokenizerRules.scala
++++ b/core/src/main/scala/com/seanshubin/devon/core/TokenizerRules.scala
+@@ -12,7 +12,7 @@ object TokenizerRules extends Rules[Char] {
+   }
+ 
+   def matchWordChar(cursor: Cursor[Char]): MatchResult[Char] = {
+-    val result = matchNotChar(cursor, ' ')
++    val result = matchAnyCharExcept(cursor, ' ')
+     result
+   }
+ 
+diff --git a/core/src/test/scala/com/seanshubin/devon/core/TokenizerRulesTest.scala b/core/src/test/scala/com/seanshubin/devon/core/TokenizerRulesTest.scala
+index 4f14e79..3eca7d4 100644
+--- a/core/src/test/scala/com/seanshubin/devon/core/TokenizerRulesTest.scala
++++ b/core/src/test/scala/com/seanshubin/devon/core/TokenizerRulesTest.scala
+@@ -31,4 +31,12 @@ class TokenizerRulesTest extends FunSuite {
+     val result = TokenizerRules.matchEnd(cursor)
+     assert(result === MatchFail("end of input expected"))
+   }
++  test("string to tokens") {
++    val text = "ab cd"
++    val tokenIterator = TokenIterator.fromString(text)
++    val tokens = tokenIterator.toSeq
++    assert(tokens.size === 2)
++    assert(tokens(0) == TokenWord("ab"))
++    assert(tokens(1) == TokenWord("cd"))
++  }
+ }
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/AbstractSyntaxTree.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/AbstractSyntaxTree.scala
+index 9964997..73889f7 100644
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/AbstractSyntaxTree.scala
++++ b/prototype/src/main/scala/com/seanshubin/devon/prototype/AbstractSyntaxTree.scala
+@@ -8,4 +8,8 @@ case class AstArray(seq: Seq[AbstractSyntaxTree]) extends AbstractSyntaxTree
+ 
+ case class AstString(value: String) extends AbstractSyntaxTree
+ 
+-case object AstNull extends AbstractSyntaxTree
+\ No newline at end of file
++case object AstNull extends AbstractSyntaxTree
++
++case object AstBeginArray extends AbstractSyntaxTree
++
++case object AstBeginMap extends AbstractSyntaxTree
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/MatchResult.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/MatchResult.scala
+index af11fc3..9b9eb83 100644
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/MatchResult.scala
++++ b/prototype/src/main/scala/com/seanshubin/devon/prototype/MatchResult.scala
+@@ -1,9 +1,13 @@
+ package com.seanshubin.devon.prototype
+ 
+-sealed trait MatchResult[A] {
++sealed trait MatchResult[A, B] {
+   def ruleName:String
++  def combine(newRule: String, that: MatchResult[A,B]): MatchResult[A,B]
+ }
+ 
+-case class MatchSuccess[A](ruleName:String, start: Cursor[A], end: Cursor[A]) extends MatchResult[A]
+-
+-case class MatchFail[A](ruleName:String, message: String) extends MatchResult[A]
++case class MatchSuccess[A,B](ruleName:String, start: Cursor[A], end: Cursor[A], assembler:Assembler[A,B]) extends MatchResult[A, B] {
++  override def combine(newRule: String, that: MatchResult[A, B]): MatchResult[A, B] = ???
++}
++case class MatchFail[A,B](ruleName:String, message: String) extends MatchResult[A,B] {
++  override def combine(newRule: String, that: MatchResult[A, B]): MatchResult[A, B] = ???
++}
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/ParserRules.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/ParserRules.scala
+index 91bbc48..774b0c4 100644
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/ParserRules.scala
++++ b/prototype/src/main/scala/com/seanshubin/devon/prototype/ParserRules.scala
+@@ -1,19 +1,19 @@
+ package com.seanshubin.devon.prototype
+ 
+ class ParserRules {
+-  def singleToken(token: Token): Rule[AbstractSyntaxTree] = ???
++  def singleToken(token: Token): Rule[Token, AbstractSyntaxTree] = ???
+ 
+-  def oneOf(ruleNames: String*): Rule[AbstractSyntaxTree] = ???
++  def oneOf(ruleNames: String*): Rule[Token, AbstractSyntaxTree] = ???
+ 
+-  def not(ruleName: String): Rule[AbstractSyntaxTree] = ???
++  def not(ruleName: String): Rule[Token, AbstractSyntaxTree] = ???
+ 
+-  def zeroOrMore(ruleName: String): Rule[AbstractSyntaxTree] = ???
++  def zeroOrMore(ruleName: String): Rule[Token, AbstractSyntaxTree] = ???
+ 
+-  def sequence(ruleNames: String*): Rule[AbstractSyntaxTree] = ???
++  def sequence(ruleNames: String*): Rule[Token, AbstractSyntaxTree] = ???
+ 
+-  def oneOrMore(ruleName: String): Rule[AbstractSyntaxTree] = ???
++  def oneOrMore(ruleName: String): Rule[Token, AbstractSyntaxTree] = ???
+ 
+-  val rules: Map[String, Rule[AbstractSyntaxTree]] = Map(
++  val rules: Map[String, Rule[Token, AbstractSyntaxTree]] = Map(
+     "pair" -> sequence("element", "element"),
+     "pairs" -> zeroOrMore("pair"),
+     "object" -> sequence("open-brace", "pairs", "close-brace"),
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/Rule.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/Rule.scala
+index bfa91ad..ee5ad34 100644
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/Rule.scala
++++ b/prototype/src/main/scala/com/seanshubin/devon/prototype/Rule.scala
+@@ -1,5 +1,5 @@
+ package com.seanshubin.devon.prototype
+ 
+-trait Rule[A] {
+-  def apply(ruleLookup:RuleLookup[A], cursor:Cursor[A]):MatchResult[A]
++trait Rule[A, B] {
++  def apply(ruleLookup:RuleLookup[A,B], cursor:Cursor[A], assembler:Assembler[A, B]):MatchResult[A,B]
+ }
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleLookup.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleLookup.scala
+index ed36ae3..19941a9 100644
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleLookup.scala
++++ b/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleLookup.scala
+@@ -1,5 +1,5 @@
+ package com.seanshubin.devon.prototype
+ 
+-trait RuleLookup[A] {
+-  def lookupByName(name:String):Rule[A]
++trait RuleLookup[A,B] {
++  def lookupRuleByName(name:String):Rule[A,B]
+ }
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleMatcher.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleMatcher.scala
+deleted file mode 100644
+index 2654f98..0000000
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleMatcher.scala
++++ /dev/null
+@@ -1,5 +0,0 @@
+-package com.seanshubin.devon.prototype
+-
+-trait RuleMatcher[A] {
+-  def applyRule(ruleName:String, cursor:Cursor[A]):MatchResult[A]
+-}
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleMatcherImpl.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleMatcherImpl.scala
+deleted file mode 100644
+index c1aec4c..0000000
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/RuleMatcherImpl.scala
++++ /dev/null
+@@ -1,8 +0,0 @@
+-package com.seanshubin.devon.prototype
+-
+-class RuleMatcherImpl[A](ruleLookup:RuleLookup[A]) extends RuleMatcher[A] {
+-  override def applyRule(ruleName: String, cursor: Cursor[A]): MatchResult[A] = {
+-    val rule = ruleLookup.lookupByName(ruleName)
+-    rule.apply(ruleLookup, cursor)
+-  }
+-}
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRuleLookup.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRuleLookup.scala
+index cfd6b88..087c09e 100644
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRuleLookup.scala
++++ b/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRuleLookup.scala
+@@ -1,5 +1,5 @@
+ package com.seanshubin.devon.prototype
+ 
+-class TokenRuleLookup extends RuleLookup[Char] {
+-  override def lookupByName(name: String): Rule[Char] = ???
++class TokenRuleLookup extends RuleLookup[Char, Token] {
++  override def lookupRuleByName(name: String): Rule[Char, Token] = ???
+ }
+diff --git a/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRules.scala b/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRules.scala
+index 0936a85..c6dada5 100644
+--- a/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRules.scala
++++ b/prototype/src/main/scala/com/seanshubin/devon/prototype/TokenRules.scala
+@@ -1,19 +1,19 @@
+ package com.seanshubin.devon.prototype
+ 
+ class TokenRules {
+-  def singleChar(ch: Char): Rule[Token] = ???
++  def singleChar(ch: Char): Rule[Char, Token] = ???
+ 
+-  def oneOf(ruleNames: String*): Rule[Token] = ???
++  def oneOf(ruleNames: String*): Rule[Char, Token] = ???
+ 
+-  def not(ruleName: String): Rule[Token] = ???
++  def not(ruleName: String): Rule[Char, Token] = ???
+ 
+-  def zeroOrMore(ruleName: String): Rule[Token] = ???
++  def zeroOrMore(ruleName: String): Rule[Char, Token] = ???
+ 
+-  def sequence(ruleNames: String*): Rule[Token] = ???
++  def sequence(ruleNames: String*): Rule[Char, Token] = ???
+ 
+-  def oneOrMore(ruleName: String): Rule[Token] = ???
++  def oneOrMore(ruleName: String): Rule[Char, Token] = ???
+ 
+-  val rules: Map[String, Rule[Token]] = Map(
++  val rules: Map[String, Rule[Char, Token]] = Map(
+     "open-brace" -> singleChar('{'),
+     "close-brace" -> singleChar('}'),
+     "open-bracket" -> singleChar('['),
