@@ -12,7 +12,7 @@ object TokenizerRules extends Rules[Char] {
   }
 
   def matchWordChar(cursor: Cursor[Char]): MatchResult[Char] = {
-    val result = matchNotChar(cursor, ' ')
+    val result = matchAnyCharExcept(cursor, ' ')
     result
   }
 

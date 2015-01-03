@@ -31,7 +31,7 @@ trait Rules[A] {
     }
   }
 
-  final def matchNotChar(cursor: Cursor[A], ch: A): MatchResult[A] = {
+  final def matchAnyCharExcept(cursor: Cursor[A], ch: A): MatchResult[A] = {
     val result: MatchResult[A] =
       if (cursor.isEnd) MatchFail("unexpected end of input")
       else if (cursor.value == ch) MatchFail(s"expected not $ch")

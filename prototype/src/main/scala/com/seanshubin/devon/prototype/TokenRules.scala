@@ -1,19 +1,19 @@
 package com.seanshubin.devon.prototype
 
 class TokenRules {
-  def singleChar(ch: Char): Rule[Token] = ???
+  def singleChar(ch: Char): Rule[Char, Token] = ???
 
-  def oneOf(ruleNames: String*): Rule[Token] = ???
+  def oneOf(ruleNames: String*): Rule[Char, Token] = ???
 
-  def not(ruleName: String): Rule[Token] = ???
+  def not(ruleName: String): Rule[Char, Token] = ???
 
-  def zeroOrMore(ruleName: String): Rule[Token] = ???
+  def zeroOrMore(ruleName: String): Rule[Char, Token] = ???
 
-  def sequence(ruleNames: String*): Rule[Token] = ???
+  def sequence(ruleNames: String*): Rule[Char, Token] = ???
 
-  def oneOrMore(ruleName: String): Rule[Token] = ???
+  def oneOrMore(ruleName: String): Rule[Char, Token] = ???
 
-  val rules: Map[String, Rule[Token]] = Map(
+  val rules: Map[String, Rule[Char, Token]] = Map(
     "open-brace" -> singleChar('{'),
     "close-brace" -> singleChar('}'),
     "open-bracket" -> singleChar('['),

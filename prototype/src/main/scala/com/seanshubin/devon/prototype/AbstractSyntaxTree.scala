@@ -9,3 +9,7 @@ case class AstArray(seq: Seq[AbstractSyntaxTree]) extends AbstractSyntaxTree
 case class AstString(value: String) extends AbstractSyntaxTree
 
 case object AstNull extends AbstractSyntaxTree
+
+case object AstBeginArray extends AbstractSyntaxTree
+
+case object AstBeginMap extends AbstractSyntaxTree

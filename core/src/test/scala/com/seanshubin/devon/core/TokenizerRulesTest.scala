@@ -31,4 +31,12 @@ class TokenizerRulesTest extends FunSuite {
     val result = TokenizerRules.matchEnd(cursor)
     assert(result === MatchFail("end of input expected"))
   }
+  test("string to tokens") {
+//    val text = "ab cd"
+//    val tokenIterator = TokenIterator.fromString(text)
+//    val tokens = tokenIterator.toSeq
+//    assert(tokens.size === 2)
+//    assert(tokens(0) == TokenWord("ab"))
+//    assert(tokens(1) == TokenWord("cd"))
+  }
 }
