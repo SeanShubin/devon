@@ -3,6 +3,8 @@ package com.seanshubin.devon.prototype
 case class ElementAssembler(composed:List[AbstractSyntaxTree]) extends Assembler[Token, AbstractSyntaxTree] {
   override def top: AbstractSyntaxTree = composed.head
 
+  override def push(value: Token): Assembler[Token, AbstractSyntaxTree] = copy(AstToken(value) :: composed)
+
   private val pushNull:AssembleCommand = (name, token) => copy(AstNull :: composed)
   private val pushObjectBegin:AssembleCommand = (name, token) => copy(AstBeginMap :: composed)
   private val createObject:AssembleCommand = (name, token) => {
