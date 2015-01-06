@@ -4,18 +4,17 @@ import org.scalatest.FunSuite
 
 class ConstructMapTest extends FunSuite {
   test("construct map") {
-    val tokenCursor:Cursor[Token] = Cursor.fromIterator(Seq(
+    val tokens: Seq[Token] = Seq(
       TokenOpenBrace,
       TokenWord("ab"), TokenWord("cd"),
       TokenWord("ef"), TokenWord("gh"),
-      TokenCloseBrace).toIterator)
-
+      TokenCloseBrace)
+    val tokenCursor:Cursor[Token] = Cursor.fromIterator(tokens.toIterator)
     val ruleLookup:RuleLookup[Token, AbstractSyntaxTree] = new ParserRuleLookup()
     val parser:Parser[Token, AbstractSyntaxTree] = new ParserImpl(ruleLookup)
     val assembler:Assembler[Token, AbstractSyntaxTree] = new ElementAssembler(Nil)
     val actual:Either[String, AbstractSyntaxTree] = parser.parse("element", tokenCursor, assembler)
     val expected:Either[String, AbstractSyntaxTree] = Right(AstObject(Map(AstString("ab") -> AstString("cd"), AstString("ef") -> AstString("gh)"))))
     assert(actual === expected)
-
   }
 }

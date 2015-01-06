@@ -11,7 +11,12 @@ sealed trait MatchResult[A, B] {
 }
 
 case class MatchSuccess[A, B](ruleName: String, start: Cursor[A], end: Cursor[A], assembler: Assembler[A, B]) extends MatchResult[A, B] {
-  override def combine(newRule: String, that: MatchResult[A, B]): MatchResult[A, B] = ???
+  override def combine(newRule: String, that: MatchResult[A, B]): MatchResult[A, B] = {
+    that match {
+      case x:MatchSuccess[A,B] => MatchSuccess[A,B](ruleName, start, x.end, x.assembler)
+      case x:MatchFail[A,B] => x
+    }
+  }
 
   override def withRuleName(newRuleName: String): MatchResult[A, B] = copy(ruleName = newRuleName)
 
