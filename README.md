@@ -73,6 +73,7 @@ single characters
     <tr><td>tab          </td><td>\t </td><td>000009</td></tr>
     <tr><td>return       </td><td>\r </td><td>00000D</td></tr>
     <tr><td>newline      </td><td>\n </td><td>00000A</td></tr>
+    <tr><td>number-sign  </td><td>#  </td><td>000023</td></tr>
     </tbody>
 </table>
 
@@ -86,6 +87,18 @@ negations (these do not match end of file)
 
     unquoted-word-character  = not structural-or-whitespace
     not-quote                = not quote
+
+Annotated
+===
+support for comments, any line starting with a # as the first non-whitespace character
+
+    lines = { line }
+    line = comment-line | real-line
+    comment-line = { whitespace } number-sign line-text end-of-line
+    whitespace = space | tab
+    line-text = { not-end-of-line }
+    end-of-line = return | newline | end-of-input
+    not-end-of-line = not end-of-line
 
 Tokens
 ===
