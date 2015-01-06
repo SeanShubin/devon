@@ -14,4 +14,4 @@ case object AstBeginArray extends AbstractSyntaxTree
 
 case object AstBeginMap extends AbstractSyntaxTree
 
-case class AstToken(token:Token) extends AbstractSyntaxTree
+case class AstToken(token: Token) extends AbstractSyntaxTree
