@@ -1,13 +1,24 @@
 package com.seanshubin.devon.prototype
 
-case class ElementAssembler(composed:List[AbstractSyntaxTree]) extends Assembler[Token, AbstractSyntaxTree] {
+case class ElementAssembler(composed: List[AbstractSyntaxTree]) extends Assembler[Token, AbstractSyntaxTree] {
   override def top: AbstractSyntaxTree = composed.head
 
-  override def push(value: Token): Assembler[Token, AbstractSyntaxTree] = copy(AstToken(value) :: composed)
+  override def update(ruleName: String, cursorBegin: Cursor[Token], cursorEnd: Cursor[Token]): Assembler[Token, AbstractSyntaxTree] = {
+    val values = Cursor.values(cursorBegin, cursorEnd)
+    val result: Assembler[Token, AbstractSyntaxTree] = if (ruleName == "single token" && values == Seq(TokenOpenBrace)) {
+      copy(AstBeginMap :: composed)
+    } else if (ruleName == "string") {
+      val Seq(TokenWord(stringValue)) = values
+      copy(AstString(stringValue) :: composed)
+    } else if (ruleName == "single token" && values == Seq(TokenCloseBrace)) {
+      createObject()
+    } else {
+      unsupported(ruleName, values)
+    }
+    result
+  }
 
-  private val pushNull:AssembleCommand = (name, token) => copy(AstNull :: composed)
-  private val pushObjectBegin:AssembleCommand = (name, token) => copy(AstBeginMap :: composed)
-  private val createObject:AssembleCommand = (name, token) => {
+  def createObject(): Assembler[Token, AbstractSyntaxTree] = {
     val (reversedValues, remain) = composed.span(_ != AstBeginMap)
     val values = reversedValues.reverse
     def pairToTuple(pair: List[AbstractSyntaxTree]): (AbstractSyntaxTree, AbstractSyntaxTree) = (pair.head, pair.tail.head)
@@ -16,23 +27,8 @@ case class ElementAssembler(composed:List[AbstractSyntaxTree]) extends Assembler
     val map = tuples.toMap
     copy(AstObject(map) :: remain.tail)
   }
-  private val pushArrayBegin:AssembleCommand = (name, token) => copy(AstBeginArray :: composed)
-  private val createArray:AssembleCommand = (name, token) => {
-    val (reversedValues, remain) = composed.span(_ != AstBeginArray)
-    val values = reversedValues.reverse
-    copy(AstArray(values) :: remain.tail)
-  }
-  private val pushString:AssembleCommand = (name, token) => {
-    val TokenWord(value) = token
-    copy(AstString(value) :: composed)
-  }
-  private val doNothing:AssembleCommand = (name, token) => this
 
-  private val commands:Map[String, AssembleCommand] = Map(
-    "null" -> pushNull,
-    "begin-object" -> pushObjectBegin,
-    "end-object" -> createObject,
-    "begin-array" -> pushArrayBegin,
-    "end-array" -> createArray,
-    "string" -> pushString).withDefaultValue(doNothing)
+  def unsupported(ruleName: String, values: Seq[Token]): Assembler[Token, AbstractSyntaxTree] = {
+    throw new RuntimeException(s"unsupported rule $ruleName with values $values")
+  }
 }
