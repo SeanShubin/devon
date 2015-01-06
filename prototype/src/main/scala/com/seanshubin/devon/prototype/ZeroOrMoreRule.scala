@@ -8,7 +8,7 @@ class ZeroOrMoreRule[A, B](ruleName: String) extends Rule[A, B] {
       val newParseResult = rule.apply(ruleLookup, theCursor, oldParseResult.assembler)
       newParseResult match {
         case x: MatchSuccess[A, B] =>
-          loop(x.end, oldParseResult.combineSuccess(x.ruleName, x))
+          loop(x.end, oldParseResult.combineSuccess(x))
         case x: MatchFail[A, B] => oldParseResult
       }
     }
