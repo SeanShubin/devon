@@ -8,15 +8,13 @@ class TokenizerRulesTest extends FunSuite {
     val charIterator = text.toIterator
     val cursor = Cursor.fromIterator(charIterator)
     val tokenRuleLookup = new TokenRuleLookup()
-    val parser = new TokenParser()
+    val parser = new ParserImpl(tokenRuleLookup)
     val emptyAssembler = TokenAssembler.Empty
-    val result1 = parser.parse("element", cursor, emptyAssembler)
-    assert(result1.isSuccess === true)
-    val MatchSuccess(assembler1) = result1
+    val result1 = parser.parse("unquoted-word", cursor, emptyAssembler)
+    val MatchSuccess(endCursor1, assembler1, children1) = result1
     assert(assembler1.value === TokenWord("ab"))
-    val result2 = parser.parse("element", cursor, emptyAssembler)
-    assert(result2.isSuccess === true)
-    val MatchSuccess(assembler2) = result2
+    val result2 = parser.parse("unquoted-word", cursor, emptyAssembler)
+    val MatchSuccess(endCursor2, assembler2, children2) = result2
     assert(assembler2.value === TokenWord("cd"))
   }
 }
