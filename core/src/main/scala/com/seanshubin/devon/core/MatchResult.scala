@@ -1,7 +1,9 @@
 package com.seanshubin.devon.core
 
-sealed trait MatchResult[A]
+sealed trait MatchResult[A, B] {
+  def isSuccess:Boolean
+}
 
-case class MatchSuccess[A](start: Cursor[A], end: Cursor[A]) extends MatchResult[A]
-
-case class MatchFail[A](message: String) extends MatchResult[A]
+case class MatchSuccess[A,B](assembler:Assembler[A,B]) extends MatchResult[A,B] {
+  override def isSuccess: Boolean = true
+}
