@@ -9,12 +9,17 @@ class TokenizerRulesTest extends FunSuite {
     val cursor = Cursor.fromIterator(charIterator)
     val tokenRuleLookup = new TokenRuleLookup()
     val parser = new ParserImpl(tokenRuleLookup)
-    val emptyAssembler = TokenAssembler.Empty
-    val result1 = parser.parse("unquoted-word", cursor, emptyAssembler)
-    val MatchSuccess(endCursor1, assembler1, children1) = result1
-    assert(assembler1.value === TokenWord("ab"))
-    val result2 = parser.parse("unquoted-word", cursor, emptyAssembler)
-    val MatchSuccess(endCursor2, assembler2, children2) = result2
-    assert(assembler2.value === TokenWord("cd"))
+
+    val result1 = parser.parse("unquoted-word", cursor)
+    val MatchSuccess(parseTree1, cursor1) = result1
+    val ParseTreeBranch(name1, children1) = parseTree1
+    assert(name1 === "unquoted-word")
+    assert(children1 === Seq(ParseTreeLeaf("not-space", 'a'), ParseTreeLeaf("not-space", 'b')))
+
+    val result2 = parser.parse("unquoted-word", cursor1.next)
+    val MatchSuccess(parseTree2, _) = result2
+    val ParseTreeBranch(name2, children2) = parseTree2
+    assert(name2 === "unquoted-word")
+    assert(children2 === Seq(ParseTreeLeaf("not-space", 'c'), ParseTreeLeaf("not-space", 'd')))
   }
 }
