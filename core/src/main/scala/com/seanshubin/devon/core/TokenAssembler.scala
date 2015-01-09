@@ -1,19 +1,21 @@
 package com.seanshubin.devon.core
 
-case class TokenAssembler(values: List[Token]) extends Assembler[Char, Token] {
-  override def value: Token = values.head
-
-  override def successfulMatch(ruleName: String, begin: Cursor[Char], afterEnd: Cursor[Char]): Assembler[Char, Token] = {
-    println(ruleName)
-    if (ruleName == "word") {
-      val text = Cursor.values(begin, afterEnd).mkString
-      TokenAssembler(TokenWord(text) :: values)
-    } else {
-      this
-    }
+class TokenAssembler extends Assembler[Char, Token] {
+  override def assembleFromParseTree(parseTree: ParseTree[Char]): Token = {
+    assemblers(parseTree.name)(parseTree)
   }
-}
 
-object TokenAssembler {
-  val Empty = TokenAssembler(Nil)
+  private def unquotedWord(parseTree: ParseTree[Char]): Token = {
+    val ParseTreeBranch(name, children) = parseTree
+    TokenWord(children.map(extractValue).mkString)
+  }
+
+  private def extractValue(parseTree: ParseTree[Char]): Char = {
+    val ParseTreeLeaf(name, value) = parseTree
+    value
+  }
+
+  private val assemblers: Map[String, ParseTree[Char] => Token] = Map(
+    "unquoted-word" -> unquotedWord
+  )
 }

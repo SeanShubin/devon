@@ -1,6 +1,8 @@
 package com.seanshubin.devon.core
 
-sealed trait ParseTree[A]
+sealed trait ParseTree[A] {
+  def name: String
+}
 
 case class ParseTreeLeaf[A](name: String, value: A) extends ParseTree[A]
 

@@ -4,15 +4,12 @@ import org.scalatest.FunSuite
 
 class TokenAssemblerTest extends FunSuite {
   test("assemble word") {
-    val text = "ab"
-    val cursorA = Cursor.fromIterator(text.toIterator)
-    val cursorB = cursorA.next
-    val cursorEnd = cursorB.next
-    val tokenAssembler =
-      TokenAssembler.Empty.
-        successfulMatch("word-char", cursorA, cursorB).
-        successfulMatch("word-char", cursorB, cursorEnd).
-        successfulMatch("word", cursorA, cursorEnd)
-    assert(tokenAssembler.value === TokenWord("ab"))
+    val a = ParseTreeLeaf("not-space", 'a')
+    val b = ParseTreeLeaf("not-space", 'b')
+    val parseTree = ParseTreeBranch("unquoted-word", List(a, b))
+    val tokenAssembler = new TokenAssembler()
+    val actualToken = tokenAssembler.assembleFromParseTree(parseTree)
+    val expectedToken = TokenWord("ab")
+    assert(actualToken === expectedToken)
   }
 }
