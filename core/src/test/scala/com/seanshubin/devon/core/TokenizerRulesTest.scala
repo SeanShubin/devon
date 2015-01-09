@@ -1,5 +1,6 @@
 package com.seanshubin.devon.core
 
+import com.seanshubin.devon.core.token.TokenRuleLookup
 import org.scalatest.FunSuite
 
 class TokenizerRulesTest extends FunSuite {

@@ -1,5 +1,6 @@
 package com.seanshubin.devon.core
 
+import com.seanshubin.devon.core.token.{TokenAssembler, TokenWord}
 import org.scalatest.FunSuite
 
 class TokenAssemblerTest extends FunSuite {

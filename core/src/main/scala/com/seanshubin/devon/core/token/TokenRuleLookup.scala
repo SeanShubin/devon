@@ -1,7 +1,8 @@
 
-package com.seanshubin.devon.core
+package com.seanshubin.devon.core.token
 
 import com.seanshubin.devon.core.rules._
+import com.seanshubin.devon.core.{Rule, RuleLookup}
 
 class TokenRuleLookup extends RuleLookup[Char] {
   override def lookupRuleByName(name: String): Rule[Char] = rulesMap(name)

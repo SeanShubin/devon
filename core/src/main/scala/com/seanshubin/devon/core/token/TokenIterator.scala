@@ -1,4 +1,6 @@
-package com.seanshubin.devon.core
+package com.seanshubin.devon.core.token
+
+import com.seanshubin.devon.core.{Cursor, MatchSuccess, ParserImpl}
 
 class TokenIterator(backingIterator: Iterator[Char]) extends Iterator[Token] {
   private val ruleLookup = new TokenRuleLookup()
