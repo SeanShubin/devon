@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core
 
-class TokenIterator(backingIterator:Iterator[Char]) extends Iterator[Token] {
+class TokenIterator(backingIterator: Iterator[Char]) extends Iterator[Token] {
   private val ruleLookup = new TokenRuleLookup()
   private val parser = new ParserImpl(ruleLookup)
   private val assembler = new TokenAssembler
@@ -19,7 +19,7 @@ class TokenIterator(backingIterator:Iterator[Char]) extends Iterator[Token] {
 }
 
 object TokenIterator {
-  def fromString(text:String):Iterator[Token] = {
+  def fromString(text: String): Iterator[Token] = {
     new TokenIterator(text.toIterator)
   }
 }
