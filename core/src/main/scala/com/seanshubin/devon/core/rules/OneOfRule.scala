@@ -2,7 +2,7 @@ package com.seanshubin.devon.core.rules
 
 import com.seanshubin.devon.core._
 
-case class OneOfRule[A](thisRuleName: String, ruleLookup: RuleLookup[A], ruleNames: String*) extends Rule[A] {
+case class OneOfRule[A](ruleLookup: RuleLookup[A], thisRuleName: String, ruleNames: String*) extends Rule[A] {
   override def apply(cursor: Cursor[A]): MatchResult[A] = {
     val successfulMatchFromCursor = successfulMatch(_: String, cursor)
 

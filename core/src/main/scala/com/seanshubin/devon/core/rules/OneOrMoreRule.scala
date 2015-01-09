@@ -2,7 +2,7 @@ package com.seanshubin.devon.core.rules
 
 import com.seanshubin.devon.core._
 
-case class OneOrMoreRule[A](thisRuleName: String, ruleLookup: RuleLookup[A], ruleName: String) extends Rule[A] {
+case class OneOrMoreRule[A](ruleLookup: RuleLookup[A], thisRuleName: String, ruleName: String) extends Rule[A] {
   private lazy val rule = ruleLookup.lookupRuleByName(ruleName)
 
   override def apply(cursor: Cursor[A]): MatchResult[A] = {

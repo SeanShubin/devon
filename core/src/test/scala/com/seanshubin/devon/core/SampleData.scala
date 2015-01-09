@@ -27,6 +27,8 @@ object SampleData {
       |    ]
       |    n
       |    ()
+      |    'o p'
+      |    'q '' r'
       | """.stripMargin
 
 }

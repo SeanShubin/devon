@@ -2,7 +2,7 @@ package com.seanshubin.devon.core.rules
 
 import com.seanshubin.devon.core._
 
-case class SequenceRule[A](thisRuleName: String, ruleLookup: RuleLookup[A], ruleNames: String*) extends Rule[A] {
+case class SequenceRule[A](ruleLookup: RuleLookup[A], thisRuleName: String, ruleNames: String*) extends Rule[A] {
   override def apply(cursor: Cursor[A]): MatchResult[A] = {
     def loop(soFar: List[MatchSuccess[A]], remaining: List[String], cursor: Cursor[A]): List[MatchResult[A]] = {
       if (remaining.isEmpty) soFar

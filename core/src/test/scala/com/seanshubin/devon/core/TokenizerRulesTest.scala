@@ -14,12 +14,12 @@ class TokenizerRulesTest extends FunSuite {
     val MatchSuccess(parseTree1, cursor1) = result1
     val ParseTreeBranch(name1, children1) = parseTree1
     assert(name1 === "unquoted-word")
-    assert(children1 === Seq(ParseTreeLeaf("not-space", 'a'), ParseTreeLeaf("not-space", 'b')))
+    assert(children1 === Seq(ParseTreeLeaf("unquoted-word-character", 'a'), ParseTreeLeaf("unquoted-word-character", 'b')))
 
     val result2 = parser.parse("unquoted-word", cursor1.next)
     val MatchSuccess(parseTree2, _) = result2
     val ParseTreeBranch(name2, children2) = parseTree2
     assert(name2 === "unquoted-word")
-    assert(children2 === Seq(ParseTreeLeaf("not-space", 'c'), ParseTreeLeaf("not-space", 'd')))
+    assert(children2 === Seq(ParseTreeLeaf("unquoted-word-character", 'c'), ParseTreeLeaf("unquoted-word-character", 'd')))
   }
 }
