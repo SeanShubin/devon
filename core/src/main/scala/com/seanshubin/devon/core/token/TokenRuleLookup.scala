@@ -24,9 +24,6 @@ class TokenRuleLookup extends RuleLookup[Char] {
   private val structuralAndWhitespace = structural ++ whitespace
 
   private val rules: Seq[Rule[Char]] = Seq(
-    OneOfRule(this, "token",
-      "open-brace", "close-brace", "open-bracket", "close-bracket", "null", "quoted-word", "unquoted-word",
-      "whitespace-block"),
     ValueRule(this, "open-brace", openBrace),
     ValueRule(this, "close-brace", closeBrace),
     ValueRule(this, "open-bracket", openBracket),
@@ -34,10 +31,13 @@ class TokenRuleLookup extends RuleLookup[Char] {
     ValueRule(this, "open-paren", openParen),
     ValueRule(this, "close-paren", closeParen),
     ValueRule(this, "quote", quote),
+    ValueRule(this, "whitespace", whitespace: _*),
     ValueOtherThanRule(this, "unquoted-word-character", structuralAndWhitespace: _*),
     ValueOtherThanRule(this, "not-quote", quote),
+    OneOfRule(this, "token",
+      "open-brace", "close-brace", "open-bracket", "close-bracket", "null", "quoted-word", "unquoted-word",
+      "whitespace-block"),
     OneOrMoreRule(this, "unquoted-word", "unquoted-word-character"),
-    ValueRule(this, "whitespace", whitespace: _*),
     OneOrMoreRule(this, "whitespace-block", "whitespace"),
     SequenceRule(this, "null", "open-paren", "close-paren"),
     SequenceRule(this, "quoted-word", "quote", "quoted-contents", "quote"),
