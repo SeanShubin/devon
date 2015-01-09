@@ -2,7 +2,7 @@ package com.seanshubin.devon.core.rules
 
 import com.seanshubin.devon.core._
 
-case class ValueOtherThanRule[A, B](ruleLookup: RuleLookup[A], thisRuleName: String, forbiddenValues: Seq[A]) extends Rule[A] {
+case class ValueOtherThanRule[A, B](ruleLookup: RuleLookup[A], thisRuleName: String, forbiddenValues: A*) extends Rule[A] {
   override def apply(cursor: Cursor[A]): MatchResult[A] = {
     if (cursor.isEnd) MatchFailure("end of input")
     else {

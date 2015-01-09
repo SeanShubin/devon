@@ -1,3 +1,4 @@
+
 package com.seanshubin.devon.core
 
 import com.seanshubin.devon.core.rules._
@@ -5,21 +6,35 @@ import com.seanshubin.devon.core.rules._
 class TokenRuleLookup extends RuleLookup[Char] {
   override def lookupRuleByName(name: String): Rule[Char] = rulesMap(name)
 
-  private val whitespace = Seq(' ', '\t', '\r', '\n')
-  private val structural = Seq('{', '}', '[', ']', '(', ')', '\'')
+  private val quote = '\''
+  private val openBrace = '{'
+  private val closeBrace = '}'
+  private val openBracket = '['
+  private val closeBracket = ']'
+  private val openParen = '('
+  private val closeParen = ')'
+  private val space = ' '
+  private val tab = '\t'
+  private val carriageReturn = '\r'
+  private val lineFeed = '\n'
+
+  private val whitespace = Seq(space, tab, carriageReturn, lineFeed)
+  private val structural = Seq(openBrace, closeBrace, openBracket, closeBracket, openParen, closeParen, quote)
   private val structuralAndWhitespace = structural ++ whitespace
 
   private val rules: Seq[Rule[Char]] = Seq(
-    OneOfRule(this, "token", "open-brace", "close-brace", "open-bracket", "close-bracket", "null", "quoted-word", "unquoted-word", "whitespace-block"),
-    ValueRule(this, "open-brace", '{'),
-    ValueRule(this, "close-brace", '}'),
-    ValueRule(this, "open-bracket", '['),
-    ValueRule(this, "close-bracket", ']'),
-    ValueRule(this, "open-paren", '('),
-    ValueRule(this, "close-paren", ')'),
-    ValueRule(this, "quote", '\''),
-    ValueOtherThanRule(this, "unquoted-word-character", structuralAndWhitespace),
-    ValueOtherThanRule(this, "not-quote", Seq('\'')),
+    OneOfRule(this, "token",
+      "open-brace", "close-brace", "open-bracket", "close-bracket", "null", "quoted-word", "unquoted-word",
+      "whitespace-block"),
+    ValueRule(this, "open-brace", openBrace),
+    ValueRule(this, "close-brace", closeBrace),
+    ValueRule(this, "open-bracket", openBracket),
+    ValueRule(this, "close-bracket", closeBracket),
+    ValueRule(this, "open-paren", openParen),
+    ValueRule(this, "close-paren", closeParen),
+    ValueRule(this, "quote", quote),
+    ValueOtherThanRule(this, "unquoted-word-character", structuralAndWhitespace: _*),
+    ValueOtherThanRule(this, "not-quote", quote),
     OneOrMoreRule(this, "unquoted-word", "unquoted-word-character"),
     ValueRule(this, "whitespace", whitespace: _*),
     OneOrMoreRule(this, "whitespace-block", "whitespace"),
