@@ -9,3 +9,5 @@ case class DevonString(string: String) extends Devon
 case class DevonArray(array: Seq[Devon]) extends Devon
 
 case class DevonMap(map: Map[Devon, Devon]) extends Devon
+
+case object DevonEnd extends Devon

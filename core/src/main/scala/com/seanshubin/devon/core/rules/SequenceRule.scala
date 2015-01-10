@@ -25,7 +25,7 @@ case class SequenceRule[A](ruleLookup: RuleLookup[A], thisRuleName: String, rule
         MatchSuccess(ParseTreeBranch(thisRuleName, children.reverse), newCursor)
       case x: MatchFailure[A] =>
         val sequenceString = ruleNames.mkString(", ")
-        MatchFailure(s"expected sequence: $sequenceString", Some(x))
+        MatchFailure(thisRuleName, s"expected sequence: $sequenceString")
     }
   }
 }

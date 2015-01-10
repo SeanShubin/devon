@@ -23,6 +23,6 @@ case class OneOfRule[A](ruleLookup: RuleLookup[A], thisRuleName: String, ruleNam
 
   private def failure(): MatchResult[A] = {
     val ruleNamesString = ruleNames.mkString(", ")
-    MatchFailure(s"expected one of $ruleNamesString")
+    MatchFailure(thisRuleName, s"expected one of $ruleNamesString")
   }
 }

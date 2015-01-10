@@ -19,3 +19,5 @@ case object TokenOpenBracket extends Token
 case object TokenCloseBracket extends Token
 
 case object TokenNull extends Token
+
+case object TokenEnd extends Token
