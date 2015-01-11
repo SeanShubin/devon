@@ -8,6 +8,6 @@ case class MatchSuccess[A](parseTree: ParseTree[A], cursor: Cursor[A]) extends M
   override def success: Boolean = true
 }
 
-case class MatchFailure[A](rule:String, message: String) extends MatchResult[A] {
+case class MatchFailure[A](rule: String, message: String) extends MatchResult[A] {
   override def success: Boolean = false
 }

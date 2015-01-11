@@ -6,6 +6,7 @@ sealed trait ParseTree[A] {
 
 case class ParseTreeLeaf[A](name: String, value: A) extends ParseTree[A] {
   private def escapedValue = StringUtil.escape(value.toString)
+
   override def toString: String = s"ParseTreeLeaf($name, $escapedValue)"
 }
 

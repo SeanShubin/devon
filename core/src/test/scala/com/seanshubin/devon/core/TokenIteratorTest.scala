@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core
 
-import com.seanshubin.devon.core.token.{TokenEnd, Token, TokenAssembler, TokenRuleLookup}
+import com.seanshubin.devon.core.token.{Token, TokenAssembler, TokenEnd, TokenRuleLookup}
 import org.scalatest.FunSuite
 
 class TokenIteratorTest extends FunSuite {

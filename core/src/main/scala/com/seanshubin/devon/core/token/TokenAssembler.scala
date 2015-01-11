@@ -38,7 +38,7 @@ class TokenAssembler extends Assembler[Char, Token] {
     "close-brace" -> (parseTree => TokenCloseBrace),
     "open-bracket" -> (parseTree => TokenOpenBracket),
     "close-bracket" -> (parseTree => TokenCloseBracket),
-    "null" -> (parseTree => TokenNull) ,
+    "null" -> (parseTree => TokenNull),
     "end" -> (parseTree => TokenEnd)
   )
 }

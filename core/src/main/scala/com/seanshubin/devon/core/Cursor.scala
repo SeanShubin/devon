@@ -39,7 +39,7 @@ object Cursor {
 
     override def isEnd: Boolean = maybeValue.isEmpty
 
-    private def escapedValue:Option[String] = maybeValue.map(x => StringUtil.escape(x.toString))
+    private def escapedValue: Option[String] = maybeValue.map(x => StringUtil.escape(x.toString))
 
     override def toString: String = s"Cursor(value=$escapedValue, isEnd=$isEnd)"
   }
