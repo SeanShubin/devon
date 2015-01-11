@@ -4,9 +4,9 @@ import com.seanshubin.devon.core.StringUtil
 
 sealed trait Token
 
-case class TokenWord(word: String) extends Token
+case class TokenString(word: String) extends Token
 
-case class TokenWhitespaceBlock(whitespace: String) extends Token {
+case class TokenWhitespace(whitespace: String) extends Token {
   override def toString: String = s"TokenWhitespaceBlock(${StringUtil.escape(whitespace)})"
 }
 

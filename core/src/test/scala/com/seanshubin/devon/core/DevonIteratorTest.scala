@@ -1,23 +1,47 @@
 package com.seanshubin.devon.core
 
-import com.seanshubin.devon.core.devon.{Devon, DevonAssembler, DevonEnd, DevonRuleLookup}
-import com.seanshubin.devon.core.token._
+import com.seanshubin.devon.core.devon._
 import org.scalatest.FunSuite
 
 class DevonIteratorTest extends FunSuite {
-  test("complex string") {
-    val charIterator = SampleData.complexSample.toIterator
-    val unfilteredTokenIterator: Iterator[Token] = new ParserIterator[Char, Token](
-      charIterator, new TokenRuleLookup(), new TokenAssembler(), "token", TokenEnd)
-    def validToken(token: Token): Boolean = {
-      token match {
-        case _: TokenWhitespaceBlock => false
-        case _ => true
-      }
-    }
-    val tokenIterator: Iterator[Token] = unfilteredTokenIterator.filter(validToken)
-    val devonIterator: Iterator[Devon] = new ParserIterator[Token, Devon](
-      tokenIterator, new DevonRuleLookup(), new DevonAssembler(), "element", DevonEnd)
-    devonIterator.foreach(println)
+  def createElement(value: String): Devon = {
+    val parsed = DevonIterator.fromString(value).toSeq
+    assert(parsed.size === 1)
+    parsed.head
+  }
+
+  test("elements") {
+    val parsed = DevonIterator.fromString("a b c").toSeq
+    assert(parsed === Seq(DevonString("a"), DevonString("b"), DevonString("c")))
+  }
+  test("map") {
+    val element = createElement("{a b c d}")
+    assert(element === DevonMap(Map(
+      DevonString("a") -> DevonString("b"),
+      DevonString("c") -> DevonString("d")
+    )))
+  }
+  test("array") {
+    val element = createElement("[a b c]")
+    assert(element === DevonArray(Seq(
+      DevonString("a"),
+      DevonString("b"),
+      DevonString("c"))))
+  }
+  test("string") {
+    val element = createElement("abc")
+    assert(element === DevonString("abc"))
+  }
+  test("string with spaces") {
+    val element = createElement("'a b'")
+    assert(element === DevonString("a b"))
+  }
+  test("string with single quotes") {
+    val element = createElement("'a''b'")
+    assert(element === DevonString("a'b"))
+  }
+  test("null") {
+    val element = createElement("()")
+    assert(element === DevonNull)
   }
 }

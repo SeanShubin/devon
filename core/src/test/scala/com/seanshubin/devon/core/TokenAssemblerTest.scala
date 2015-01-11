@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core
 
-import com.seanshubin.devon.core.token.{TokenAssembler, TokenWord}
+import com.seanshubin.devon.core.token.{TokenAssembler, TokenString}
 import org.scalatest.FunSuite
 
 class TokenAssemblerTest extends FunSuite {
@@ -10,7 +10,7 @@ class TokenAssemblerTest extends FunSuite {
     val parseTree = ParseTreeBranch("unquoted-word", List(a, b))
     val tokenAssembler = new TokenAssembler()
     val actualToken = tokenAssembler.assembleFromParseTree(parseTree)
-    val expectedToken = TokenWord("ab")
+    val expectedToken = TokenString("ab")
     assert(actualToken === expectedToken)
   }
 }

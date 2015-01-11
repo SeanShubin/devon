@@ -31,9 +31,9 @@ class TokenAssembler extends Assembler[Char, Token] {
   }
 
   private val assemblers: Map[String, ParseTree[Char] => Token] = Map(
-    "unquoted-word" -> (parseTree => TokenWord(extractUnquotedWord(parseTree))),
-    "quoted-word" -> (parseTree => TokenWord(extractQuotedWord(parseTree))),
-    "whitespace-block" -> (parseTree => TokenWhitespaceBlock(extractUnquotedWord(parseTree))),
+    "unquoted-word" -> (parseTree => TokenString(extractUnquotedWord(parseTree))),
+    "quoted-word" -> (parseTree => TokenString(extractQuotedWord(parseTree))),
+    "whitespace-block" -> (parseTree => TokenWhitespace(extractUnquotedWord(parseTree))),
     "open-brace" -> (parseTree => TokenOpenBrace),
     "close-brace" -> (parseTree => TokenCloseBrace),
     "open-bracket" -> (parseTree => TokenOpenBracket),

@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core.devon
 
-import com.seanshubin.devon.core.token.{Token, TokenNull, TokenWord}
+import com.seanshubin.devon.core.token.{Token, TokenNull, TokenString}
 import com.seanshubin.devon.core.{Assembler, ParseTree, ParseTreeBranch, ParseTreeLeaf}
 
 class DevonAssembler extends Assembler[Token, Devon] {
@@ -10,8 +10,8 @@ class DevonAssembler extends Assembler[Token, Devon] {
 
   private def extract(parseTree: ParseTree[Token]): Devon = {
     parseTree match {
-      case ParseTreeLeaf("string", TokenWord(s)) => DevonString(s)
-      case ParseTreeBranch("object", children) => DevonMap(extractObject(children))
+      case ParseTreeLeaf("string", TokenString(s)) => DevonString(s)
+      case ParseTreeBranch("map", children) => DevonMap(extractObject(children))
       case ParseTreeBranch("array", children) => DevonArray(extractArray(children))
       case ParseTreeLeaf("null", TokenNull) => DevonNull
       case ParseTreeBranch("end", Nil) => DevonEnd

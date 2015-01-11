@@ -10,10 +10,10 @@ class DevonRuleLookup extends RuleLookup[Token] {
 
   private val rules: Seq[Rule[Token]] = Seq(
     ZeroOrMoreRule(this, "elements", "element"),
-    OneOfRule(this, "element", "object", "array", "string", "null", "end"),
-    SequenceRule(this, "object", "begin-object", "pairs", "end-object"),
+    OneOfRule(this, "element", "map", "array", "string", "null", "end"),
+    SequenceRule(this, "map", "begin-object", "pairs", "end-object"),
     SequenceRule(this, "array", "begin-array", "elements", "end-array"),
-    ValueTypeRule(this, "string", classOf[TokenWord]),
+    ValueTypeRule(this, "string", classOf[TokenString]),
     ValueRule(this, "null", TokenNull),
     ValueRule(this, "begin-object", TokenOpenBrace),
     ZeroOrMoreRule(this, "pairs", "pair"),
