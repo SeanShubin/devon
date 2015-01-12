@@ -73,7 +73,6 @@ single characters
     <tr><td>tab          </td><td>\t </td><td>000009</td></tr>
     <tr><td>return       </td><td>\r </td><td>00000D</td></tr>
     <tr><td>newline      </td><td>\n </td><td>00000A</td></tr>
-    <tr><td>number-sign  </td><td>#  </td><td>000023</td></tr>
     </tbody>
 </table>
 
@@ -88,41 +87,28 @@ negations (these do not match end of file)
     unquoted-word-character  = not structural-or-whitespace
     not-quote                = not quote
 
-Annotated
-===
-support for comments, any line starting with a # as the first non-whitespace character
-
-    lines = { line }
-    line = comment-line | real-line
-    comment-line = { whitespace } number-sign line-text end-of-line
-    whitespace = space | tab
-    line-text = { not-end-of-line }
-    end-of-line = return | newline | end-of-input
-    not-end-of-line = not end-of-line
-
 Tokens
 ===
 
-    tokens                = { token }
     token                 = open-brace | close-brace | open-bracket | close-bracket | null | quoted-word | unquoted-word | whitespace-block
     null                  = open-paren close-paren
-    whitespace-block      = whitespace { whitespace }
-    unquoted-word         = unquoted-word-character { unquoted-word-character }
     quoted-word           = quote quoted-contents quote
-    two-quotes            = quote quote
+    unquoted-word         = unquoted-word-character { unquoted-word-character }
+    whitespace-block      = whitespace { whitespace }
     quoted-contents       = quoted-word-character { quoted-word-character }
     quoted-word-character = not-quote | two-quotes
+    two-quotes            = quote quote
 
 Structure
 ===
 
     elements = { element }
-    element = object | array | string | null
-    object = begin-object pairs end-object
+    element = map | array | string | null
+    map = begin-map pairs end-map
+    array = begin-array elements end-array
+    string = quoted-word | unquoted-word
     pairs = { pair }
     pair = element element
-    array = begin-array elements end-array
-    string = quoted-string | unquoted-string
 
 Planned Features for Scala Implementation
 ===
