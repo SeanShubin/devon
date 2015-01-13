@@ -18,7 +18,7 @@ class TokenAssembler extends Assembler[Char, Token] {
   }
 
   private def extractQuotedWord(parseTree: ParseTree[Char]): String = {
-    val ParseTreeBranch("quoted-word", List(_, ParseTreeBranch("quoted-contents", quotedContents), _)) = parseTree
+    val ParseTreeBranch("quoted-string", List(_, ParseTreeBranch("quoted-contents", quotedContents), _)) = parseTree
     quotedContents.map(extractQuotedChar).mkString
   }
 
@@ -31,8 +31,8 @@ class TokenAssembler extends Assembler[Char, Token] {
   }
 
   private val assemblers: Map[String, ParseTree[Char] => Token] = Map(
-    "unquoted-word" -> (parseTree => TokenString(extractUnquotedWord(parseTree))),
-    "quoted-word" -> (parseTree => TokenString(extractQuotedWord(parseTree))),
+    "unquoted-string" -> (parseTree => TokenString(extractUnquotedWord(parseTree))),
+    "quoted-string" -> (parseTree => TokenString(extractQuotedWord(parseTree))),
     "whitespace-block" -> (parseTree => TokenWhitespace(extractUnquotedWord(parseTree))),
     "open-brace" -> (parseTree => TokenOpenBrace),
     "close-brace" -> (parseTree => TokenCloseBrace),

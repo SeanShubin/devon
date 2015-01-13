@@ -5,44 +5,29 @@ import com.seanshubin.devon.core.rules._
 import com.seanshubin.devon.core.{Rule, RuleLookup}
 
 class TokenRuleLookup extends RuleLookup[Char] {
+  import TokenCharacters._
   override def lookupRuleByName(name: String): Rule[Char] = rulesMap(name)
-
-  private val quote = '\''
-  private val openBrace = '{'
-  private val closeBrace = '}'
-  private val openBracket = '['
-  private val closeBracket = ']'
-  private val openParen = '('
-  private val closeParen = ')'
-  private val space = ' '
-  private val tab = '\t'
-  private val carriageReturn = '\r'
-  private val lineFeed = '\n'
-
-  private val whitespace = Seq(space, tab, carriageReturn, lineFeed)
-  private val structural = Seq(openBrace, closeBrace, openBracket, closeBracket, openParen, closeParen, quote)
-  private val structuralAndWhitespace = structural ++ whitespace
 
   private val rules: Seq[Rule[Char]] = Seq(
     OneOfRule(this, "token",
-      "open-brace", "close-brace", "open-bracket", "close-bracket", "null", "quoted-word", "unquoted-word",
+      "open-brace", "close-brace", "open-bracket", "close-bracket", "null", "quoted-string", "unquoted-string",
       "whitespace-block", "end"),
     ValueRule(this, "open-brace", openBrace),
     ValueRule(this, "close-brace", closeBrace),
     ValueRule(this, "open-bracket", openBracket),
     ValueRule(this, "close-bracket", closeBracket),
     SequenceRule(this, "null", "open-paren", "close-paren"),
-    SequenceRule(this, "quoted-word", "quote", "quoted-contents", "quote"),
-    OneOrMoreRule(this, "unquoted-word", "unquoted-word-character"),
+    SequenceRule(this, "quoted-string", "quote", "quoted-contents", "quote"),
+    OneOrMoreRule(this, "unquoted-string", "unquoted-string-character"),
     OneOrMoreRule(this, "whitespace-block", "whitespace"),
     EndRule(this, "end"),
     ValueRule(this, "open-paren", openParen),
     ValueRule(this, "close-paren", closeParen),
     ValueRule(this, "quote", quote),
-    OneOrMoreRule(this, "quoted-contents", "quoted-word-character"),
-    ValueOtherThanRule(this, "unquoted-word-character", structuralAndWhitespace: _*),
+    OneOrMoreRule(this, "quoted-contents", "quoted-string-character"),
+    ValueOtherThanRule(this, "unquoted-string-character", structuralAndWhitespace: _*),
     ValueRule(this, "whitespace", whitespace: _*),
-    OneOfRule(this, "quoted-word-character", "not-quote", "two-quotes"),
+    OneOfRule(this, "quoted-string-character", "not-quote", "two-quotes"),
     ValueOtherThanRule(this, "not-quote", quote),
     SequenceRule(this, "two-quotes", "quote", "quote")
   )
