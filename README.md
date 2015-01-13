@@ -62,45 +62,47 @@ single characters
     <tr><th>name</th><th>character</th><th>unicode</th></tr>
     </thead>
     <tbody>
-    <tr><td>open-brace   </td><td>{  </td><td>00007B</td></tr>
-    <tr><td>close-brace  </td><td>}  </td><td>00007D</td></tr>
-    <tr><td>open-bracket </td><td>[  </td><td>00005B</td></tr>
-    <tr><td>close-bracket</td><td>]  </td><td>00005D</td></tr>
-    <tr><td>open-paren   </td><td>(  </td><td>000028</td></tr>
-    <tr><td>close-paren  </td><td>)  </td><td>000029</td></tr>
+    <tr><td>tab          </td><td>\t </td><td>000009</td></tr>
+    <tr><td>newline      </td><td>\n </td><td>00000A</td></tr>
+    <tr><td>return       </td><td>\r </td><td>00000D</td></tr>
     <tr><td>space        </td><td>' '</td><td>000020</td></tr>
     <tr><td>quote        </td><td>\' </td><td>000027</td></tr>
-    <tr><td>tab          </td><td>\t </td><td>000009</td></tr>
-    <tr><td>return       </td><td>\r </td><td>00000D</td></tr>
-    <tr><td>newline      </td><td>\n </td><td>00000A</td></tr>
+    <tr><td>open-paren   </td><td>(  </td><td>000028</td></tr>
+    <tr><td>close-paren  </td><td>)  </td><td>000029</td></tr>
+    <tr><td>open-bracket </td><td>[  </td><td>00005B</td></tr>
+    <tr><td>close-bracket</td><td>]  </td><td>00005D</td></tr>
+    <tr><td>open-brace   </td><td>{  </td><td>00007B</td></tr>
+    <tr><td>close-brace  </td><td>}  </td><td>00007D</td></tr>
     </tbody>
 </table>
 
 alternatives
 
-    whitespace               = space | tab | return | newline
-    structural               = open-brace | close-brace | open-bracket | close-bracket | open-paren | close-paren | quote
+    whitespace               = tab | newline | return | space
+    structural               = quote | open-paren | close-paren | open-bracket | close-bracket | open-brace | close-brace
     structural-or-whitespace = structural | whitespace
 
 negations (these do not match end of file)
 
-    unquoted-word-character  = not structural-or-whitespace
-    not-quote                = not quote
+    unquoted-string-character  = not structural-or-whitespace
+    not-quote                  = not quote
 
 Tokens
 ===
 
-    token                 = open-brace | close-brace | open-bracket | close-bracket | null | quoted-word | unquoted-word | whitespace-block
-    null                  = open-paren close-paren
-    quoted-word           = quote quoted-contents quote
-    unquoted-word         = unquoted-word-character { unquoted-word-character }
-    whitespace-block      = whitespace { whitespace }
-    quoted-contents       = quoted-word-character { quoted-word-character }
-    quoted-word-character = not-quote | two-quotes
-    two-quotes            = quote quote
+    token                   = open-brace | close-brace | open-bracket | close-bracket | null | quoted-string | unquoted-string | whitespace-block
+    null                    = open-paren close-paren
+    quoted-string           = quote quoted-contents quote
+    unquoted-string         = unquoted-string-character { unquoted-string-character }
+    whitespace-block        = whitespace { whitespace }
+    quoted-contents         = quoted-string-character { quoted-string-character }
+    quoted-string-character = not-quote | two-quotes
+    two-quotes              = quote quote
 
 Structure
 ===
+
+Ignore tokens of type "whitespace-block"
 
     elements = { element }
     element = map | array | string | null
@@ -132,7 +134,7 @@ Features almost rejected in favor of simplicity, but kept out of necessity
 
 Sample
 ===
-A complex object, followed by an array, then a string, then a null
+A complex object, followed by an array, string, null, quoted string, and quoted string with an inner quote
 
 {a{b c}\[d \[e f\]\](){()\[f{g h}()\]{}i}j}\[\[k l\]\[\]m\]n()
 
@@ -161,3 +163,6 @@ A complex object, followed by an array, then a string, then a null
     ]
     n
     ()
+    'o p'
+    'q '' r'
+
