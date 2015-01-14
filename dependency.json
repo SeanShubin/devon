@@ -1,43 +1,43 @@
 {
-    "searchPaths": [
-        [
-            "console",
-            "target",
-            "devon-console.jar"
-        ]
+  "searchPaths": [
+    [
+      "console",
+      "target",
+      "devon-console.jar"
+    ]
+  ],
+  "styleSheet": ["dependency.css"],
+  "relevantDependencyPattern": {
+    "includeRegex": ["com/seanshubin/devon/.*"],
+    "excludeRegex": []
+  },
+  "trimRegex": "^com/seanshubin/devon/",
+  "classFileNamePattern": {
+    "includeRegex": [".*\\.class"],
+    "excludeRegex": []
+  },
+  "zipFileNamePattern": {
+    "includeRegex": [
+      ".*\\.zip",
+      ".*\\.war",
+      ".*\\.jar"
     ],
-    "styleSheet": ["dependency.css"],
-    "relevantDependencyPattern": {
-        "includeRegex": ["com/seanshubin/devon/.*"],
-        "excludeRegex": []
-    },
-    "trimRegex": "^com/seanshubin/devon/",
-    "classFileNamePattern": {
-        "includeRegex": [".*\\.class"],
-        "excludeRegex": []
-    },
-    "zipFileNamePattern": {
-        "includeRegex": [
-            ".*\\.zip",
-            ".*\\.war",
-            ".*\\.jar"
-        ],
-        "excludeRegex": []
-    },
-    "generatedReportDirectory": [
-        "console",
-        "target",
-        "dependency-report"
-    ],
-    "classLimits": {
-        "depth": 7,
-        "complexity": 100,
-        "cycleCount": 0
-    },
-    "packageLimits": {
-        "depth": 4,
-        "complexity": 10,
-        "cycleCount": 0
-    },
-    "failIfAnyLimitExceeded": true
+    "excludeRegex": []
+  },
+  "generatedReportDirectory": [
+    "console",
+    "target",
+    "dependency-report"
+  ],
+  "classLimits": {
+    "depth": 7,
+    "complexity": 100,
+    "cycleCount": 0
+  },
+  "packageLimits": {
+    "depth": 4,
+    "complexity": 10,
+    "cycleCount": 0
+  },
+  "failIfAnyLimitExceeded": true
 }

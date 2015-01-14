@@ -44,9 +44,7 @@ class CompactPrintTest extends FunSuite {
         |'o p'
         |'q '' r'""".stripMargin
     val actual = Formatter.compactString(complex)
-    val expected = "{a{b c}[d[e f]](){()[f{g h}()]{} i}j}[[k l][]m]n()'o p' 'q '' r'"
-    println(expected)
-    println(actual)
-//    assert(actual === expected)
+    val expected = "{a{b c}[d[e f]](){()[f{g h}()]{}i}j}[[k l][]m]n()'o p' 'q '' r'"
+    assert(actual === expected)
   }
 }

@@ -5,7 +5,9 @@ import com.seanshubin.devon.core.rules._
 import com.seanshubin.devon.core.{Rule, RuleLookup}
 
 class TokenRuleLookup extends RuleLookup[Char] {
-  import TokenCharacters._
+
+  import com.seanshubin.devon.core.token.TokenCharacters._
+
   override def lookupRuleByName(name: String): Rule[Char] = rulesMap(name)
 
   private val rules: Seq[Rule[Char]] = Seq(
