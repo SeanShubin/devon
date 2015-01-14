@@ -43,4 +43,5 @@ object Cursor {
 
     override def toString: String = s"Cursor(value=$escapedValue, isEnd=$isEnd)"
   }
+
 }
