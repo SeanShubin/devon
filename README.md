@@ -136,7 +136,7 @@ Sample
 ===
 A complex object, followed by an array, string, null, quoted string, and quoted string with an inner quote
 
-{a{b c}\[d \[e f\]\](){()\[f{g h}()\]{}i}j}\[\[k l\]\[\]m\]n()
+{a{b c}\[d \[e f\]\](){()\[f{g h}()\]{}i}j}\[\[k l\]\[\]m\]n()'o p' 'q '' r'
 
     {
       a {b c}
