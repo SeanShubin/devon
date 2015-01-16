@@ -43,11 +43,11 @@ sequence
 map
 
 * {}
-* a set of key value pairs
+* a set of key-value pairs
 * the number of elements MUST be even
 * duplicate keys SHOULD NOT be present
 * the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
-* the transport layer MUST preserve duplicate keys, although the consumer MAY enact a rule for deciding which to keep
+* the transport layer MUST preserve duplicate keys, although in the case of key-value pairs with duplicate keys, the consumer MAY enact a rule for deciding which key-value pairs to keep and which to discard
 * this can be used to model dictionaries (such as java maps), or records (such as java classes)
 
 Specification
