@@ -90,8 +90,9 @@ negations (these do not match end of file)
 Tokens
 ===
 
-    token                   = open-brace | close-brace | open-bracket | close-bracket | null | quoted-string | unquoted-string | whitespace-block
+    token                   = open-brace | close-brace | open-bracket | close-bracket | null | string | whitespace-block
     null                    = open-paren close-paren
+    string                  = quoted-string | unquoted-string
     quoted-string           = quote quoted-contents quote
     unquoted-string         = unquoted-string-character { unquoted-string-character }
     whitespace-block        = whitespace { whitespace }
@@ -102,18 +103,18 @@ Tokens
 Structure
 ===
 
-Ignore tokens of type "whitespace-block"
+Ignore tokens of type "whitespace-block".
 
     elements = { element }
     element = map | array | string | null
-    map = begin-map pairs end-map
-    array = begin-array elements end-array
-    string = quoted-word | unquoted-word
+    map = open-brace pairs close-brace
+    array = open-bracket elements close-bracket
     pairs = { pair }
     pair = element element
 
 Planned Features for Scala Implementation
 ===
+
 - Pretty Print
 - Store case class into notation
 - Load notation into case class
