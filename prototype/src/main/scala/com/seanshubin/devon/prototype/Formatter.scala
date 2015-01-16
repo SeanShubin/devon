@@ -24,7 +24,7 @@ object Formatter {
   }
 
   def compactDevonString(string: String): CompactFragment = {
-    if (string.exists(x => TokenCharacters.structuralAndWhitespace.contains(x))) {
+    if (string.exists(x => TokenCharacters.structuralAndWhitespace.contains(x)) || string.isEmpty) {
       compactQuotedString(string)
     } else {
       compactUnquotedString(string)

@@ -14,6 +14,14 @@ class CompactPrintTest extends FunSuite {
     assert(actual === expected)
   }
 
+  test("empty string") {
+    val source = "''"
+    val actual = Formatter.compactString(source)
+    val expected = "''"
+    assert(actual === expected)
+
+  }
+
   test("complex") {
     val complex =
       """{

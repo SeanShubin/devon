@@ -26,7 +26,7 @@ class TokenRuleLookup extends RuleLookup[Char] {
     ValueRule(this, "open-paren", openParen),
     ValueRule(this, "close-paren", closeParen),
     ValueRule(this, "quote", quote),
-    OneOrMoreRule(this, "quoted-contents", "quoted-string-character"),
+    ZeroOrMoreRule(this, "quoted-contents", "quoted-string-character"),
     ValueOtherThanRule(this, "unquoted-string-character", structuralAndWhitespace: _*),
     ValueRule(this, "whitespace", whitespace: _*),
     OneOfRule(this, "quoted-string-character", "not-quote", "two-quotes"),

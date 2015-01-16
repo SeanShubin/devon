@@ -18,34 +18,37 @@ There are 5 aspects of this notation
 
 unquoted string
 
-    MUST NOT contain whitespace, single quote, or the symbols ()[]{}
+* MUST NOT contain whitespace, single quote, or the symbols ()[]{}
+* an empty string MUST be represented as a quoted string, like so: ''
 
 quoted string
 
-    starts and ends with a single quote, internal quotes must be doubled up
+* starts and ends with a single quote, internal quotes must be doubled up
+* an empty string MUST be represented as a quoted string, like so: ''
 
 unit
 
-    ()
-    explicitly indicates no value
-    sometimes referred to as 'null', 'unit', or 'void'
-    useful for messages intended to un-set a value
-    whitespace is not allowed between the '(' and ')'
+* ()
+* explicitly indicates no value
+* sometimes referred to as 'null', 'unit', or 'void'
+* useful for messages intended to un-set a value
+* whitespace is not allowed between the '(' and ')'
 
 sequence
 
-    []
-    the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
-    this can be used to model tuples, ordered sequences, or unordered sets
+* []
+* the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
+* this can be used to model tuples, ordered sequences, or unordered sets
 
 map
 
-    {}
-    a set of key value pairs
-    the number of elements MUST be even
-    duplicate keys SHOULD NOT be present
-    different consumers MAY handle duplicate keys differently
-    this can be used to model dictionaries (such as java maps), or records (such as java classes)
+* {}
+* a set of key value pairs
+* the number of elements MUST be even
+* duplicate keys SHOULD NOT be present
+* the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
+* the transport layer MUST preserve duplicate keys, although the consumer MAY enact a rule for deciding which to keep
+* this can be used to model dictionaries (such as java maps), or records (such as java classes)
 
 Specification
 ===
@@ -96,7 +99,7 @@ Tokens
     quoted-string           = quote quoted-contents quote
     unquoted-string         = unquoted-string-character { unquoted-string-character }
     whitespace-block        = whitespace { whitespace }
-    quoted-contents         = quoted-string-character { quoted-string-character }
+    quoted-contents         = { quoted-string-character }
     quoted-string-character = not-quote | two-quotes
     two-quotes              = quote quote
 
