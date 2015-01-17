@@ -46,9 +46,9 @@ class LearnPropertyBasedTestingTest extends FunSuite with PropertyChecks {
   test("converting between devon and compact preserves meaning") {
     implicit val arbitraryDevon = Arbitrary[Devon](genDevon)
     forAll { (devon1: Devon) =>
-      val compact1 = Formatter.compactDevon(devon1).text
+      val compact1 = CompactFormatter.compactDevon(devon1).text
       val devon2 = DevonIterator.fromString(compact1).next()
-      val compact2 = Formatter.compactDevon(devon2).text
+      val compact2 = CompactFormatter.compactDevon(devon2).text
       assert(compact1 === compact2)
     }
   }

@@ -4,7 +4,7 @@ import com.seanshubin.devon.core.devon._
 import com.seanshubin.devon.core.token.TokenCharacters
 import com.seanshubin.devon.prototype.CompactFragment._
 
-object Formatter {
+object CompactFormatter {
   def compactString(source: String): String = {
     val devonIterator = DevonIterator.fromString(source)
     val devonSeq = devonIterator.toIndexedSeq

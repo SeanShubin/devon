@@ -29,4 +29,8 @@ object DevonIterator {
       tokenIterator, ruleLookup, assembler, "element", DevonEnd)
     devonIterator
   }
+
+  def parse(value: String): Devon = {
+    fromString(value).next()
+  }
 }

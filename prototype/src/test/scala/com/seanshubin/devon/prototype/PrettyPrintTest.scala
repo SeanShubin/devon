@@ -5,15 +5,16 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
 import org.scalatest.prop.PropertyChecks
 
-class CompactPrintTest extends FunSuite with PropertyChecks {
+class PrettyPrintTest extends FunSuite with PropertyChecks {
   test("map") {
-    val source =
+    val source = "{a b c d}"
+    val devon = DevonIterator.parse(source)
+    val actual = PrettyFormatter.pretty(devon)
+    val expected =
       """{
         |  a b
         |  c d
         |}""".stripMargin
-    val actual = CompactFormatter.compactString(source)
-    val expected = "{a b c d}"
     assert(actual === expected)
   }
 
@@ -24,38 +25,37 @@ class CompactPrintTest extends FunSuite with PropertyChecks {
     assert(actual === expected)
 
   }
-
   test("complex") {
-    val complex =
+    val complex = "{a{b c}[d[e f]](){()[f{g h}()]{}'i j'}'k '' l'}"
+    val devon = DevonIterator.parse(complex)
+    val expected =
       """{
-        |  a {b c}
+        |  a
+        |  {
+        |    b c
+        |  }
         |  [
         |    d
-        |    [e f]
+        |    [
+        |      e
+        |      f
+        |    ]
         |  ]
         |  ()
         |  {
         |    ()
         |    [
         |      f
-        |      {g h}
+        |      {
+        |        g h
+        |      }
         |      ()
         |    ]
-        |    {} i
+        |    {} 'i j'
         |  }
-        |  j
-        |}
-        |[
-        |  [k l]
-        |  []
-        |  m
-        |]
-        |n
-        |()
-        |'o p'
-        |'q '' r'""".stripMargin
-    val actual = CompactFormatter.compactString(complex)
-    val expected = "{a{b c}[d[e f]](){()[f{g h}()]{}i}j}[[k l][]m]n()'o p' 'q '' r'"
+        |  'k '' l'
+        |}""".stripMargin
+    val actual = PrettyFormatter.pretty(devon)
     assert(actual === expected)
   }
 
@@ -78,13 +78,13 @@ class CompactPrintTest extends FunSuite with PropertyChecks {
     (1, genArray),
     (1, genNull))
 
-  test("converting between devon and compact preserves meaning") {
+  test("converting between devon and pretty preserves meaning") {
     implicit val arbitraryDevon = Arbitrary[Devon](genDevon)
     forAll { (devon1: Devon) =>
-      val compact1 = CompactFormatter.compactDevon(devon1).text
-      val devon2 = DevonIterator.fromString(compact1).next()
-      val compact2 = CompactFormatter.compactDevon(devon2).text
-      assert(compact1 === compact2)
+      val pretty1 = PrettyFormatter.pretty(devon1)
+      val devon2 = DevonIterator.fromString(pretty1).next()
+      val pretty2 = PrettyFormatter.pretty(devon2)
+      assert(pretty1 === pretty2)
     }
   }
 }
