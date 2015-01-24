@@ -9,7 +9,7 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
   test("map") {
     val source = "{a b c d}"
     val devon = DevonIterator.parse(source)
-    val actual = PrettyFormatter.pretty(devon)
+    val actual = PrettyFormatter.pretty(devon).mkString("\n")
     val expected =
       """{
         |  a b
@@ -55,7 +55,27 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
         |  }
         |  'k '' l'
         |}""".stripMargin
-    val actual = PrettyFormatter.pretty(devon)
+    val actual = PrettyFormatter.pretty(devon).mkString("\n")
+    assert(actual === expected)
+  }
+
+  test("rectangle") {
+    val text = "{ topLeft { x 1 y 2 } bottomRight { x 3 y 4 } }"
+    val devon = DevonIterator.parse(text)
+    val actual = PrettyFormatter.pretty(devon).mkString("\n")
+    val expected =
+      """{
+        |  topLeft
+        |  {
+        |    x 1
+        |    y 2
+        |  }
+        |  bottomRight
+        |  {
+        |    x 3
+        |    y 4
+        |  }
+        |}""".stripMargin
     assert(actual === expected)
   }
 
@@ -82,7 +102,7 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
     implicit val arbitraryDevon = Arbitrary[Devon](genDevon)
     forAll { (devon1: Devon) =>
       val pretty1 = PrettyFormatter.pretty(devon1)
-      val devon2 = DevonIterator.fromString(pretty1).next()
+      val devon2 = DevonIterator.fromString(pretty1.mkString("\n")).next()
       val pretty2 = PrettyFormatter.pretty(devon2)
       assert(pretty1 === pretty2)
     }

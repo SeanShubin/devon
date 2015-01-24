@@ -4,8 +4,8 @@ import com.seanshubin.devon.core.devon._
 import com.seanshubin.devon.core.token.TokenCharacters
 
 object PrettyFormatter {
-  def pretty(devon: Devon): String = {
-    prettyDevon(devon).lines.mkString("\n")
+  def pretty(devon: Devon): Seq[String] = {
+    prettyDevon(devon).lines
   }
 
   def prettyDevon(devon: Devon): PrettyFragment = {
