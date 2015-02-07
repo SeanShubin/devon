@@ -15,7 +15,6 @@ class ScalaReflectionTest extends FunSuite {
     val constructorMethod = classMirror.reflectConstructor(sampleConstructor)
     val sample = constructorMethod(1, 2)
     assert(sample === Sample(1, 2))
-    println(sample)
   }
 
   test("read case class") {

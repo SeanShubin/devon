@@ -10,6 +10,6 @@ class ArbitraryDevonTest extends FunSuite {
     val generator = new ArbitraryDevonImpl(random = random, maxDepth = 5, maxStringSize = 5, maxArraySize = 10, maxMapSize = 5)
     val devon = generator.generate()
     val prettyDevon = PrettyFormatter.pretty(devon)
-    println(prettyDevon)
+    assert(prettyDevon.size === 23268)
   }
 }
