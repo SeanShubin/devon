@@ -33,4 +33,12 @@ object DevonIterator {
   def parse(value: String): Devon = {
     fromString(value).next()
   }
+
+  def load[T](value: String, theClass: Class[T]): T = {
+    ???
+  }
+
+  def toAbstractSyntaxTree[T](value: T): String = {
+    ???
+  }
 }

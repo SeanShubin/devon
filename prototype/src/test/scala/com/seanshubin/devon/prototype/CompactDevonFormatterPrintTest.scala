@@ -5,7 +5,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
 import org.scalatest.prop.PropertyChecks
 
-class CompactPrintTest extends FunSuite with PropertyChecks {
+class CompactDevonFormatterPrintTest extends FunSuite with PropertyChecks {
   test("map") {
     val source =
       """{
