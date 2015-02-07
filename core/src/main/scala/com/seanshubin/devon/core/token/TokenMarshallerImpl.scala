@@ -11,4 +11,9 @@ class TokenMarshallerImpl extends TokenMarshaller {
       charIterator, ruleLookup, assembler, "token", TokenEnd)
     tokenIterator
   }
+
+  override def stringToIterator(text: String): Iterator[Token] = {
+    val charIterator = text.toIterator
+    charsToIterator(charIterator)
+  }
 }
