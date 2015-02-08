@@ -9,6 +9,12 @@ class ReflectUtilTest extends FunSuite {
     assert(created === Point(1, 2))
   }
 
+  test("pull apart class") {
+    val value = Point(1, 2)
+    val map = ReflectUtil.pullApart(value)
+    assert(map === Map("x" -> 1, "y" -> 2))
+  }
+
   private def symbolToLines(symbol: reflect.runtime.universe.Symbol): Seq[String] = {
     Seq(
       s"$symbol",
