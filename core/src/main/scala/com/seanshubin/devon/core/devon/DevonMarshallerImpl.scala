@@ -1,8 +1,9 @@
 package com.seanshubin.devon.core.devon
 
-import com.seanshubin.devon.core.ParserIterator
+import com.seanshubin.devon.core.{ReflectUtil, ParserIterator}
 import com.seanshubin.devon.core.token.{Token, TokenMarshallerImpl, TokenWhitespace}
 
+import scala.reflect.ClassTag
 import scala.reflect.runtime.{universe => ru}
 
 class DevonMarshallerImpl extends DevonMarshaller {
@@ -43,7 +44,7 @@ class DevonMarshallerImpl extends DevonMarshaller {
 
   override def toPretty(devon: Devon): Seq[String] = prettyFormatter.format(devon)
 
-  override def valueToAbstractSyntaxTree[T: ru.TypeTag](value: T): Devon = ???
+  override def valueToAbstractSyntaxTree[T: ru.TypeTag:ClassTag](value: T): Devon = ???
 
   override def toClass[T](devon: Devon, theClass: Class[T]): T = ???
 }

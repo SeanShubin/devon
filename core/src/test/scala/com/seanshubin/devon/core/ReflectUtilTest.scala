@@ -15,6 +15,24 @@ class ReflectUtilTest extends FunSuite {
     assert(map === Map("x" -> 1, "y" -> 2))
   }
 
+  test("create nested from primary constructor") {
+    val values = Map("topLeft" -> Map("x" -> 1, "y" -> 2), "bottomRight" -> Map("x" -> 3, "y" -> 4))
+    val topLeft = Point(1, 2)
+    val bottomRight = Point(3, 4)
+    val rectangle = Rectangle(topLeft, bottomRight)
+    val created: Rectangle = ReflectUtil.create(classOf[Rectangle], values)
+    assert(created === rectangle)
+  }
+
+  test("pull apart nested class") {
+    val values = Map("topLeft" -> Map("x" -> 1, "y" -> 2), "bottomRight" -> Map("x" -> 3, "y" -> 4))
+    val topLeft = Point(1, 2)
+    val bottomRight = Point(3, 4)
+    val rectangle = Rectangle(topLeft, bottomRight)
+    val map = ReflectUtil.pullApart(rectangle)
+    assert(map === values)
+  }
+
   private def symbolToLines(symbol: reflect.runtime.universe.Symbol): Seq[String] = {
     Seq(
       s"$symbol",

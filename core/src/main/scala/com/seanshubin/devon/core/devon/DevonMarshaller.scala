@@ -2,6 +2,7 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token.Token
 
+import scala.reflect.ClassTag
 import scala.reflect.runtime.{universe => ru}
 
 trait DevonMarshaller {
@@ -17,7 +18,7 @@ trait DevonMarshaller {
 
   def toPretty(devon: Devon): Seq[String]
 
-  def valueToAbstractSyntaxTree[T: ru.TypeTag](value: T): Devon
+  def valueToAbstractSyntaxTree[T: ru.TypeTag:ClassTag](value: T): Devon
 
   def toClass[T](devon: Devon, theClass: Class[T]): T
 }

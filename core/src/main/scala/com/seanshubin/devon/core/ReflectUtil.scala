@@ -10,7 +10,7 @@ object ReflectUtil {
     if (ctor.paramLists.size != 1) {
       throw new RuntimeException("Currently only supports exactly one parameter list in primary constructor")
     }
-    val parameterList = constructParameterList(ctor.asMethod.paramLists.head, parameters)
+    val parameterList = constructParameterList(ctor.asMethod.paramLists.head.map(_.asTerm), parameters)
     val m = ru.runtimeMirror(getClass.getClassLoader)
     val theClassSymbol = theType.typeSymbol.asClass
     val cm = m.reflectClass(theClassSymbol)
@@ -33,9 +33,10 @@ object ReflectUtil {
     fields.map(pluckValue).toMap
   }
 
-  private def constructParameterList(symbols: Seq[ru.Symbol], values: Map[String, Any]): Seq[Any] = {
-    def pluckValue(symbol: ru.Symbol): Any = {
+  private def constructParameterList(symbols: Seq[ru.TermSymbol], values: Map[String, Any]): Seq[Any] = {
+    def pluckValue(symbol: ru.TermSymbol): Any = {
       val name = symbol.name.decodedName.toString
+      val theType = symbol.typeSignature
       val value = values(name)
       value
     }
@@ -43,6 +44,6 @@ object ReflectUtil {
   }
 
   private def isAccessor(symbol: ru.Symbol): Boolean = {
-    symbol.isPublic && symbol.isMethod && symbol.isTerm && !symbol.isConstructor && !symbol.isSynthetic
+    symbol.isTerm && symbol.asTerm.isGetter
   }
 }
