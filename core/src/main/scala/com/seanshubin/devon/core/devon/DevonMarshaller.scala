@@ -2,6 +2,8 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token.Token
 
+import scala.reflect.runtime.{universe => ru}
+
 trait DevonMarshaller {
   def stringToIterator(text: String): Iterator[Devon]
 
@@ -11,11 +13,11 @@ trait DevonMarshaller {
 
   def stringToAbstractSyntaxTree(text: String): Devon
 
-  def valueToAbstractSyntaxTree[T](value: T): Devon
-
   def toCompact(devon: Devon): String
 
   def toPretty(devon: Devon): Seq[String]
+
+  def valueToAbstractSyntaxTree[T: ru.TypeTag](value: T): Devon
 
   def toClass[T](devon: Devon, theClass: Class[T]): T
 }

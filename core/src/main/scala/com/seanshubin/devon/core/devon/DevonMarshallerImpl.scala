@@ -3,6 +3,8 @@ package com.seanshubin.devon.core.devon
 import com.seanshubin.devon.core.ParserIterator
 import com.seanshubin.devon.core.token.{Token, TokenMarshallerImpl, TokenWhitespace}
 
+import scala.reflect.runtime.{universe => ru}
+
 class DevonMarshallerImpl extends DevonMarshaller {
   private val ruleLookup = new DevonRuleLookup
   private val assembler = new DevonAssembler
@@ -32,8 +34,6 @@ class DevonMarshallerImpl extends DevonMarshaller {
     devonIterator
   }
 
-  override def toClass[T](devon: Devon, theClass: Class[T]): T = ???
-
   override def charsToIterator(charIterator: Iterator[Char]): Iterator[Devon] = {
     val tokenIterator = tokenMarshaller.charsToIterator(charIterator)
     tokensToIterator(tokenIterator)
@@ -41,9 +41,9 @@ class DevonMarshallerImpl extends DevonMarshaller {
 
   override def toCompact(devon: Devon): String = compactFormatter.format(devon)
 
-  override def valueToAbstractSyntaxTree[T](value: T): Devon = ???
+  override def toPretty(devon: Devon): Seq[String] = prettyFormatter.format(devon)
 
-  override def toPretty(devon: Devon): Seq[String] = {
-    prettyFormatter.format(devon)
-  }
+  override def valueToAbstractSyntaxTree[T: ru.TypeTag](value: T): Devon = ???
+
+  override def toClass[T](devon: Devon, theClass: Class[T]): T = ???
 }

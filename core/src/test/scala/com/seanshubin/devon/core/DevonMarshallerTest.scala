@@ -4,6 +4,47 @@ import com.seanshubin.devon.core.devon._
 import org.scalatest.FunSuite
 
 class DevonMarshallerTest extends FunSuite {
+  test("elements") {
+    val parsed = new DevonMarshallerImpl().stringToIterator("a b c").toSeq
+    assert(parsed === Seq(DevonString("a"), DevonString("b"), DevonString("c")))
+  }
+
+  test("map") {
+    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("{a b c d}")
+    assert(element === DevonMap(Map(
+      DevonString("a") -> DevonString("b"),
+      DevonString("c") -> DevonString("d")
+    )))
+  }
+
+  test("array") {
+    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("[a b c]")
+    assert(element === DevonArray(Seq(
+      DevonString("a"),
+      DevonString("b"),
+      DevonString("c"))))
+  }
+
+  test("string") {
+    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("abc")
+    assert(element === DevonString("abc"))
+  }
+
+  test("string with spaces") {
+    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("'a b'")
+    assert(element === DevonString("a b"))
+  }
+
+  test("string with single quotes") {
+    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("'a''b'")
+    assert(element === DevonString("a'b"))
+  }
+
+  test("null") {
+    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("()")
+    assert(element === DevonNull)
+  }
+
   test("text to iterator") {
     val text = "a {b c} () [d]"
     val devonMarshaller = new DevonMarshallerImpl()
@@ -40,38 +81,13 @@ class DevonMarshallerTest extends FunSuite {
     assert(prettyLines(2) === "}")
   }
 
-  test("elements") {
-    val parsed = new DevonMarshallerImpl().stringToIterator("a b c").toSeq
-    assert(parsed === Seq(DevonString("a"), DevonString("b"), DevonString("c")))
-  }
-  test("map") {
-    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("{a b c d}")
-    assert(element === DevonMap(Map(
-      DevonString("a") -> DevonString("b"),
-      DevonString("c") -> DevonString("d")
-    )))
-  }
-  test("array") {
-    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("[a b c]")
-    assert(element === DevonArray(Seq(
-      DevonString("a"),
-      DevonString("b"),
-      DevonString("c"))))
-  }
-  test("string") {
-    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("abc")
-    assert(element === DevonString("abc"))
-  }
-  test("string with spaces") {
-    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("'a b'")
-    assert(element === DevonString("a b"))
-  }
-  test("string with single quotes") {
-    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("'a''b'")
-    assert(element === DevonString("a'b"))
-  }
-  test("null") {
-    val element = new DevonMarshallerImpl().stringToAbstractSyntaxTree("()")
-    assert(element === DevonNull)
+  test("from value") {
+    val topLeft = Point(1, 2)
+    val bottomRight = Point(3, 4)
+    val rectangle = Rectangle(topLeft, bottomRight)
+    val devonMarshaller = new DevonMarshallerImpl()
+    val devon = devonMarshaller.valueToAbstractSyntaxTree(rectangle)
+    val compact = devonMarshaller.toCompact(devon)
+    assert(compact === "{topLeft{x 1 y 2}bottomRight{x 3 y 4}}")
   }
 }
