@@ -6,6 +6,21 @@ import org.scalatest.FunSuite
 import org.scalatest.prop.PropertyChecks
 
 class LearnPropertyBasedTestingTest extends FunSuite with PropertyChecks {
+  val devonMarshaller = new DevonMarshallerImpl
+
+  def stringToDevon(source:String):Devon = {
+    val devon = devonMarshaller.stringToAbstractSyntaxTree(source)
+    devon
+  }
+  def compactString(source:String):String = {
+    devonToCompact(stringToDevon(source))
+  }
+
+  def devonToCompact(devon:Devon):String = {
+    val compact = devonMarshaller.toCompact(devon)
+    compact
+  }
+
   test("length of two concatenated strings") {
     forAll { (left: String, right: String) =>
       whenever(left != null && right != null) {
@@ -46,9 +61,9 @@ class LearnPropertyBasedTestingTest extends FunSuite with PropertyChecks {
   test("converting between devon and compact preserves meaning") {
     implicit val arbitraryDevon = Arbitrary[Devon](genDevon)
     forAll { (devon1: Devon) =>
-      val compact1 = CompactFormatter.compactDevon(devon1).text
-      val devon2 = DevonIterator.fromString(compact1).next()
-      val compact2 = CompactFormatter.compactDevon(devon2).text
+      val compact1 = devonToCompact(devon1)
+      val devon2 = stringToDevon(compact1)
+      val compact2 = devonToCompact(devon2)
       assert(compact1 === compact2)
     }
   }

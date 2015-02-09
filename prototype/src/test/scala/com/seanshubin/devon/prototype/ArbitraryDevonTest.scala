@@ -1,5 +1,6 @@
 package com.seanshubin.devon.prototype
 
+import com.seanshubin.devon.core.devon.DevonMarshallerImpl
 import org.scalatest.FunSuite
 
 class ArbitraryDevonTest extends FunSuite {
@@ -9,7 +10,8 @@ class ArbitraryDevonTest extends FunSuite {
     val random = new RandomImpl(scalaRandom)
     val generator = new ArbitraryDevonImpl(random = random, maxDepth = 5, maxStringSize = 5, maxArraySize = 10, maxMapSize = 5)
     val devon = generator.generate()
-    val prettyDevon = PrettyFormatter.pretty(devon)
+    val devonMarshaller = new DevonMarshallerImpl
+    val prettyDevon = devonMarshaller.toPretty(devon)
     assert(prettyDevon.size === 23268)
   }
 }

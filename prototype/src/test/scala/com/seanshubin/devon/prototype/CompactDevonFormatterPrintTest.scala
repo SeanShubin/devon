@@ -6,20 +6,36 @@ import org.scalatest.FunSuite
 import org.scalatest.prop.PropertyChecks
 
 class CompactDevonFormatterPrintTest extends FunSuite with PropertyChecks {
+  val devonMarshaller = new DevonMarshallerImpl
+
+  def stringToDevon(source:String):Devon = {
+    val devon = devonMarshaller.stringToAbstractSyntaxTree(source)
+   devon
+  }
+  def compactString(source:String):String = {
+    devonToCompact(stringToDevon(source))
+  }
+
+  def devonToCompact(devon:Devon):String = {
+    val compact = devonMarshaller.toCompact(devon)
+    compact
+  }
+
+
   test("map") {
     val source =
       """{
         |  a b
         |  c d
         |}""".stripMargin
-    val actual = CompactFormatter.compactString(source)
+    val actual = compactString(source)
     val expected = "{a b c d}"
     assert(actual === expected)
   }
 
   test("empty string") {
     val source = "''"
-    val actual = CompactFormatter.compactString(source)
+    val actual = compactString(source)
     val expected = "''"
     assert(actual === expected)
 
@@ -54,7 +70,7 @@ class CompactDevonFormatterPrintTest extends FunSuite with PropertyChecks {
         |()
         |'o p'
         |'q '' r'""".stripMargin
-    val actual = CompactFormatter.compactString(complex)
+    val actual = compactString(complex)
     val expected = "{a{b c}[d[e f]](){()[f{g h}()]{}i}j}[[k l][]m]n()'o p' 'q '' r'"
     assert(actual === expected)
   }
@@ -81,9 +97,9 @@ class CompactDevonFormatterPrintTest extends FunSuite with PropertyChecks {
   test("converting between devon and compact preserves meaning") {
     implicit val arbitraryDevon = Arbitrary[Devon](genDevon)
     forAll { (devon1: Devon) =>
-      val compact1 = CompactFormatter.compactDevon(devon1).text
-      val devon2 = DevonIterator.fromString(compact1).next()
-      val compact2 = CompactFormatter.compactDevon(devon2).text
+      val compact1 = devonToCompact(devon1)
+      val devon2 = stringToDevon(compact1)
+      val compact2 = devonToCompact(devon2)
       assert(compact1 === compact2)
     }
   }
