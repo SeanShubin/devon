@@ -5,7 +5,7 @@ import org.scalatest.FunSuite
 class ReflectUtilTest extends FunSuite {
   test("create from primary constructor") {
     val values = Map("x" -> 1, "y" -> 2)
-    val created: Point = ReflectUtil.create(classOf[Point], values)
+    val created: Point = ReflectUtil.construct(values, classOf[Point])
     assert(created === Point(1, 2))
   }
 
@@ -20,7 +20,7 @@ class ReflectUtilTest extends FunSuite {
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
     val rectangle = Rectangle(topLeft, bottomRight)
-    val created: Rectangle = ReflectUtil.create(classOf[Rectangle], values)
+    val created: Rectangle = ReflectUtil.construct(values, classOf[Rectangle])
     assert(created === rectangle)
   }
 

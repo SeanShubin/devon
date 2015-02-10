@@ -2,7 +2,7 @@ package com.seanshubin.devon.prototype
 
 import org.scalatest.FunSuite
 
-import scala.reflect.runtime.universe
+import scala.reflect.runtime._
 import scala.reflect.runtime.universe.Symbol
 
 class ScalaReflectionTest extends FunSuite {
@@ -52,7 +52,6 @@ class ScalaReflectionTest extends FunSuite {
     val rectangleTypeTag = universe.typeTag[Rectangle]
     val rectangleConstructor = rectangleTypeTag.tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
     val topLeftSymbol: universe.Symbol = rectangleConstructor.typeSignature.paramLists.head.head
-    val bottomRightSymbol: universe.Symbol = rectangleConstructor.typeSignature.paramLists.head.tail.head
     val rectangleClassSymbol: universe.ClassSymbol = rectangleTypeTag.tpe.typeSymbol.asClass
     val pointClassSymbol: universe.ClassSymbol = topLeftSymbol.asTerm.typeSignature.typeSymbol.asClass
     val pointConstructor = pointClassSymbol.info.decl(universe.termNames.CONSTRUCTOR).asMethod
@@ -61,8 +60,49 @@ class ScalaReflectionTest extends FunSuite {
     val rectangleConstructorMethod = rectangleClassMirror.reflectConstructor(rectangleConstructor)
     val pointConstructorMethod = pointClassMirror.reflectConstructor(pointConstructor)
     val actualTopLeft = pointConstructorMethod(1, 2).asInstanceOf[Point]
+    val xSymbol = pointConstructor.typeSignature.paramLists.head.head
+    val xClassSymbol = xSymbol.asTerm.typeSignature.typeSymbol.asClass
+    assert(xClassSymbol === universe.typeTag[Int].tpe.typeSymbol)
+
     val actualBottomRight = pointConstructorMethod(3, 4).asInstanceOf[Point]
     val actualRectangle = rectangleConstructorMethod(actualTopLeft, actualBottomRight).asInstanceOf[Rectangle]
     assert(actualRectangle === expectedRectangle)
+
+    val values = Map("topLeft" -> Map("x" -> 1, "y" -> 2), "bottomRight" -> Map("x" -> 3, "y" -> 4))
+    println(construct(values, classOf[Rectangle]))
+  }
+
+  def construct[T:universe.TypeTag](value:Any, theClass:Class[T]):T = {
+    val theType = universe.typeTag[T].tpe.typeSymbol
+    constructFromType(value, theType).asInstanceOf[T]
+  }
+
+  def constructFromType(value:Any, theType:universe.Symbol):Any = {
+    value match {
+      case map:Map[_,_] => constructObject(map.asInstanceOf[Map[String, Any]], theType)
+      case x:Int => x
+      case _ =>
+        throw new RuntimeException(s"Unsupported: value $value, type $theType")
+    }
+  }
+
+  private def constructObject(map:Map[String, Any], theType:universe.Symbol):Any = {
+    val constructor:universe.MethodSymbol = theType.info.decl(universe.termNames.CONSTRUCTOR).asMethod
+    if(constructor.typeSignature.paramLists.size != 1) {
+      throw new RuntimeException("multiple parameter lists not supported")
+    }
+    val parameterSymbols:Seq[universe.Symbol] = constructor.typeSignature.paramLists.head
+    val parameters = for {
+      parameterSymbol <- parameterSymbols
+      key = parameterSymbol.name.decodedName.toString
+      value = map(key)
+      classSymbol = parameterSymbol.asTerm.typeSignature.typeSymbol
+    } yield {
+      constructFromType(value, classSymbol)
+    }
+    val mirror = universe.runtimeMirror(getClass.getClassLoader)
+    val classMirror = mirror.reflectClass(theType.info.typeSymbol.asClass)
+    val constructorMethod = classMirror.reflectConstructor(constructor)
+    constructorMethod(parameters:_*)
   }
 }

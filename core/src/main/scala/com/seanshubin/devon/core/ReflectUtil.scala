@@ -1,30 +1,49 @@
 package com.seanshubin.devon.core
 
 import scala.reflect.ClassTag
-import scala.reflect.runtime.{universe => ru}
+import scala.reflect.runtime.universe
 
 object ReflectUtil {
-  def create[T: ru.TypeTag](theClass: Class[T], parameters: Map[String, Any]): T = {
-    val theType = ru.typeTag[T].tpe
-    val ctor = theType.decl(ru.termNames.CONSTRUCTOR).asMethod
-    if (ctor.paramLists.size != 1) {
-      throw new RuntimeException("Currently only supports exactly one parameter list in primary constructor")
-    }
-    val parameterList = constructParameterList(ctor.asMethod.paramLists.head.map(_.asTerm), parameters)
-    val m = ru.runtimeMirror(getClass.getClassLoader)
-    val theClassSymbol = theType.typeSymbol.asClass
-    val cm = m.reflectClass(theClassSymbol)
-    val ctorm = cm.reflectConstructor(ctor)
-    val created = ctorm(parameterList: _*)
-    created.asInstanceOf[T]
+  def construct[T: universe.TypeTag](value: Any, theClass: Class[T]): T = {
+    val theType = universe.typeTag[T].tpe.typeSymbol
+    constructFromType(value, theType).asInstanceOf[T]
   }
 
-  def pullApart[T: ru.TypeTag : ClassTag](value: T): Any = {
-    val m = ru.runtimeMirror(value.getClass.getClassLoader)
-    val theType = ru.typeTag[T].tpe
+  private def constructFromType(value: Any, theType: universe.Symbol): Any = {
+    value match {
+      case map: Map[_, _] => constructObject(map.asInstanceOf[Map[String, Any]], theType)
+      case x: Int => x
+      case _ =>
+        throw new RuntimeException(s"Unsupported: value $value, type $theType")
+    }
+  }
+
+  private def constructObject(map: Map[String, Any], theType: universe.Symbol): Any = {
+    val constructor: universe.MethodSymbol = theType.info.decl(universe.termNames.CONSTRUCTOR).asMethod
+    if (constructor.typeSignature.paramLists.size != 1) {
+      throw new RuntimeException("multiple parameter lists not supported")
+    }
+    val parameterSymbols: Seq[universe.Symbol] = constructor.typeSignature.paramLists.head
+    val parameters = for {
+      parameterSymbol <- parameterSymbols
+      key = parameterSymbol.name.decodedName.toString
+      value = map(key)
+      classSymbol = parameterSymbol.asTerm.typeSignature.typeSymbol
+    } yield {
+      constructFromType(value, classSymbol)
+    }
+    val mirror = universe.runtimeMirror(getClass.getClassLoader)
+    val classMirror = mirror.reflectClass(theType.info.typeSymbol.asClass)
+    val constructorMethod = classMirror.reflectConstructor(constructor)
+    constructorMethod(parameters: _*)
+  }
+
+  def pullApart[T: universe.TypeTag : ClassTag](value: T): Any = {
+    val m = universe.runtimeMirror(value.getClass.getClassLoader)
+    val theType = universe.typeTag[T].tpe
     val fields = theType.decls.filter(isAccessor).map(x => x.asTerm)
     val im = m.reflect(value)
-    def pluckValue(accessor: ru.TermSymbol): (String, Any) = {
+    def pluckValue(accessor: universe.TermSymbol): (String, Any) = {
       val fieldMirror = im.reflectField(accessor)
       val fieldName = accessor.name.decodedName.toString
       val fieldValue = fieldMirror.get
@@ -33,17 +52,7 @@ object ReflectUtil {
     fields.map(pluckValue).toMap
   }
 
-  private def constructParameterList(symbols: Seq[ru.TermSymbol], values: Map[String, Any]): Seq[Any] = {
-    def pluckValue(symbol: ru.TermSymbol): Any = {
-      val name = symbol.name.decodedName.toString
-      val theType = symbol.typeSignature
-      val value = values(name)
-      value
-    }
-    symbols.map(pluckValue)
-  }
-
-  private def isAccessor(symbol: ru.Symbol): Boolean = {
+  private def isAccessor(symbol: universe.Symbol): Boolean = {
     symbol.isTerm && symbol.asTerm.isGetter
   }
 }
