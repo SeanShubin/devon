@@ -8,15 +8,16 @@ import org.scalatest.prop.PropertyChecks
 class CompactDevonFormatterPrintTest extends FunSuite with PropertyChecks {
   val devonMarshaller = new DevonMarshallerImpl
 
-  def stringToDevon(source:String):Devon = {
+  def stringToDevon(source: String): Devon = {
     val devon = devonMarshaller.stringToAbstractSyntaxTree(source)
-   devon
+    devon
   }
-  def compactString(source:String):String = {
+
+  def compactString(source: String): String = {
     devonToCompact(stringToDevon(source))
   }
 
-  def devonToCompact(devon:Devon):String = {
+  def devonToCompact(devon: Devon): String = {
     val compact = devonMarshaller.toCompact(devon)
     compact
   }

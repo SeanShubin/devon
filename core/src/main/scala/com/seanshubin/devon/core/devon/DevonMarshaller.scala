@@ -18,7 +18,7 @@ trait DevonMarshaller {
 
   def toPretty(devon: Devon): Seq[String]
 
-  def valueToAbstractSyntaxTree[T: ru.TypeTag:ClassTag](value: T): Devon
+  def valueToAbstractSyntaxTree[T: ru.TypeTag : ClassTag](value: T): Devon
 
   def toClass[T](devon: Devon, theClass: Class[T]): T
 }

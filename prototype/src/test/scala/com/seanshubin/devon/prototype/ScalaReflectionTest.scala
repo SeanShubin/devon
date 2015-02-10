@@ -43,4 +43,26 @@ class ScalaReflectionTest extends FunSuite {
     assert(values(0) === "x = (java.lang.Integer) 1")
     assert(values(1) === "y = (java.lang.Integer) 2")
   }
+
+  test("construct nested case class") {
+    val mirror = universe.runtimeMirror(getClass.getClassLoader)
+    val expectedTopLeft = Point(1, 2)
+    val expectedBottomRight = Point(3, 4)
+    val expectedRectangle = Rectangle(expectedTopLeft, expectedBottomRight)
+    val rectangleTypeTag = universe.typeTag[Rectangle]
+    val rectangleConstructor = rectangleTypeTag.tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
+    val topLeftSymbol: universe.Symbol = rectangleConstructor.typeSignature.paramLists.head.head
+    val bottomRightSymbol: universe.Symbol = rectangleConstructor.typeSignature.paramLists.head.tail.head
+    val rectangleClassSymbol: universe.ClassSymbol = rectangleTypeTag.tpe.typeSymbol.asClass
+    val pointClassSymbol: universe.ClassSymbol = topLeftSymbol.asTerm.typeSignature.typeSymbol.asClass
+    val pointConstructor = pointClassSymbol.info.decl(universe.termNames.CONSTRUCTOR).asMethod
+    val pointClassMirror = mirror.reflectClass(pointClassSymbol)
+    val rectangleClassMirror = mirror.reflectClass(rectangleClassSymbol)
+    val rectangleConstructorMethod = rectangleClassMirror.reflectConstructor(rectangleConstructor)
+    val pointConstructorMethod = pointClassMirror.reflectConstructor(pointConstructor)
+    val actualTopLeft = pointConstructorMethod(1, 2).asInstanceOf[Point]
+    val actualBottomRight = pointConstructorMethod(3, 4).asInstanceOf[Point]
+    val actualRectangle = rectangleConstructorMethod(actualTopLeft, actualBottomRight).asInstanceOf[Rectangle]
+    assert(actualRectangle === expectedRectangle)
+  }
 }

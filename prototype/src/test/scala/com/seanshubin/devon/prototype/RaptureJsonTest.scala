@@ -2,7 +2,7 @@ package com.seanshubin.devon.prototype
 
 import org.scalatest.FunSuite
 import rapture.json._
-import jsonBackends.scalaJson._
+import rapture.json.jsonBackends.scalaJson._
 
 class RaptureJsonTest extends FunSuite {
   test("create nested from primary constructor") {
@@ -11,7 +11,7 @@ class RaptureJsonTest extends FunSuite {
     val bottomRight = Point(3, 4)
     val rectangle = Rectangle(topLeft, bottomRight)
 
-    val json =  Json(values)
+    val json = Json(values)
     val created = json.as[Rectangle]
     assert(created === rectangle)
   }

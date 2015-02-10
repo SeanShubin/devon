@@ -6,10 +6,22 @@ DeVoN - Developers Value Notation
 
 Goals
 ===
-- simple
-- language neutral
-- human/machine readable/writable
-- complete
+- minimal (nothing unnecessary, everything that exists, exists for a reason)
+- language neutral (no dependence on implementation data types)
+- human readable/writable (can pretty print)
+- machine readable/writable (easy to parse and format)
+- complete (can support any data structure)
+
+Features
+===
+- no unnecessary punctuation
+- the notation only gives special meaning to 11 characters
+- whitespace is not significant
+- language independent (no language specific words like "true", "false", "null")
+- maps to common data structures
+- support for dictionaries, arrays, null, and strings
+- no escaping
+- leaves interpretation of primitive values to the consumer
 
 Overview
 ===

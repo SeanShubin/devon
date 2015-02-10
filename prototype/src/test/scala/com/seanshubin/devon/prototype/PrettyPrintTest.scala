@@ -8,15 +8,16 @@ import org.scalatest.prop.PropertyChecks
 class PrettyPrintTest extends FunSuite with PropertyChecks {
   val devonMarshaller = new DevonMarshallerImpl
 
-  def stringToDevon(source:String):Devon = {
+  def stringToDevon(source: String): Devon = {
     val devon = devonMarshaller.stringToAbstractSyntaxTree(source)
     devon
   }
-  def prettyString(source:String):Seq[String] = {
+
+  def prettyString(source: String): Seq[String] = {
     devonToPretty(stringToDevon(source))
   }
 
-  def devonToPretty(devon:Devon):Seq[String] = {
+  def devonToPretty(devon: Devon): Seq[String] = {
     val pretty = devonMarshaller.toPretty(devon)
     pretty
   }
