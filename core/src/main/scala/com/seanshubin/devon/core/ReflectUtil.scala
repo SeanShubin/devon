@@ -12,9 +12,7 @@ object ReflectUtil {
   private def constructFromType(value: Any, theType: universe.Symbol): Any = {
     value match {
       case map: Map[_, _] => constructObject(map.asInstanceOf[Map[String, Any]], theType)
-      case x: Int => x
-      case _ =>
-        throw new RuntimeException(s"Unsupported: value $value, type $theType")
+      case x => x
     }
   }
 
@@ -39,17 +37,38 @@ object ReflectUtil {
   }
 
   def pullApart[T: universe.TypeTag : ClassTag](value: T): Any = {
-    val m = universe.runtimeMirror(value.getClass.getClassLoader)
+    val mirror = universe.runtimeMirror(value.getClass.getClassLoader)
     val theType = universe.typeTag[T].tpe
-    val fields = theType.decls.filter(isAccessor).map(x => x.asTerm)
-    val im = m.reflect(value)
-    def pluckValue(accessor: universe.TermSymbol): (String, Any) = {
-      val fieldMirror = im.reflectField(accessor)
-      val fieldName = accessor.name.decodedName.toString
-      val fieldValue = fieldMirror.get
+    pullApartWithType(value, theType.typeSymbol)
+  }
+
+  private def pullApartWithType(value: Any, theType: universe.Symbol): Any = {
+    if (isPrimitive(theType)) {
+      value
+    } else {
+      pullApartObject(value, theType)
+    }
+  }
+
+  private def pullApartObject(value: Any, theType: universe.Symbol): Any = {
+    val fields = theType.info.decls.filter(isAccessor).map(x => x.asTerm)
+    val mirror = universe.runtimeMirror(value.getClass.getClassLoader)
+    val instanceMirror = mirror.reflect(value)
+    val tuples = for {
+      field <- fields
+      fieldName = field.name.decodedName.toString
+      fieldMirror = instanceMirror.reflectField(field)
+      rawFieldValue = fieldMirror.get
+      classSymbol = field.asTerm.typeSignature.typeSymbol
+      fieldValue = pullApartWithType(rawFieldValue, classSymbol)
+    } yield {
       (fieldName, fieldValue)
     }
-    fields.map(pluckValue).toMap
+    tuples.toMap
+  }
+
+  private def isPrimitive(theType: universe.Symbol): Boolean = {
+    theType == universe.TypeTag.Int.tpe.typeSymbol
   }
 
   private def isAccessor(symbol: universe.Symbol): Boolean = {

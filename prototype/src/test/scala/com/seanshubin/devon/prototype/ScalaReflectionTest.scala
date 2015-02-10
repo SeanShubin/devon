@@ -72,26 +72,26 @@ class ScalaReflectionTest extends FunSuite {
     println(construct(values, classOf[Rectangle]))
   }
 
-  def construct[T:universe.TypeTag](value:Any, theClass:Class[T]):T = {
+  def construct[T: universe.TypeTag](value: Any, theClass: Class[T]): T = {
     val theType = universe.typeTag[T].tpe.typeSymbol
     constructFromType(value, theType).asInstanceOf[T]
   }
 
-  def constructFromType(value:Any, theType:universe.Symbol):Any = {
+  def constructFromType(value: Any, theType: universe.Symbol): Any = {
     value match {
-      case map:Map[_,_] => constructObject(map.asInstanceOf[Map[String, Any]], theType)
-      case x:Int => x
+      case map: Map[_, _] => constructObject(map.asInstanceOf[Map[String, Any]], theType)
+      case x: Int => x
       case _ =>
         throw new RuntimeException(s"Unsupported: value $value, type $theType")
     }
   }
 
-  private def constructObject(map:Map[String, Any], theType:universe.Symbol):Any = {
-    val constructor:universe.MethodSymbol = theType.info.decl(universe.termNames.CONSTRUCTOR).asMethod
-    if(constructor.typeSignature.paramLists.size != 1) {
+  private def constructObject(map: Map[String, Any], theType: universe.Symbol): Any = {
+    val constructor: universe.MethodSymbol = theType.info.decl(universe.termNames.CONSTRUCTOR).asMethod
+    if (constructor.typeSignature.paramLists.size != 1) {
       throw new RuntimeException("multiple parameter lists not supported")
     }
-    val parameterSymbols:Seq[universe.Symbol] = constructor.typeSignature.paramLists.head
+    val parameterSymbols: Seq[universe.Symbol] = constructor.typeSignature.paramLists.head
     val parameters = for {
       parameterSymbol <- parameterSymbols
       key = parameterSymbol.name.decodedName.toString
@@ -103,6 +103,6 @@ class ScalaReflectionTest extends FunSuite {
     val mirror = universe.runtimeMirror(getClass.getClassLoader)
     val classMirror = mirror.reflectClass(theType.info.typeSymbol.asClass)
     val constructorMethod = classMirror.reflectConstructor(constructor)
-    constructorMethod(parameters:_*)
+    constructorMethod(parameters: _*)
   }
 }
