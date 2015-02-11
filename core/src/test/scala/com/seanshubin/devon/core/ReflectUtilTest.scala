@@ -4,7 +4,7 @@ import org.scalatest.FunSuite
 
 class ReflectUtilTest extends FunSuite {
   test("create from primary constructor") {
-    val values = Map("x" -> 1, "y" -> 2)
+    val values = Map("x" -> "1", "y" -> "2")
     val created: Point = ReflectUtil.construct(values, classOf[Point])
     assert(created === Point(1, 2))
   }
@@ -12,11 +12,11 @@ class ReflectUtilTest extends FunSuite {
   test("pull apart class") {
     val value = Point(1, 2)
     val map = ReflectUtil.pullApart(value)
-    assert(map === Map("x" -> 1, "y" -> 2))
+    assert(map === Map("x" -> "1", "y" -> "2"))
   }
 
   test("create nested from primary constructor") {
-    val values = Map("topLeft" -> Map("x" -> 1, "y" -> 2), "bottomRight" -> Map("x" -> 3, "y" -> 4))
+    val values = Map("topLeft" -> Map("x" -> "1", "y" -> "2"), "bottomRight" -> Map("x" -> "3", "y" -> "4"))
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
     val rectangle = Rectangle(topLeft, bottomRight)
@@ -25,7 +25,7 @@ class ReflectUtilTest extends FunSuite {
   }
 
   test("pull apart nested class") {
-    val values = Map("topLeft" -> Map("x" -> 1, "y" -> 2), "bottomRight" -> Map("x" -> 3, "y" -> 4))
+    val values = Map("topLeft" -> Map("x" -> "1", "y" -> "2"), "bottomRight" -> Map("x" -> "3", "y" -> "4"))
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
     val rectangle = Rectangle(topLeft, bottomRight)

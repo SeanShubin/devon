@@ -12,7 +12,8 @@ object ReflectUtil {
   private def constructFromType(value: Any, theType: universe.Symbol): Any = {
     value match {
       case map: Map[_, _] => constructObject(map.asInstanceOf[Map[String, Any]], theType)
-      case x => x
+      case x:String => stringToType(x, theType)
+      case x => throw new RuntimeException(s"Unsupported: value: $value, type: $theType")
     }
   }
 
@@ -42,7 +43,7 @@ object ReflectUtil {
 
   private def pullApartWithType(value: Any, theType: universe.Symbol): Any = {
     if (isPrimitive(theType)) {
-      value
+      value.toString
     } else {
       pullApartObject(value, theType)
     }
@@ -71,5 +72,10 @@ object ReflectUtil {
 
   private def isAccessor(symbol: universe.Symbol): Boolean = {
     symbol.isTerm && symbol.asTerm.isGetter
+  }
+
+  private def stringToType(x:String, theType: universe.Symbol):Any = {
+    if(theType == universe.TypeTag.Int.tpe.typeSymbol) x.toInt
+    else throw new RuntimeException(s"Unsupported primitive type $theType")
   }
 }
