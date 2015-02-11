@@ -37,9 +37,7 @@ object ReflectUtil {
   }
 
   def pullApart[T: universe.TypeTag : ClassTag](value: T): Any = {
-    val mirror = universe.runtimeMirror(value.getClass.getClassLoader)
-    val theType = universe.typeTag[T].tpe
-    pullApartWithType(value, theType.typeSymbol)
+    pullApartWithType(value, universe.typeTag[T].tpe.typeSymbol)
   }
 
   private def pullApartWithType(value: Any, theType: universe.Symbol): Any = {

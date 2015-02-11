@@ -9,7 +9,7 @@ class CompactDevonFormatterPrintTest extends FunSuite with PropertyChecks {
   val devonMarshaller = new DevonMarshallerImpl
 
   def stringToDevon(source: String): Devon = {
-    val devon = devonMarshaller.stringToAbstractSyntaxTree(source)
+    val devon = devonMarshaller.fromString(source)
     devon
   }
 
@@ -71,7 +71,7 @@ class CompactDevonFormatterPrintTest extends FunSuite with PropertyChecks {
         |()
         |'o p'
         |'q '' r'""".stripMargin
-    val actual = compactString(complex)
+    val actual = devonMarshaller.toCompact(devonMarshaller.stringToIterator(complex))
     val expected = "{a{b c}[d[e f]](){()[f{g h}()]{}i}j}[[k l][]m]n()'o p' 'q '' r'"
     assert(actual === expected)
   }

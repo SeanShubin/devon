@@ -12,13 +12,15 @@ trait DevonMarshaller {
 
   def tokensToIterator(tokenIterator: Iterator[Token]): Iterator[Devon]
 
-  def stringToAbstractSyntaxTree(text: String): Devon
+  def fromString(text: String): Devon
 
   def toCompact(devon: Devon): String
 
+  def toCompact(devonIterator: Iterator[Devon]): String
+
   def toPretty(devon: Devon): Seq[String]
 
-  def valueToAbstractSyntaxTree[T: ru.TypeTag : ClassTag](value: T): Devon
+  def fromValue[T: ru.TypeTag : ClassTag](value: T): Devon
 
-  def toClass[T](devon: Devon, theClass: Class[T]): T
+  def toValue[T](devon: Devon, theClass: Class[T]): T
 }

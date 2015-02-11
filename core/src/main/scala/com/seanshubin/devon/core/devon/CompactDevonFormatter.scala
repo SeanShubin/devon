@@ -10,6 +10,10 @@ class CompactDevonFormatter {
     compactDevon(devon).text
   }
 
+  def format(devonIterator: Iterator[Devon]): String = {
+    compactArrayWithoutBrackets(devonIterator.toSeq).text
+  }
+
   private def compactDevon(devon: Devon): CompactFragment = {
     devon match {
       case DevonNull => CompactFragment(Symbol, "()", Symbol)
@@ -42,6 +46,11 @@ class CompactDevonFormatter {
       val text = "[" + array.map(compactDevon).reduceLeft(CompactFragment.merge).text + "]"
       CompactFragment(Symbol, text, Symbol)
     }
+  }
+
+  private def compactArrayWithoutBrackets(array: Seq[Devon]): CompactFragment = {
+    val text = array.map(compactDevon).reduceLeft(CompactFragment.merge).text
+    CompactFragment(Symbol, text, Symbol)
   }
 
   private def compactMap(map: Map[Devon, Devon]): CompactFragment = {

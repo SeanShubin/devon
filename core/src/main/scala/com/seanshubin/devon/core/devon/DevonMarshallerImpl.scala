@@ -18,7 +18,7 @@ class DevonMarshallerImpl extends DevonMarshaller {
     charsToIterator(charIterator)
   }
 
-  override def stringToAbstractSyntaxTree(text: String): Devon = {
+  override def fromString(text: String): Devon = {
     stringToIterator(text).next()
   }
 
@@ -42,9 +42,11 @@ class DevonMarshallerImpl extends DevonMarshaller {
 
   override def toCompact(devon: Devon): String = compactFormatter.format(devon)
 
+  override def toCompact(devonIterator: Iterator[Devon]): String = compactFormatter.format(devonIterator)
+
   override def toPretty(devon: Devon): Seq[String] = prettyFormatter.format(devon)
 
-  override def valueToAbstractSyntaxTree[T: ru.TypeTag : ClassTag](value: T): Devon = ???
+  override def fromValue[T: ru.TypeTag : ClassTag](value: T): Devon = ???
 
-  override def toClass[T](devon: Devon, theClass: Class[T]): T = ???
+  override def toValue[T](devon: Devon, theClass: Class[T]): T = ???
 }

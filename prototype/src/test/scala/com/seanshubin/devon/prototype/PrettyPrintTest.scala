@@ -9,7 +9,7 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
   val devonMarshaller = new DevonMarshallerImpl
 
   def stringToDevon(source: String): Devon = {
-    val devon = devonMarshaller.stringToAbstractSyntaxTree(source)
+    val devon = devonMarshaller.fromString(source)
     devon
   }
 
@@ -36,7 +36,7 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
 
   test("empty string") {
     val source = "''"
-    val actual = devonMarshaller.toCompact(devonMarshaller.valueToAbstractSyntaxTree(source))
+    val actual = devonMarshaller.toCompact(devonMarshaller.fromString(source))
     val expected = "''"
     assert(actual === expected)
 
