@@ -2,6 +2,9 @@ package com.seanshubin.devon.core
 
 import org.scalatest.FunSuite
 
+import scala.reflect.ClassTag
+import scala.reflect.runtime.universe
+
 class ReflectUtilTest extends FunSuite {
   test("create from primary constructor") {
     val values = Map("x" -> "1", "y" -> "2")
@@ -33,35 +36,49 @@ class ReflectUtilTest extends FunSuite {
     assert(map === values)
   }
 
-  private def symbolToLines(symbol: reflect.runtime.universe.Symbol): Seq[String] = {
-    Seq(
-      s"$symbol",
-      s"Abstract = ${symbol.isAbstract}",
-      s"AbstractOverride = ${symbol.isAbstractOverride}",
-      s"Constructor = ${symbol.isConstructor}",
-      s"Private = ${symbol.isPrivate}",
-      s"Implicit = ${symbol.isImplicit}",
-      s"Class = ${symbol.isClass}",
-      s"Java = ${symbol.isJava}",
-      s"Final = ${symbol.isFinal}",
-      s"ImplementationArtifact = ${symbol.isImplementationArtifact}",
-      s"Macro = ${symbol.isMacro}",
-      s"Method = ${symbol.isMethod}",
-      s"Module = ${symbol.isModule}",
-      s"ModuleClass = ${symbol.isModuleClass}",
-      s"Package = ${symbol.isPackage}",
-      s"PackageClass = ${symbol.isPackageClass}",
-      s"Parameter = ${symbol.isParameter}",
-      s"PrivateThis = ${symbol.isPrivateThis}",
-      s"Protected = ${symbol.isProtected}",
-      s"ProtectedThis = ${symbol.isProtectedThis}",
-      s"Public = ${symbol.isPublic}",
-      s"Specialized = ${symbol.isSpecialized}",
-      s"Static = ${symbol.isStatic}",
-      s"Synthetic = ${symbol.isSynthetic}",
-      s"Term = ${symbol.isTerm}",
-      s"Type = ${symbol.isType}",
-      s""
+  test("handle primitive types") {
+    val composed = SampleWithPrimitiveTypes(
+      sampleByte = 1,
+      sampleShort = 2,
+      sampleChar = 'a',
+      sampleInt = 3,
+      sampleLong = 4,
+      sampleFloat = 5.6F,
+      sampleDouble = 7.8,
+      sampleBoolean = true
     )
+    val parts = Map(
+      "sampleByte" -> "1",
+      "sampleShort" -> "2",
+      "sampleChar" -> "a",
+      "sampleInt" -> "3",
+      "sampleLong" -> "4",
+      "sampleFloat" -> "5.6",
+      "sampleDouble" -> "7.8",
+      "sampleBoolean" -> "true"
+    )
+    testMarshallBothDirections(composed, parts, classOf[SampleWithPrimitiveTypes])
   }
+
+  test("handle top level types") {
+    val composed = SampleWithTopLevelTypes(
+      sampleString = "sampleString",
+      sampleBigInt = BigInt("12345"),
+      sampleBigDecimal = BigDecimal("123.456")
+    )
+    val parts = Map(
+      "sampleString" -> "sampleString",
+      "sampleBigInt" -> "12345",
+      "sampleBigDecimal" -> "123.456"
+    )
+    testMarshallBothDirections(composed, parts, classOf[SampleWithTopLevelTypes])
+  }
+
+  def testMarshallBothDirections[T: universe.TypeTag : ClassTag](composed: T, parts: Map[String, Any], theClass: Class[T]): Unit = {
+    val actualComposed = ReflectUtil.construct(parts, theClass)
+    assert(actualComposed === composed)
+    val actualParts = ReflectUtil.pullApart(composed)
+    assert(actualParts === parts)
+  }
+
 }
