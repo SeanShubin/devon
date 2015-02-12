@@ -89,15 +89,24 @@ object ReflectUtil {
     pullApartWithType(value, universe.typeTag[T].tpe.typeSymbol)
   }
 
-  private def pullApartWithType(value: Any, theType: universe.Symbol): Any = {
-    if (isPrimitive(theType)) {
+  private def pullApartWithType(value: Any, theField: universe.Symbol): Any = {
+    val typeSymbol = theField.info.typeSymbol
+    if (isPrimitive(typeSymbol)) {
       value.toString
+    } else if (isMap(typeSymbol)) {
+      ???
     } else {
-      pullApartObject(value, theType)
+      pullApartObject(value, typeSymbol)
     }
   }
 
+  def isMap(theType: universe.Symbol): Boolean = {
+    val result = theType.fullName == "scala.collection.immutable.Map"
+    result
+  }
+
   private def pullApartObject(value: Any, theType: universe.Symbol): Any = {
+    //    println(theType.info.decl(universe.termNames.CONSTRUCTOR).asMethod.typeSignature.paramLists.head.head.asTerm.typeSignature.typeArgs)
     val fields = theType.info.decls.filter(isAccessor).map(x => x.asTerm)
     val mirror = universe.runtimeMirror(value.getClass.getClassLoader)
     val instanceMirror = mirror.reflect(value)
@@ -106,8 +115,8 @@ object ReflectUtil {
       fieldName = field.name.decodedName.toString
       fieldMirror = instanceMirror.reflectField(field)
       rawFieldValue = fieldMirror.get
-      classSymbol = field.asTerm.typeSignature.typeSymbol
-      fieldValue = pullApartWithType(rawFieldValue, classSymbol)
+      classSymbol = field.asTerm.typeSignature
+      fieldValue = pullApartWithType(rawFieldValue, field)
     } yield {
       (fieldName, fieldValue)
     }
