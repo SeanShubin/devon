@@ -6,7 +6,7 @@ import scala.reflect.ClassTag
 import scala.reflect.runtime.universe
 
 class ReflectUtilTest extends FunSuite {
-  test("create from primary constructor") {
+  test("create class") {
     val values = Map("x" -> "1", "y" -> "2")
     val created: Point = ReflectUtil.construct(values, classOf[Point])
     assert(created === Point(1, 2))
@@ -18,7 +18,7 @@ class ReflectUtilTest extends FunSuite {
     assert(map === Map("x" -> "1", "y" -> "2"))
   }
 
-  test("create nested from primary constructor") {
+  test("create nested class") {
     val values = Map("topLeft" -> Map("x" -> "1", "y" -> "2"), "bottomRight" -> Map("x" -> "3", "y" -> "4"))
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
@@ -36,7 +36,7 @@ class ReflectUtilTest extends FunSuite {
     assert(map === values)
   }
 
-  test("handle primitive types") {
+  test("primitive types") {
     val composed = SampleWithPrimitiveTypes(
       sampleByte = 1,
       sampleShort = 2,
@@ -60,7 +60,7 @@ class ReflectUtilTest extends FunSuite {
     testMarshallBothDirections(composed, parts, classOf[SampleWithPrimitiveTypes])
   }
 
-  test("handle top level types") {
+  test("top level types") {
     val composed = SampleWithTopLevelTypes(
       sampleString = "sampleString",
       sampleBigInt = BigInt("12345"),
@@ -72,6 +72,28 @@ class ReflectUtilTest extends FunSuite {
       "sampleBigDecimal" -> "123.456"
     )
     testMarshallBothDirections(composed, parts, classOf[SampleWithTopLevelTypes])
+  }
+
+  ignore("map") {
+    val composed = SampleWithMap(
+      sampleMap = Map(1 -> "a", 2 -> "b")
+    )
+    val parts = Map(
+      "sampleMap" -> Map("1" -> "a", "2" -> "b")
+    )
+    testMarshallBothDirections(composed, parts, classOf[SampleWithMap])
+  }
+
+  ignore("composite types") {
+    val composed = SampleWithCompositeTypes(
+      sampleMap = Map(1 -> "a", 2 -> "b"),
+      sampleSeq = Seq(Point(1, 2), Point(3, 4))
+    )
+    val parts = Map(
+      "sampleMap" -> Map("1" -> "a", "2" -> "b"),
+      "sampleSeq" -> Seq(Map("x" -> "1", "y" -> "2"), Map("x" -> "3", "y" -> "4"))
+    )
+    testMarshallBothDirections(composed, parts, classOf[SampleWithCompositeTypes])
   }
 
   def testMarshallBothDirections[T: universe.TypeTag : ClassTag](composed: T, parts: Map[String, Any], theClass: Class[T]): Unit = {

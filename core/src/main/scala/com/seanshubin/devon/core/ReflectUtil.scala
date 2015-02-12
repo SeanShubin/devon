@@ -25,10 +25,44 @@ object ReflectUtil {
 
   private def constructFromType(value: Any, theType: universe.Symbol): Any = {
     value match {
-      case map: Map[_, _] => constructObject(map.asInstanceOf[Map[String, Any]], theType)
+      case map: Map[_, _] =>
+        val fullName = theType.fullName
+        if (fullName == "scala.collection.immutable.Map") {
+          ???
+        } else {
+          constructObject(map.asInstanceOf[Map[String, Any]], theType)
+        }
       case x: String => stringToType(x, theType)
       case x => throw new RuntimeException(s"Unsupported: value: $value, type: $theType")
     }
+  }
+
+  private def constructFromParameter(value: Any, parameterSymbol: universe.Symbol): Any = {
+    val theType = parameterSymbol.asTerm.typeSignature.typeSymbol
+    value match {
+      case map: Map[_, _] =>
+        val fullName = theType.fullName
+        if (fullName == "scala.collection.immutable.Map") {
+          val keyType = parameterSymbol.info.typeArgs(0).typeSymbol
+          val valueType = parameterSymbol.info.typeArgs(1).typeSymbol
+          val result = constructMap(keyType, valueType, map.asInstanceOf[Map[Any, Any]])
+          result
+        } else {
+          constructObject(map.asInstanceOf[Map[String, Any]], theType)
+        }
+      case x: String => stringToType(x, theType)
+      case x => throw new RuntimeException(s"Unsupported: value: $value, type: $theType")
+    }
+  }
+
+  private def constructMap(keyType: universe.Symbol, valueType: universe.Symbol, source: Map[Any, Any]): Map[Any, Any] = {
+    def constructEntry(sourceEntry: (Any, Any)): (Any, Any) = {
+      val (sourceKey, sourceValue) = sourceEntry
+      val key = constructFromType(sourceKey, keyType)
+      val value = constructFromType(sourceValue, valueType)
+      (key, value)
+    }
+    source.map(constructEntry)
   }
 
   private def constructObject(map: Map[String, Any], theType: universe.Symbol): Any = {
@@ -43,7 +77,7 @@ object ReflectUtil {
       value = map(key)
       classSymbol = parameterSymbol.asTerm.typeSignature.typeSymbol
     } yield {
-      constructFromType(value, classSymbol)
+      constructFromParameter(value, parameterSymbol)
     }
     val mirror = universe.runtimeMirror(getClass.getClassLoader)
     val classMirror = mirror.reflectClass(theType.info.typeSymbol.asClass)
