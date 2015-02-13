@@ -6,7 +6,7 @@ import scala.reflect.ClassTag
 import scala.reflect.runtime.universe
 
 case class LearningSample(map: Map[Int, String]) {
-  def this(a: Int, b: String) = this(Map(a -> b))
+  //  def this(a: Int, b: String) = this(Map(a -> b))
 }
 
 class LearnReflectionTest extends FunSuite {
@@ -16,9 +16,13 @@ class LearnReflectionTest extends FunSuite {
   }
 
   def foo[T: universe.TypeTag : ClassTag](sample: T): Unit = {
-    val typeTag: universe.TypeTag[SampleWithMap] = universe.typeTag[SampleWithMap]
+    val typeTag: universe.TypeTag[T] = universe.typeTag[T]
     val tpe: universe.Type = typeTag.tpe
     println(s"tpe = $tpe")
+    bar(sample, tpe)
+  }
+
+  def bar[T: universe.TypeTag : ClassTag](sample: T, tpe: universe.Type): Unit = {
     val constructor: universe.MethodSymbol = tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
     println(s"constructor = $constructor")
     val typeSignature: universe.Type = constructor.typeSignature
@@ -47,11 +51,14 @@ class LearnReflectionTest extends FunSuite {
     println(s"toMapMethod = $toMapMethod")
     val mirror = universe.runtimeMirror(param.getClass.getClassLoader)
     println(s"mirror = $mirror")
-    //    val instanceMirror = mirror.reflect(param)
-    //    println(s"instanceMirror = $instanceMirror")
-
-    println(whatIs(param))
-    param.info.decls.foreach(println)
+    val getter = tpe.decls.filter(x => x.name.decodedName.toString == paramName).head.asMethod
+    println(s"getter = $getter")
+    val instanceMirror = mirror.reflect(sample)
+    println(s"instanceMirror = $instanceMirror")
+    val fieldMirror = instanceMirror.reflectField(getter)
+    println(s"fieldMirror = $fieldMirror")
+    val value = fieldMirror.get
+    println(s"value = $value")
   }
 
   def whatIs(x: universe.Symbol): String = {
@@ -92,20 +99,3 @@ class LearnReflectionTest extends FunSuite {
     }
   }
 }
-
-/*
-value sampleMap: method=true ?=false
-value sampleMap: method=false ?=false
-constructor SampleWithMap: method=true ?=true
-method copy: method=true ?=false
-method copy$default$1: method=true ?=false
-method productPrefix: method=true ?=false
-method productArity: method=true ?=false
-method productElement: method=true ?=false
-method productIterator: method=true ?=false
-method canEqual: method=true ?=false
-method hashCode: method=true ?=false
-method toString: method=true ?=false
-method equals: method=true ?=false
-
- */
