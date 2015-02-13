@@ -4,19 +4,21 @@ import scala.reflect.ClassTag
 import scala.reflect.runtime.universe
 
 object ReflectUtil {
-  private val primitiveTypeNames = Seq(
-    "scala.Byte",
-    "scala.Short",
-    "scala.Char",
-    "scala.Int",
-    "scala.Long",
-    "scala.Float",
-    "scala.Double",
-    "scala.Boolean",
-    "java.lang.String",
-    "scala.math.BigInt",
-    "scala.math.BigDecimal"
+  private val primitiveTypeTags: Seq[universe.TypeTag[_]] = Seq(
+    universe.TypeTag.Byte,
+    universe.TypeTag.Short,
+    universe.TypeTag.Char,
+    universe.TypeTag.Int,
+    universe.TypeTag.Long,
+    universe.TypeTag.Float,
+    universe.TypeTag.Double,
+    universe.TypeTag.Boolean,
+    universe.typeTag[java.lang.String],
+    universe.typeTag[scala.math.BigInt],
+    universe.typeTag[scala.math.BigDecimal]
   )
+
+  private val primitiveTypeFullNames: Seq[String] = primitiveTypeTags.map(_.tpe.typeSymbol.fullName)
 
   def construct[T: universe.TypeTag](value: Any, theClass: Class[T]): T = {
     val theType = universe.typeTag[T].tpe.typeSymbol
@@ -86,28 +88,26 @@ object ReflectUtil {
   }
 
   def pullApart[T: universe.TypeTag : ClassTag](value: T): Any = {
-    pullApartWithType(value, universe.typeTag[T].tpe.typeSymbol)
+    pullApartWithType(value, universe.typeTag[T].tpe)
   }
 
-  private def pullApartWithType(value: Any, theField: universe.Symbol): Any = {
-    val typeSymbol = theField.info.typeSymbol
-    if (isPrimitive(typeSymbol)) {
+  private def pullApartWithType(value: Any, tpe: universe.Type): Any = {
+    if (isPrimitive(tpe)) {
       value.toString
-    } else if (isMap(typeSymbol)) {
+    } else if (isMap(tpe)) {
       ???
     } else {
-      pullApartObject(value, typeSymbol)
+      pullApartObject(value, tpe)
     }
   }
 
-  def isMap(theType: universe.Symbol): Boolean = {
-    val result = theType.fullName == "scala.collection.immutable.Map"
+  def isMap(theType: universe.Type): Boolean = {
+    val result = theType.baseClasses.map(_.fullName).contains("scala.collection.immutable.Map")
     result
   }
 
-  private def pullApartObject(value: Any, theType: universe.Symbol): Any = {
-    //    println(theType.info.decl(universe.termNames.CONSTRUCTOR).asMethod.typeSignature.paramLists.head.head.asTerm.typeSignature.typeArgs)
-    val fields = theType.info.decls.filter(isAccessor).map(x => x.asTerm)
+  private def pullApartObject(value: Any, theType: universe.Type): Any = {
+    val fields = theType.decls.filter(isAccessor).map(x => x.asTerm)
     val mirror = universe.runtimeMirror(value.getClass.getClassLoader)
     val instanceMirror = mirror.reflect(value)
     val tuples = for {
@@ -116,15 +116,16 @@ object ReflectUtil {
       fieldMirror = instanceMirror.reflectField(field)
       rawFieldValue = fieldMirror.get
       classSymbol = field.asTerm.typeSignature
-      fieldValue = pullApartWithType(rawFieldValue, field)
+      fieldValue = pullApartWithType(rawFieldValue, field.info)
     } yield {
       (fieldName, fieldValue)
     }
     tuples.toMap
   }
 
-  private def isPrimitive(theType: universe.Symbol): Boolean = {
-    primitiveTypeNames.contains(theType.fullName)
+  private def isPrimitive(theType: universe.Type): Boolean = {
+    val result = primitiveTypeFullNames.contains(theType.typeSymbol.fullName)
+    result
   }
 
   private def isAccessor(symbol: universe.Symbol): Boolean = {

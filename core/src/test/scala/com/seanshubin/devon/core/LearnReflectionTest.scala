@@ -51,11 +51,11 @@ class LearnReflectionTest extends FunSuite {
     println(s"toMapMethod = $toMapMethod")
     val mirror = universe.runtimeMirror(param.getClass.getClassLoader)
     println(s"mirror = $mirror")
-    val getter = tpe.decls.filter(x => x.name.decodedName.toString == paramName).head.asMethod
+    val getter: universe.MethodSymbol = tpe.decls.filter(x => x.name.decodedName.toString == paramName).head.asMethod
     println(s"getter = $getter")
-    val instanceMirror = mirror.reflect(sample)
+    val instanceMirror: universe.InstanceMirror = mirror.reflect(sample)
     println(s"instanceMirror = $instanceMirror")
-    val fieldMirror = instanceMirror.reflectField(getter)
+    val fieldMirror: universe.FieldMirror = instanceMirror.reflectField(getter)
     println(s"fieldMirror = $fieldMirror")
     val value = fieldMirror.get
     println(s"value = $value")
