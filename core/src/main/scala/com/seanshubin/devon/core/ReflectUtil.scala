@@ -95,7 +95,7 @@ object ReflectUtil {
     if (isPrimitive(tpe)) {
       value.toString
     } else if (isMap(tpe)) {
-      ???
+      pullApartMap(value.asInstanceOf[Map[Any, Any]], tpe)
     } else {
       pullApartObject(value, tpe)
     }
@@ -121,6 +121,20 @@ object ReflectUtil {
       (fieldName, fieldValue)
     }
     tuples.toMap
+  }
+
+  private def pullApartMap(theMap: Map[Any, Any], tpe: universe.Type): Any = {
+    val typeArgKey: universe.Type = tpe.typeArgs(0)
+    println(s"typeArgKey = $typeArgKey")
+    val typeArgValue: universe.Type = tpe.typeArgs(1)
+    println(s"typeArgValue = $typeArgValue")
+    for {
+      (key, value) <- theMap
+    } yield {
+      println(s"key = $key")
+      println(s"value = $value")
+    }
+    ???
   }
 
   private def isPrimitive(theType: universe.Type): Boolean = {
