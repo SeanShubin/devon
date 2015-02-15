@@ -22,7 +22,7 @@ class LearnReflectionTest extends FunSuite {
     bar(sample, tpe)
   }
 
-  def bar[T: universe.TypeTag : ClassTag](sample: T, tpe: universe.Type): Unit = {
+  def bar(value: Any, tpe: universe.Type): Unit = {
     val constructor: universe.MethodSymbol = tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
     println(s"constructor = $constructor")
     val typeSignature: universe.Type = constructor.typeSignature
@@ -35,30 +35,40 @@ class LearnReflectionTest extends FunSuite {
     println(s"param = $param")
     val paramName: String = param.name.decodedName.toString
     println(s"paramName = $paramName")
-    val typeSymbol: universe.ClassSymbol = param.info.typeSymbol.asClass
+    val paramType: universe.Type = param.info
+    println(s"paramType = $paramType")
+    val typeSymbol: universe.ClassSymbol = paramType.typeSymbol.asClass
     println(s"typeSymbol = $typeSymbol")
     val baseClassNames = typeSymbol.baseClasses.map(x => x.fullName).mkString(" ")
     println(s"baseClassNames = $baseClassNames")
-    val typeArgKey: universe.Type = param.info.typeArgs(0)
+    val typeArgKey: universe.Type = paramType.typeArgs(0)
     println(s"typeArgKey = $typeArgKey")
-    val typeArgValue: universe.Type = param.info.typeArgs(1)
+    val typeArgValue: universe.Type = paramType.typeArgs(1)
     println(s"typeArgValue = $typeArgValue")
     val typeArgKeyClasses = typeArgKey.baseClasses.map(x => x.fullName).mkString(" ")
     println(s"typeArgKeyClasses = $typeArgKeyClasses")
     val typeArgValueClasses = typeArgValue.baseClasses.map(x => x.fullName).mkString(" ")
     println(s"typeArgValueClasses = $typeArgValueClasses")
-    val toMapMethod: universe.MethodSymbol = param.info.decl(universe.TermName("toMap")).asMethod
+    val toMapMethod: universe.MethodSymbol = paramType.decl(universe.TermName("toMap")).asMethod
     println(s"toMapMethod = $toMapMethod")
     val mirror = universe.runtimeMirror(param.getClass.getClassLoader)
     println(s"mirror = $mirror")
     val getter: universe.MethodSymbol = tpe.decls.filter(x => x.name.decodedName.toString == paramName).head.asMethod
     println(s"getter = $getter")
-    val instanceMirror: universe.InstanceMirror = mirror.reflect(sample)
-    println(s"instanceMirror = $instanceMirror")
-    val fieldMirror: universe.FieldMirror = instanceMirror.reflectField(getter)
-    println(s"fieldMirror = $fieldMirror")
-    val value = fieldMirror.get
-    println(s"value = $value")
+    val getterTypeSignature = getter.typeSignature.resultType
+    println(s"getterTypeSignature = $getterTypeSignature")
+
+
+    //    val instanceMirror: universe.InstanceMirror = mirror.reflect(value)
+    //    println(s"instanceMirror = $instanceMirror")
+    //    val fieldMirror: universe.FieldMirror = instanceMirror.reflectField(getter)
+    //    println(s"fieldMirror = $fieldMirror")
+    //    val fieldValue = fieldMirror.get
+    //    println(s"fieldValue = $fieldValue")
+  }
+
+  private def isAccessor(symbol: universe.Symbol): Boolean = {
+    symbol.isTerm && symbol.asTerm.isGetter
   }
 
   def whatIs(x: universe.Symbol): String = {

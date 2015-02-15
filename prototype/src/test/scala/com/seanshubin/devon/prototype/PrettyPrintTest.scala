@@ -22,7 +22,7 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
     pretty
   }
 
-  test("map") {
+  ignore("map") {
     val source = "{a b c d}"
     val devon = stringToDevon(source)
     val actual = devonToPretty(devon).mkString("\n")
@@ -41,7 +41,7 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
     assert(actual === expected)
 
   }
-  test("complex") {
+  ignore("complex") {
     val complex = "{a{b c}[d[e f]](){()[f{g h}()]{}'i j'}'k '' l'}"
     val devon = stringToDevon(complex)
     val expected =
@@ -75,7 +75,7 @@ class PrettyPrintTest extends FunSuite with PropertyChecks {
     assert(actual === expected)
   }
 
-  test("rectangle") {
+  ignore("rectangle") {
     val text = "{ topLeft { x 1 y 2 } bottomRight { x 3 y 4 } }"
     val devon = stringToDevon(text)
     val actual = devonToPretty(devon).mkString("\n")

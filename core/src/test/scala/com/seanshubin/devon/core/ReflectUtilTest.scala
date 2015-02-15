@@ -84,7 +84,7 @@ class ReflectUtilTest extends FunSuite {
     testMarshallBothDirections(composed, parts, classOf[SampleWithMap])
   }
 
-  ignore("composite types") {
+  test("composite types") {
     val composed = SampleWithCompositeTypes(
       sampleMap = Map(1 -> "a", 2 -> "b"),
       sampleSeq = Seq(Point(1, 2), Point(3, 4))

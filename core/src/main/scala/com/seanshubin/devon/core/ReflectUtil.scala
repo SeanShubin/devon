@@ -40,20 +40,28 @@ object ReflectUtil {
   }
 
   private def constructFromParameter(value: Any, parameterSymbol: universe.Symbol): Any = {
-    val theType = parameterSymbol.asTerm.typeSignature.typeSymbol
+    val tpe = parameterSymbol.asTerm.typeSignature
+    val typeSymbol = tpe.typeSymbol
     value match {
       case map: Map[_, _] =>
-        val fullName = theType.fullName
-        if (fullName == "scala.collection.immutable.Map") {
+        if (isMap(tpe)) {
           val keyType = parameterSymbol.info.typeArgs(0).typeSymbol
           val valueType = parameterSymbol.info.typeArgs(1).typeSymbol
           val result = constructMap(keyType, valueType, map.asInstanceOf[Map[Any, Any]])
           result
         } else {
-          constructObject(map.asInstanceOf[Map[String, Any]], theType)
+          constructObject(map.asInstanceOf[Map[String, Any]], typeSymbol)
         }
-      case x: String => stringToType(x, theType)
-      case x => throw new RuntimeException(s"Unsupported: value: $value, type: $theType")
+      case seq: Seq[_] =>
+        if (isSeq(tpe)) {
+          val valueType = parameterSymbol.info.typeArgs(0).typeSymbol
+          val result = constructArray(valueType, seq.asInstanceOf[Seq[Any]])
+          result
+        } else {
+          ???
+        }
+      case x: String => stringToType(x, typeSymbol)
+      case x => throw new RuntimeException(s"Unsupported: value: $value, type: $typeSymbol")
     }
   }
 
@@ -63,6 +71,14 @@ object ReflectUtil {
       val key = constructFromType(sourceKey, keyType)
       val value = constructFromType(sourceValue, valueType)
       (key, value)
+    }
+    source.map(constructEntry)
+  }
+
+  private def constructArray(valueType: universe.Symbol, source: Seq[Any]): Seq[Any] = {
+    def constructEntry(sourceEntry: Any): Any = {
+      val value = constructFromType(sourceEntry, valueType)
+      value
     }
     source.map(constructEntry)
   }
@@ -88,14 +104,26 @@ object ReflectUtil {
   }
 
   def pullApart[T: universe.TypeTag : ClassTag](value: T): Any = {
-    pullApartWithType(value, universe.typeTag[T].tpe)
+    val tpe = universe.typeTag[T].tpe
+    pullApartWithType(value, tpe)
   }
 
   private def pullApartWithType(value: Any, tpe: universe.Type): Any = {
     if (isPrimitive(tpe)) {
       value.toString
+    } else {
+      pullApartObject(value, tpe)
+    }
+  }
+
+  private def pullApartWithTerm(value: Any, field: universe.TermSymbol): Any = {
+    val tpe: universe.Type = field.info
+    if (isPrimitive(tpe)) {
+      value.toString
     } else if (isMap(tpe)) {
-      pullApartMap(value.asInstanceOf[Map[Any, Any]], tpe)
+      pullApartMap(value.asInstanceOf[Map[Any, Any]], field)
+    } else if (isSeq(tpe)) {
+      pullApartSeq(value.asInstanceOf[Seq[Any]], field)
     } else {
       pullApartObject(value, tpe)
     }
@@ -106,8 +134,13 @@ object ReflectUtil {
     result
   }
 
-  private def pullApartObject(value: Any, theType: universe.Type): Any = {
-    val fields = theType.decls.filter(isAccessor).map(x => x.asTerm)
+  def isSeq(theType: universe.Type): Boolean = {
+    val result = theType.baseClasses.map(_.fullName).contains("scala.collection.Seq")
+    result
+  }
+
+  private def pullApartObject(value: Any, tpe: universe.Type): Any = {
+    val fields = tpe.decls.filter(isAccessor).map(x => x.asTerm)
     val mirror = universe.runtimeMirror(value.getClass.getClassLoader)
     val instanceMirror = mirror.reflect(value)
     val tuples = for {
@@ -116,25 +149,35 @@ object ReflectUtil {
       fieldMirror = instanceMirror.reflectField(field)
       rawFieldValue = fieldMirror.get
       classSymbol = field.asTerm.typeSignature
-      fieldValue = pullApartWithType(rawFieldValue, field.info)
+      fieldValue = pullApartWithTerm(rawFieldValue, field)
     } yield {
       (fieldName, fieldValue)
     }
     tuples.toMap
   }
 
-  private def pullApartMap(theMap: Map[Any, Any], tpe: universe.Type): Any = {
-    val typeArgKey: universe.Type = tpe.typeArgs(0)
-    println(s"typeArgKey = $typeArgKey")
-    val typeArgValue: universe.Type = tpe.typeArgs(1)
-    println(s"typeArgValue = $typeArgValue")
-    for {
-      (key, value) <- theMap
+  private def pullApartMap(theMap: Map[Any, Any], field: universe.TermSymbol): Any = {
+    val typeArgKey: universe.Type = field.typeSignature.resultType.typeArgs(0)
+    val typeArgValue: universe.Type = field.typeSignature.resultType.typeArgs(1)
+    val entries = for {
+      (rawKey, rawValue) <- theMap
     } yield {
-      println(s"key = $key")
-      println(s"value = $value")
+      val key = pullApartWithType(rawKey, typeArgKey)
+      val value = pullApartWithType(rawValue, typeArgValue)
+      (key, value)
     }
-    ???
+    entries.toMap
+  }
+
+  private def pullApartSeq(theSeq: Seq[Any], field: universe.TermSymbol): Any = {
+    val typeArgValue: universe.Type = field.typeSignature.resultType.typeArgs(0)
+    val entries = for {
+      rawValue <- theSeq
+    } yield {
+      val value = pullApartWithType(rawValue, typeArgValue)
+      value
+    }
+    entries.toSeq
   }
 
   private def isPrimitive(theType: universe.Type): Boolean = {
