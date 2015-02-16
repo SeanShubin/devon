@@ -19,8 +19,8 @@ class DevonReflection(reflection: Reflection) {
   private def makeDevon(dynamic: Any): Devon = {
     dynamic match {
       case x: String => makeDevonString(x)
-      case x: Seq[Any] => makeDevonSeq(x)
-      case x: Map[Any, Any] => makeDevonMap(x)
+      case x: Seq[_] => makeDevonSeq(x)
+      case x: Map[_, _] => makeDevonMap(x)
       case null => DevonNull
       case x => throw new RuntimeException(s"Unsupported: $dynamic of type ${dynamic.getClass.getName}")
     }
@@ -28,7 +28,7 @@ class DevonReflection(reflection: Reflection) {
 
   private def makeDevonString(x: String): DevonString = DevonString(x)
 
-  private def makeDevonMap(x: Map[Any, Any]): DevonMap = {
+  private def makeDevonMap(x: Map[_, _]): DevonMap = {
     val entries = for {
       (key, value) <- x
       devonKey = makeDevon(key)
@@ -39,7 +39,7 @@ class DevonReflection(reflection: Reflection) {
     DevonMap(entries.toMap)
   }
 
-  private def makeDevonSeq(x: Seq[Any]): DevonArray = {
+  private def makeDevonSeq(x: Seq[_]): DevonArray = {
     val devonElements = x.map(makeDevon)
     DevonArray(devonElements)
   }
