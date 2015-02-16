@@ -31,6 +31,7 @@ Intentionally not features
 - no support for primitives other than strings (not the business of a notation to know about data types)
 - no escaping (nothing stops you from assigning meaning to your own escape characters in a string)
 - no comments (you build comments into your data structure, and have your consumer ignore them)
+- no references (instead, treat a value as an id)
 
 Overview
 ===
