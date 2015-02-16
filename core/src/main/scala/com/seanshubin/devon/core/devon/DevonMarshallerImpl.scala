@@ -2,9 +2,9 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.ParserIterator
 import com.seanshubin.devon.core.token.{Token, TokenMarshallerImpl, TokenWhitespace}
+import com.seanshubin.utility.reflection.{ReflectionImpl, SimpleTypeConversion}
 
-import scala.reflect.ClassTag
-import scala.reflect.runtime.{universe => ru}
+import scala.reflect.runtime.universe
 
 class DevonMarshallerImpl extends DevonMarshaller {
   private val ruleLookup = new DevonRuleLookup
@@ -12,6 +12,8 @@ class DevonMarshallerImpl extends DevonMarshaller {
   private val tokenMarshaller = new TokenMarshallerImpl
   private val compactFormatter = new CompactDevonFormatter
   private val prettyFormatter = new PrettyDevonFormatter
+  private val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
+  private val devonReflection = new DevonReflection(reflection)
 
   override def stringToIterator(text: String): Iterator[Devon] = {
     val charIterator = text.toIterator
@@ -46,7 +48,7 @@ class DevonMarshallerImpl extends DevonMarshaller {
 
   override def toPretty(devon: Devon): Seq[String] = prettyFormatter.format(devon)
 
-  override def fromValue[T: ru.TypeTag : ClassTag](value: T): Devon = ???
+  override def fromValue[T: universe.TypeTag](value: T): Devon = devonReflection.fromValue(value)
 
-  override def toValue[T](devon: Devon, theClass: Class[T]): T = ???
+  override def toValue[T: universe.TypeTag](devon: Devon, theClass: Class[T]): T = devonReflection.toValue(devon, theClass)
 }

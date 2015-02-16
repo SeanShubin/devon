@@ -9,6 +9,10 @@
     <name>devon-core</name>
     <dependencies>
         <dependency>
+            <groupId>com.seanshubin</groupId>
+            <artifactId>utility-reflection</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
         </dependency>

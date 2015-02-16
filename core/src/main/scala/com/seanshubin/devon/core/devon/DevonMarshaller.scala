@@ -2,8 +2,7 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token.Token
 
-import scala.reflect.ClassTag
-import scala.reflect.runtime.{universe => ru}
+import scala.reflect.runtime.universe
 
 trait DevonMarshaller {
   def stringToIterator(text: String): Iterator[Devon]
@@ -20,7 +19,7 @@ trait DevonMarshaller {
 
   def toPretty(devon: Devon): Seq[String]
 
-  def fromValue[T: ru.TypeTag : ClassTag](value: T): Devon
+  def fromValue[T: universe.TypeTag](value: T): Devon
 
-  def toValue[T](devon: Devon, theClass: Class[T]): T
+  def toValue[T: universe.TypeTag](devon: Devon, theClass: Class[T]): T
 }

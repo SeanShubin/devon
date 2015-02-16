@@ -81,7 +81,7 @@ class DevonMarshallerTest extends FunSuite {
     assert(prettyLines(2) === "}")
   }
 
-  ignore("from value") {
+  test("from value") {
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
     val rectangle = Rectangle(topLeft, bottomRight)
@@ -89,5 +89,16 @@ class DevonMarshallerTest extends FunSuite {
     val devon = devonMarshaller.fromValue(rectangle)
     val compact = devonMarshaller.toCompact(devon)
     assert(compact === "{topLeft{x 1 y 2}bottomRight{x 3 y 4}}")
+  }
+
+  test("to value") {
+    val topLeft = Point(1, 2)
+    val bottomRight = Point(3, 4)
+    val expectedRectangle = Rectangle(topLeft, bottomRight)
+    val compact = "{topLeft{x 1 y 2}bottomRight{x 3 y 4}}"
+    val devonMarshaller = new DevonMarshallerImpl()
+    val devon = devonMarshaller.fromString(compact)
+    val actualRectangle = devonMarshaller.toValue(devon, classOf[Rectangle])
+    assert(actualRectangle === expectedRectangle)
   }
 }
