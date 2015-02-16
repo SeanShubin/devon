@@ -29,10 +29,6 @@
             <groupId>org.scalacheck</groupId>
             <artifactId>scalacheck_2.11</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.propensive</groupId>
-            <artifactId>rapture-json_2.11</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>
