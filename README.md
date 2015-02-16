@@ -1,8 +1,12 @@
 DeVoN - Developers Value Notation
 ===
 - A simple, language neutral notation for representing structured values.
-- My main motivation for creating this was to overcome the [json](http://www.json.org) limitation of only allowing string names in its name/value pairs for objects.
-- I did look at [edn](https://github.com/edn-format/edn), but decided a simpler notation was better suited to my needs.  Be sure to think about what you are doing, examine your options, and choose the option better suited to your needs.
+- I wanted something as easy to read as [yaml](http://www.yaml.org/), as easy to parse as [json](http://www.json.org/), and a clean syntax like [edn](https://github.com/edn-format/edn)
+- What I did not want was
+    - The verbosity of [xml](http://www.w3.org/TR/REC-xml/)
+    - The limitation where [json](http://www.json.org) only allows strings as keys
+    - The complexity of parsing [yaml](http://www.yaml.org/)
+    - The over-specification of implementation details of [edn](https://github.com/edn-format/edn), such as distinguishing between list and vector
 
 Goals
 ===
@@ -16,12 +20,17 @@ Features
 ===
 - no unnecessary punctuation
 - the notation only gives special meaning to 11 characters
-- whitespace is not significant
+- whitespace outside of a quoted string is not significant
 - language independent (no language specific words like "true", "false", "null")
 - maps to common data structures
 - support for dictionaries, arrays, null, and strings
-- no escaping
-- leaves interpretation of primitive values to the consumer
+- supports streaming (no top level element)
+
+Intentionally not features
+===
+- no support for primitives other than strings (not the business of a notation to know about data types)
+- no escaping (nothing stops you from assigning meaning to your own escape characters in a string)
+- no comments (you build comments into your data structure, and have your consumer ignore them)
 
 Overview
 ===
@@ -127,27 +136,6 @@ Ignore tokens of type "whitespace-block".
     pairs = { pair }
     pair = element element
 
-Planned Features for Scala Implementation
-===
-
-- Pretty Print
-- Store case class into notation
-- Load notation into case class
-- Java support
-
-Design Decisions
-===
-
-Features considered, but rejected in favor of simplicity
-===
-- 'here' documents
-- double quoted strings
-- escape characters
-
-Features almost rejected in favor of simplicity, but kept out of necessity
-===
-- null support
-
 Sample
 ===
 A complex object, followed by an array, string, null, quoted string, and quoted string with an inner quote
@@ -182,3 +170,17 @@ A complex object, followed by an array, string, null, quoted string, and quoted 
     'o p'
     'q '' r'
 
+Alternatives
+===
+
+Be sure you think about your needs.
+DeVoN was designed to be very good at a specific set of goals.
+It was not designed to be everything to everyone.
+Before choosing a notation, be sure to consider the advantages and disadvantages of your alternatives.
+
+Here are some alternatives worth considering
+
+- [xml](http://www.w3.org/TR/REC-xml/)
+- [json](http://www.json.org/)
+- [yaml](http://www.yaml.org/)
+- [edn](https://github.com/edn-format/edn)
