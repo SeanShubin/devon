@@ -1,9 +1,9 @@
 {
   "searchPaths": [
     [
-      "console",
+      "core",
       "target",
-      "devon-console.jar"
+      "devon-core-1.0-SNAPSHOT.jar"
     ]
   ],
   "styleSheet": ["dependency.css"],
@@ -25,7 +25,7 @@
     "excludeRegex": []
   },
   "generatedReportDirectory": [
-    "console",
+    "core",
     "target",
     "dependency-report"
   ],
