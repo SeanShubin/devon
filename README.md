@@ -10,8 +10,8 @@ DeVoN - Developers Value Notation
 
 Entry Points
 ===
-- If you want to use default settings [DefaultDevonMarshaller](blob/master/core/src/main/scala/com/seanshubin/devon/core/devon/DefaultDevonMarshaller.scala)
-- If you want full control over configuration [DevonMarshallerImpl](blob/master/core/src/main/scala/com/seanshubin/devon/core/devon/DevonMarshallerImpl.scala)
+- If you want to use default settings [DefaultDevonMarshaller](core/src/main/scala/com/seanshubin/devon/core/devon/DefaultDevonMarshaller.scala)
+- If you want full control over configuration [DevonMarshallerImpl](core/src/main/scala/com/seanshubin/devon/core/devon/DevonMarshallerImpl.scala)
 
 Goals
 ===
