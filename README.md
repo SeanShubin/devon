@@ -8,6 +8,11 @@ DeVoN - Developers Value Notation
     - The complexity of parsing [yaml](http://www.yaml.org/)
     - The over-specification of implementation details of [edn](https://github.com/edn-format/edn), such as distinguishing between list and vector
 
+Entry Points
+===
+- If you want to use default settings [DefaultDevonMarshaller](blob/master/core/src/main/scala/com/seanshubin/devon/core/devon/DefaultDevonMarshaller.scala)
+- If you want full control over configuration [DevonMarshallerImpl](blob/master/core/src/main/scala/com/seanshubin/devon/core/devon/DevonMarshallerImpl.scala)
+
 Goals
 ===
 - minimal (nothing unnecessary, everything that exists, exists for a reason)
