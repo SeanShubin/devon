@@ -101,4 +101,21 @@ class DevonMarshallerTest extends FunSuite {
     val actualRectangle = devonMarshaller.toValue(devon, classOf[Rectangle])
     assert(actualRectangle === expectedRectangle)
   }
+
+  test("composite from value") {
+    val composite = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2,3)))
+    val devonMarshaller = new DefaultDevonMarshaller()
+    val devon = devonMarshaller.fromValue(composite)
+    val compact = devonMarshaller.toCompact(devon)
+    assert(compact === "{sampleMap{1 a}sampleSeq[{x 2 y 3}]}")
+  }
+
+  test("composite to value") {
+    val expected = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2,3)))
+    val compact = "{sampleMap{1 a}sampleSeq[{x 2 y 3}]}"
+    val devonMarshaller = new DefaultDevonMarshaller()
+    val devon = devonMarshaller.fromString(compact)
+    val actual = devonMarshaller.toValue(devon, classOf[SampleWithCompositeTypes])
+    assert(actual === expected)
+  }
 }
