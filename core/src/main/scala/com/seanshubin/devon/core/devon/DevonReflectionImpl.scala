@@ -2,6 +2,7 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.utility.reflection.Reflection
 
+import scala.collection.immutable.ListMap
 import scala.reflect.runtime.universe
 
 class DevonReflectionImpl(reflection: Reflection) extends DevonReflection {
@@ -36,7 +37,7 @@ class DevonReflectionImpl(reflection: Reflection) extends DevonReflection {
     } yield {
       (devonKey, devonValue)
     }
-    DevonMap(entries.toMap)
+    DevonMap(ListMap(entries.toSeq: _*))
   }
 
   private def makeDevonSeq(x: Seq[_]): DevonArray = {

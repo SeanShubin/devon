@@ -118,4 +118,12 @@ class DevonMarshallerTest extends FunSuite {
     val actual = devonMarshaller.toValue(devon, classOf[SampleWithCompositeTypes])
     assert(actual === expected)
   }
+
+  test("preserve order") {
+    val devonMarshaller = new DefaultDevonMarshaller()
+    val value = PreserveOrder(1, 2, 3, 4, 5)
+    val devon = devonMarshaller.fromValue(value)
+    val compact = devonMarshaller.toCompact(devon)
+    assert(compact === "{a 1 b 2 c 3 d 4 e 5}")
+  }
 }

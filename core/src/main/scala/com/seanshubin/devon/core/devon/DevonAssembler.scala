@@ -3,6 +3,8 @@ package com.seanshubin.devon.core.devon
 import com.seanshubin.devon.core.token.{Token, TokenNull, TokenString}
 import com.seanshubin.devon.core.{Assembler, ParseTree, ParseTreeBranch, ParseTreeLeaf}
 
+import scala.collection.immutable.ListMap
+
 class DevonAssembler extends Assembler[Token, Devon] {
   override def assembleFromParseTree(parseTree: ParseTree[Token]): Devon = {
     extract(parseTree)
@@ -19,10 +21,10 @@ class DevonAssembler extends Assembler[Token, Devon] {
     }
   }
 
-  private def extractObject(children: List[ParseTree[Token]]): Map[Devon, Devon] = {
+  private def extractObject(children: List[ParseTree[Token]]): ListMap[Devon, Devon] = {
     val List(_, pairsParseTree, _) = children
     val pairs = extractPairs(pairsParseTree)
-    val map = pairs.toMap
+    val map = ListMap(pairs: _*)
     map
   }
 
