@@ -103,7 +103,7 @@ class DevonMarshallerTest extends FunSuite {
   }
 
   test("composite from value") {
-    val composite = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2,3)))
+    val composite = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2, 3)))
     val devonMarshaller = new DefaultDevonMarshaller()
     val devon = devonMarshaller.fromValue(composite)
     val compact = devonMarshaller.toCompact(devon)
@@ -111,7 +111,7 @@ class DevonMarshallerTest extends FunSuite {
   }
 
   test("composite to value") {
-    val expected = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2,3)))
+    val expected = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2, 3)))
     val compact = "{sampleMap{1 a}sampleSeq[{x 2 y 3}]}"
     val devonMarshaller = new DefaultDevonMarshaller()
     val devon = devonMarshaller.fromString(compact)
