@@ -23,7 +23,7 @@ class DevonIteratorFactoryImpl(ruleLookup: RuleLookup[Token],
     }
     val tokenIterator = unfilteredTokenIterator.filter(notWhitespace)
     val devonIterator = new ParserIterator[Token, Devon](
-      tokenIterator, ruleLookup, assembler, "element", DevonEnd)
+      tokenIterator, ruleLookup, assembler, "element")
     devonIterator
   }
 }

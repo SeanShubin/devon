@@ -8,7 +8,7 @@ class TokenMarshallerImpl extends TokenMarshaller {
 
   override def charsToIterator(charIterator: Iterator[Char]): Iterator[Token] = {
     val tokenIterator = new ParserIterator[Char, Token](
-      charIterator, ruleLookup, assembler, "token", TokenEnd)
+      charIterator, ruleLookup, assembler, "token")
     tokenIterator
   }
 

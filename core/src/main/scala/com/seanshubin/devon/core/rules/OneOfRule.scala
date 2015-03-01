@@ -5,7 +5,6 @@ import com.seanshubin.devon.core._
 case class OneOfRule[A](ruleLookup: RuleLookup[A], thisRuleName: String, ruleNames: String*) extends Rule[A] {
   override def apply(cursor: Cursor[A]): MatchResult[A] = {
     val successfulMatchFromCursor = successfulMatch(_: String, cursor)
-
     ruleNames.toStream.map(successfulMatchFromCursor).flatten.headOption match {
       case Some(matchResult) => matchResult
       case None => failure()
@@ -23,6 +22,6 @@ case class OneOfRule[A](ruleLookup: RuleLookup[A], thisRuleName: String, ruleNam
 
   private def failure(): MatchResult[A] = {
     val ruleNamesString = ruleNames.mkString(", ")
-    MatchFailure(thisRuleName, s"expected one of $ruleNamesString")
+    MatchFailure(thisRuleName, s"expected one of: $ruleNamesString")
   }
 }
