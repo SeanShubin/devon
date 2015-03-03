@@ -6,11 +6,11 @@ import com.seanshubin.devon.core.{Assembler, ParserIterator, RuleLookup}
 class DevonIteratorFactoryImpl(ruleLookup: RuleLookup[Token],
                                assembler: Assembler[Token, Devon],
                                tokenMarshaller: TokenMarshaller) extends DevonIteratorFactory {
-  def stringToIterator(text: String): Iterator[Devon] = {
+  override def stringToIterator(text: String): Iterator[Devon] = {
     charsToIterator(text.toIterator)
   }
 
-  def charsToIterator(charIterator: Iterator[Char]): Iterator[Devon] = {
+  override def charsToIterator(charIterator: Iterator[Char]): Iterator[Devon] = {
     tokensToIterator(tokenMarshaller.charsToIterator(charIterator))
   }
 
