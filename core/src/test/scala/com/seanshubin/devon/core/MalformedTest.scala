@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 class MalformedTest extends FunSuite {
   test("open brace only") {
     val text = "{"
-    val devonMarshaller = new DefaultDevonMarshaller
+    val devonMarshaller = DefaultDevonMarshaller
     val exception = intercept[RuntimeException] {
       devonMarshaller.fromString(text)
     }
