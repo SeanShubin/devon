@@ -2,11 +2,12 @@ DeVoN - Developers Value Notation
 ===
 - A simple, language neutral notation for representing structured values.
 - I wanted something as easy to read as [yaml](http://www.yaml.org/), as easy to parse as [json](http://www.json.org/), and a clean syntax like [edn](https://github.com/edn-format/edn)
-- What I did not want was
-    - The verbosity of [xml](http://www.w3.org/TR/REC-xml/)
-    - The limitation where [json](http://www.json.org) only allows strings as keys
-    - The complexity of parsing [yaml](http://www.yaml.org/)
-    - The over-specification of implementation details of [edn](https://github.com/edn-format/edn), such as distinguishing between list and vector
+- I choose not to use
+    - [xml](http://www.w3.org/TR/REC-xml/), too verbose
+    - [json](http://www.json.org), only allows strings as keys, too verbose
+    - [yaml](http://www.yaml.org/), too complex to parse
+    - [edn](https://github.com/edn-format/edn), specifies implementation details, such as distinguishing between list and vector.  Not minimal, lots of features beyond storing structured values.
+    - [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md), not minimal, lots of features beyond storing structured values.
 
 Entry Points
 ===
@@ -190,3 +191,4 @@ Here are some alternatives worth considering
 - [json](http://www.json.org/)
 - [yaml](http://www.yaml.org/)
 - [edn](https://github.com/edn-format/edn)
+- [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md)
