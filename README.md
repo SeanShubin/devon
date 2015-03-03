@@ -77,6 +77,7 @@ map
 * the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
 * the transport layer MUST preserve duplicate keys, although in the case of key-value pairs with duplicate keys, the consumer MAY enact a rule for deciding which key-value pairs to keep and which to discard
 * this can be used to model dictionaries (such as java maps), or records (such as java classes)
+* the consumer SHOULD ignore keys it does not understand, for forward compatibility
 
 Specification
 ===
