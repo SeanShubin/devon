@@ -25,7 +25,7 @@ Goals
 Features
 ===
 - no unnecessary punctuation
-- the notation only gives special meaning to 11 characters
+- the notation only gives special meaning to 11 characters (6 structural, 4 whitespace, and quote)
 - whitespace outside of a quoted string is not significant
 - language independent (no language specific words like "true", "false", "null")
 - maps to common data structures
@@ -37,7 +37,7 @@ Intentionally not features
 - no support for primitives other than strings (not the business of a notation to know about data types)
 - no escaping (nothing stops you from assigning meaning to your own escape characters in a string)
 - no comments (you build comments into your data structure, and have your consumer ignore them)
-- no references (instead, treat a value as an id)
+- no references (you can designate a value as an id, and refer to it from another value)
 
 Overview
 ===
@@ -65,18 +65,18 @@ unit
 sequence
 
 * []
-* the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
 * this can be used to model tuples, ordered sequences, or unordered sets
+* the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
 
 map
 
 * {}
 * a set of key-value pairs
+* this can be used to model dictionaries (such as java maps), or records (such as java classes)
 * the number of elements MUST be even
 * duplicate keys SHOULD NOT be present
 * the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
 * the transport layer MUST preserve duplicate keys, although in the case of key-value pairs with duplicate keys, the consumer MAY enact a rule for deciding which key-value pairs to keep and which to discard
-* this can be used to model dictionaries (such as java maps), or records (such as java classes)
 * the consumer SHOULD ignore keys it does not understand, for forward compatibility
 
 Specification
