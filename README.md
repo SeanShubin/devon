@@ -1,6 +1,6 @@
 DeVoN - Developers Value Notation
 ===
-- A simple, language neutral notation for representing structured values.
+- A minimal, complete, language neutral notation for representing structured values.
 - I wanted something as easy to read as [yaml](http://www.yaml.org/), as easy to parse as [json](http://www.json.org/), and a clean syntax like [edn](https://github.com/edn-format/edn)
 - I choose not to use
     - [xml](http://www.w3.org/TR/REC-xml/), too verbose
