@@ -9,11 +9,6 @@ DeVoN - Developers Value Notation
     - [edn](https://github.com/edn-format/edn), specifies implementation details, such as distinguishing between list and vector.  Not minimal, lots of features beyond representing structured values.
     - [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md), not minimal, lots of features beyond representing structured values.
 
-Entry Points
-===
-- If you want to use default settings [DefaultDevonMarshaller](core/src/main/scala/com/seanshubin/devon/core/devon/DefaultDevonMarshaller.scala)
-- If you want full control over configuration [DevonMarshallerImpl](core/src/main/scala/com/seanshubin/devon/core/devon/DevonMarshallerImpl.scala)
-
 Goals
 ===
 - minimal (nothing unnecessary, everything that exists, exists for a reason)
@@ -21,6 +16,74 @@ Goals
 - human readable/writable (can pretty print)
 - machine readable/writable (easy to parse and format)
 - complete (can support any data structure)
+
+Examples
+===
+
+Simple strings.
+Devon does not require a top level element, which makes it easy to append more devon elements to a file.
+An empty string must be represented as two single quotes.
+Spaces are only supported within a quoted string.
+To represent a single quote in a quoted string, you have to double them up.
+
+    Hello
+    World
+    ''
+    'Hello, world!'
+    'Sean''s favorite notation'
+
+An array of urls.
+Notice that quotes are not needed since none of the characters used here have special meaning in devon.
+
+    [
+      http://example.com/document.txt#line=10,20
+      http://example.com/foo.mp4#t=10,20
+      http://example.com/bar.webm#t=40,80&xywh=160,120,320,240
+    ]
+
+An array of windows paths.
+Since devon has no escape characters, nothing special is needed to represent a backslash.
+Since devon uses whitespace to support formatting, quoting is needed to represent a space.
+
+    [
+      'C:\Program Files'
+      C:\Winnt
+      C:\Winnt\System32
+    ]
+
+A map.  The key is the group and artifact id.
+The value is an array of versions.
+Unlike other formats, keys are not restricted to strings only.
+
+    {
+      {
+        group org.joda
+        artifact joda-convert
+      }
+      [
+        1.7
+        1.6
+        1.5
+      ]
+      {
+        group joda-time
+        artifact joda-time
+      }
+      [
+        2.7
+        2.6
+        2.5
+      ]
+    }
+
+A sample of what an HTTP PATCH request might look like.
+We are updating the price of the item with sku 123 to 499.99, and we are unsetting the seasonal discount by sending a null '()'
+
+    {
+      sku 123
+      price 499.99
+      'seasonal discount' ()
+    }
 
 Features
 ===
@@ -78,6 +141,11 @@ map
 * the transport layer MUST preserve order, although the consumer MAY decide order is unimportant
 * the transport layer MUST preserve duplicate keys, although in the case of key-value pairs with duplicate keys, the consumer MAY enact a rule for deciding which key-value pairs to keep and which to discard
 * the consumer SHOULD ignore keys it does not understand, for forward compatibility
+
+Entry Points
+===
+- If you want to use default settings [DefaultDevonMarshaller](core/src/main/scala/com/seanshubin/devon/core/devon/DefaultDevonMarshaller.scala)
+- If you want full control over configuration [DevonMarshallerImpl](core/src/main/scala/com/seanshubin/devon/core/devon/DevonMarshallerImpl.scala)
 
 Specification
 ===
@@ -179,71 +247,3 @@ Here are some alternatives worth considering
 - [yaml](http://www.yaml.org/)
 - [edn](https://github.com/edn-format/edn)
 - [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md)
-
-Examples
-===
-
-Simple strings.
-Devon does not require a top level element, which makes it easy to append more devon elements to a file.
-An empty string must be represented as two single quotes.
-Spaces are only supported within a quoted string.
-To represent a single quote in a quoted string, you have to double them up.
-
-    Hello
-    World
-    ''
-    'Hello, world!'
-    'Sean''s favorite notation'
-
-An array of urls.
-Notice that quotes are not needed since none of the characters used here have special meaning in devon.
-
-    [
-      http://example.com/document.txt#line=10,20
-      http://example.com/foo.mp4#t=10,20
-      http://example.com/bar.webm#t=40,80&xywh=160,120,320,240
-    ]
-
-An array of windows paths.
-Since devon has no escape characters, nothing special is needed to represent a backslash.
-Since devon uses whitespace to support formatting, quoting is needed to represent a space.
-
-    [
-      'C:\Program Files'
-      C:\Winnt
-      C:\Winnt\System32
-    ]
-
-A map.  The key is the group and artifact id.
-The value is an array of versions.
-Unlike other formats, keys are not restricted to strings only.
-
-    {
-      {
-        group org.joda
-        artifact joda-convert
-      }
-      [
-        1.7
-        1.6
-        1.5
-      ]
-      {
-        group joda-time
-        artifact joda-time
-      }
-      [
-        2.7
-        2.6
-        2.5
-      ]
-    }
-
-A sample of what an HTTP PATCH request might look like.
-We are updating the price of the item with sku 123 to 499.99, and we are unsetting the seasonal discount by sending a null '()'
-
-    {
-      sku 123
-      price 499.99
-      'seasonal discount' ()
-    }
