@@ -178,6 +178,27 @@ A complex object, followed by an array, string, null, quoted string, and quoted 
     'o p'
     'q '' r'
 
+Implementations
+===
+Implementations should, at a minimum, provide the following functionality, expressed here as the corresponding method signatures for this Scala reference implementation.
+
+    def charsToIterator(charIterator: Iterator[Char]): Iterator[Devon]
+    def toCompact(devon: Devon): String
+    def toCompact(devonIterator: Iterator[Devon]): String
+    def toPretty(devon: Devon): Seq[String]
+    def fromValue[T](value: T): Devon
+    def toValue[T](devon: Devon, theClass: Class[T]): T
+
+The type 'Devon' corresponds to the abstract syntax tree.
+
+    sealed trait Devon
+    case object DevonNull extends Devon
+    case class DevonString(string: String) extends Devon
+    case class DevonArray(array: Seq[Devon]) extends Devon
+    case class DevonMap(map: Map[Devon, Devon]) extends Devon
+
+The generic type 'T' corresponds to a Scala case class, primitive, map or sequence
+
 Alternatives
 ===
 
