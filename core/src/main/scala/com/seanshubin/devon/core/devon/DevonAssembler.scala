@@ -16,7 +16,6 @@ class DevonAssembler extends Assembler[Token, Devon] {
       case ParseTreeBranch("map", children) => DevonMap(extractObject(children))
       case ParseTreeBranch("array", children) => DevonArray(extractArray(children))
       case ParseTreeLeaf("null", TokenNull) => DevonNull
-      case ParseTreeBranch("end", Nil) => DevonEnd
       case _ => throw new RuntimeException(s"Don't know how to assemble $parseTree")
     }
   }

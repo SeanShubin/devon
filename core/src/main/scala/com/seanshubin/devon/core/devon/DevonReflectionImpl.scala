@@ -52,7 +52,6 @@ class DevonReflectionImpl(reflection: Reflection) extends DevonReflection {
       case x: DevonMap => makeDynamicMap(x)
       case DevonNull => null
       case null => throw new RuntimeException(s"Unsupported: null")
-      case x => throw new RuntimeException(s"Unsupported: $devon of type ${devon.getClass.getName}")
     }
   }
 
