@@ -184,7 +184,6 @@ Implementations should, at a minimum, provide the following functionality, expre
 
     def charsToIterator(charIterator: Iterator[Char]): Iterator[Devon]
     def toCompact(devon: Devon): String
-    def toCompact(devonIterator: Iterator[Devon]): String
     def toPretty(devon: Devon): Seq[String]
     def fromValue[T](value: T): Devon
     def toValue[T](devon: Devon, theClass: Class[T]): T
