@@ -144,40 +144,6 @@ Ignore tokens of type "whitespace-block".
     pairs = { pair }
     pair = element element
 
-Sample
-===
-A complex object, followed by an array, string, null, quoted string, and quoted string with an inner quote
-
-{a{b c}\[d\[e f\]\](){()\[f{g h}()\]{}i}j}\[\[k l\]\[\]m\]n()'o p' 'q '' r'
-
-    {
-      a {b c}
-      [
-        d
-        [e f]
-      ]
-      ()
-      {
-        ()
-        [
-          f
-          {g h}
-          ()
-        ]
-        {} i
-      }
-      j
-    }
-    [
-      [k l]
-      []
-      m
-    ]
-    n
-    ()
-    'o p'
-    'q '' r'
-
 Implementations
 ===
 Implementations should, at a minimum, provide the following functionality, expressed here as the corresponding method signatures for this Scala reference implementation.
@@ -213,3 +179,71 @@ Here are some alternatives worth considering
 - [yaml](http://www.yaml.org/)
 - [edn](https://github.com/edn-format/edn)
 - [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md)
+
+Examples
+===
+
+Simple strings.
+Devon does not require a top level element, which makes it easy to append more devon elements to a file.
+An empty string must be represented as two single quotes.
+Spaces are only supported within a quoted string.
+To represent a single quote in a quoted string, you have to double them up.
+
+    Hello
+    World
+    ''
+    'Hello, world!'
+    'Sean''s favorite notation'
+
+An array of urls.
+Notice that quotes are not needed since none of the characters used here have special meaning in devon.
+
+    [
+      http://example.com/document.txt#line=10,20
+      http://example.com/foo.mp4#t=10,20
+      http://example.com/bar.webm#t=40,80&xywh=160,120,320,240
+    ]
+
+An array of windows paths.
+Since devon has no escape characters, nothing special is needed to represent a backslash.
+Since devon uses whitespace to support formatting, quoting is needed to represent a space.
+
+    [
+      'C:\Program Files'
+      C:\Winnt
+      C:\Winnt\System32
+    ]
+
+A map.  The key is the group and artifact id.
+The value is an array of versions.
+Unlike other formats, keys are not restricted to strings only.
+
+    {
+      {
+        group org.joda
+        artifact joda-convert
+      }
+      [
+        1.7
+        1.6
+        1.5
+      ]
+      {
+        group joda-time
+        artifact joda-time
+      }
+      [
+        2.7
+        2.6
+        2.5
+      ]
+    }
+
+A sample of what an HTTP PATCH request might look like.
+We are updating the price of the item with sku 123 to 499.99, and we are unsetting the seasonal discount by sending a null '()'
+
+    {
+      sku 123
+      price 499.99
+      'seasonal discount' ()
+    }
