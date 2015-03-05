@@ -4,6 +4,7 @@ import com.seanshubin.devon.core.devon.DefaultDevonMarshaller
 import org.scalatest.FunSuite
 
 class ExamplesTest extends FunSuite {
+  val lineSeparator = System.getProperty("line.separator")
 
   case class GroupArtifact(group: String, artifact: String)
 
@@ -33,7 +34,7 @@ class ExamplesTest extends FunSuite {
         |    2.5
         |  ]
         |}""".stripMargin
-    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString("\n")
+    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString(lineSeparator)
     assert(expected === actual)
   }
 
@@ -47,7 +48,7 @@ class ExamplesTest extends FunSuite {
         |  http://example.com/foo.mp4#t=10,20
         |  http://example.com/bar.webm#t=40,80&xywh=160,120,320,240
         |]""".stripMargin
-    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString("\n")
+    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString(lineSeparator)
     assert(expected === actual)
   }
 
@@ -60,7 +61,7 @@ class ExamplesTest extends FunSuite {
         |  C:\Winnt
         |  C:\Winnt\System32
         |]""".stripMargin
-    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString("\n")
+    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString(lineSeparator)
     assert(expected === actual)
   }
 
@@ -80,7 +81,7 @@ class ExamplesTest extends FunSuite {
         |  'Hello, world!'
         |  'Sean''s favorite notation'
         |]""".stripMargin
-    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString("\n")
+    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString(lineSeparator)
     assert(expected === actual)
   }
 
@@ -96,7 +97,7 @@ class ExamplesTest extends FunSuite {
         |  price 499.99
         |  'seasonal discount' ()
         |}""".stripMargin
-    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString("\n")
+    val actual = DefaultDevonMarshaller.valueToPretty(value).mkString(lineSeparator)
     assert(expected === actual)
   }
 }
