@@ -6,8 +6,8 @@ DeVoN - Developers Value Notation
     - [xml](http://www.w3.org/TR/REC-xml/), too verbose
     - [json](http://www.json.org), only allows strings as keys, too verbose
     - [yaml](http://www.yaml.org/), too complex to parse
-    - [edn](https://github.com/edn-format/edn), specifies implementation details, such as distinguishing between list and vector.  Not minimal, lots of features beyond representing structured values.
-    - [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md), not minimal, lots of features beyond representing structured values.
+    - [edn](https://github.com/edn-format/edn), more complicated due to its support for advanced types
+    - [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md), more complicated due to its support for merging configurations
 
 Goals
 ===
