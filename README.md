@@ -147,6 +147,24 @@ Entry Points
 - If you want to use default settings [DefaultDevonMarshaller](core/src/main/scala/com/seanshubin/devon/core/devon/DefaultDevonMarshaller.scala)
 - If you want full control over configuration [DevonMarshallerImpl](core/src/main/scala/com/seanshubin/devon/core/devon/DevonMarshallerImpl.scala)
 
+Maven
+===
+
+    <repository>
+        <id>sean</id>
+        <name>sean</name>
+        <url>http://thoughtfulcraftsmanship.com/nexus/content/repositories/sean-snapshots</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+
+    <dependency>
+      <groupId>com.seanshubin</groupId>
+      <artifactId>devon-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
 Specification
 ===
 - Character Classes (Unicode addresses of the characters that can have special meaning)
