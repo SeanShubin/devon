@@ -10,7 +10,8 @@ class ParserIterator[A, B](backingIterator: Iterator[A], ruleLookup: RuleLookup[
     } else {
       currentMatchResult match {
         case x: MatchSuccess[A] => true
-        case x: MatchFailure[A] => throw new RuntimeException(x.message)
+        case MatchFailure(rule, message) =>
+          throw new RuntimeException(s"Could not match '$rule', $message")
       }
     }
   }

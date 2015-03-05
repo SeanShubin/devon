@@ -34,7 +34,7 @@ class DevonIteratorTest extends FunSuite {
     val exception = intercept[RuntimeException] {
       iterator.hasNext
     }
-    assert(exception.getMessage === "expected one of: map, array, string, null")
+    assert(exception.getMessage === "Could not match 'element', expected one of: map, array, string, null")
   }
 
   test("one thing then invalid") {
@@ -45,7 +45,7 @@ class DevonIteratorTest extends FunSuite {
     val exception = intercept[RuntimeException] {
       iterator.hasNext
     }
-    assert(exception.getMessage === "expected one of: map, array, string, null")
+    assert(exception.getMessage === "Could not match 'element', expected one of: map, array, string, null")
   }
 }
 
