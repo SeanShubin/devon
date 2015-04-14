@@ -1,15 +1,17 @@
 package com.seanshubin.devon.core.token
 
-import com.seanshubin.devon.core.{Assembler, ParseTree, ParseTreeBranch, ParseTreeLeaf}
+import com.seanshubin.devon.core._
 
-class TokenAssembler extends Assembler[Char, Token] {
+class TokenAssembler(stringProcessor: StringProcessor) extends Assembler[Char, Token] {
   override def assembleFromParseTree(parseTree: ParseTree[Char]): Token = {
     assemblers(parseTree.name)(parseTree)
   }
 
   private def extractUnquotedWord(parseTree: ParseTree[Char]): String = {
     val ParseTreeBranch(name, children) = parseTree
-    children.map(extractUnquotedValue).mkString
+    val unprocessedString = children.map(extractUnquotedValue).mkString
+    val processedString = stringProcessor.processedToRaw(unprocessedString)
+    processedString
   }
 
   private def extractUnquotedValue(parseTree: ParseTree[Char]): Char = {
@@ -19,7 +21,9 @@ class TokenAssembler extends Assembler[Char, Token] {
 
   private def extractQuotedWord(parseTree: ParseTree[Char]): String = {
     val ParseTreeBranch("quoted-string", List(_, ParseTreeBranch("quoted-contents", quotedContents), _)) = parseTree
-    quotedContents.map(extractQuotedChar).mkString
+    val unprocessedString = quotedContents.map(extractQuotedChar).mkString
+    val processedString = stringProcessor.processedToRaw(unprocessedString)
+    processedString
   }
 
   private def extractQuotedChar(parseTree: ParseTree[Char]): Char = {

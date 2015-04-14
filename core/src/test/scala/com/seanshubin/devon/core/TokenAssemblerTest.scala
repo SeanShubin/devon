@@ -8,7 +8,7 @@ class TokenAssemblerTest extends FunSuite {
     val a = ParseTreeLeaf("not-space", 'a')
     val b = ParseTreeLeaf("not-space", 'b')
     val parseTree = ParseTreeBranch("unquoted-string", List(a, b))
-    val tokenAssembler = new TokenAssembler()
+    val tokenAssembler = new TokenAssembler(NoOperationStringProcessor)
     val actualToken = tokenAssembler.assembleFromParseTree(parseTree)
     val expectedToken = TokenString("ab")
     assert(actualToken === expectedToken)

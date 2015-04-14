@@ -1,6 +1,8 @@
 package com.seanshubin.devon.core
 
 import com.seanshubin.devon.core.devon._
+import com.seanshubin.devon.core.token.TokenMarshallerImpl
+import com.seanshubin.utility.reflection.{ReflectionImpl, SimpleTypeConversion}
 import org.scalatest.FunSuite
 
 class DevonMarshallerTest extends FunSuite {
@@ -71,7 +73,7 @@ class DevonMarshallerTest extends FunSuite {
     assert(compact === "{a b}")
   }
 
-  test("to pretty") {
+  test("map to pretty") {
     val devon = DevonMap(Map(DevonString("a") -> DevonString("b")))
     val devonMarshaller = DefaultDevonMarshaller
     val prettyLines = devonMarshaller.toPretty(devon)
@@ -79,6 +81,17 @@ class DevonMarshallerTest extends FunSuite {
     assert(prettyLines(0) === "{")
     assert(prettyLines(1) === "  a b")
     assert(prettyLines(2) === "}")
+  }
+
+  test("array to pretty") {
+    val devon = DevonArray(Seq(DevonString("a"), DevonString("b")))
+    val devonMarshaller = DefaultDevonMarshaller
+    val prettyLines = devonMarshaller.toPretty(devon)
+    assert(prettyLines.size === 4)
+    assert(prettyLines(0) === "[")
+    assert(prettyLines(1) === "  a")
+    assert(prettyLines(2) === "  b")
+    assert(prettyLines(3) === "]")
   }
 
   test("from value") {
@@ -126,4 +139,35 @@ class DevonMarshallerTest extends FunSuite {
     val compact = devonMarshaller.toCompact(devon)
     assert(compact === "{a 1 b 2 c 3 d 4 e 5}")
   }
+
+  test("unescape when reading") {
+    val devonWithEscapedNewline = """aa\nbb"""
+    val expected = DevonString("aa\nbb")
+    val actual = escapingDevonMarshaller.fromString(devonWithEscapedNewline)
+    assert(actual === expected)
+  }
+
+  test("escape when writing compact") {
+    val devonWithEscapedNewline = DevonString("aa\nbb")
+    val expected = """aa\nbb"""
+    val actual = escapingDevonMarshaller.toCompact(devonWithEscapedNewline)
+    assert(actual === expected)
+  }
+
+  test("escape when writing pretty") {
+    val devonWithEscapedNewline = DevonString("aa\nbb")
+    val expected = Seq( """aa\nbb""")
+    val actual = escapingDevonMarshaller.toPretty(devonWithEscapedNewline)
+    assert(actual === expected)
+  }
+
+  val escapingDevonMarshaller = new DevonMarshallerImpl(
+    compactFormatter = new CompactDevonFormatterImpl(EscapeStringProcessor),
+    prettyFormatter = new PrettyDevonFormatterImpl(EscapeStringProcessor),
+    devonReflection = new DevonReflectionImpl(
+      new ReflectionImpl(SimpleTypeConversion.defaultConversions)),
+    iteratorFactory = new DevonIteratorFactoryImpl(
+      ruleLookup = new DevonRuleLookup,
+      assembler = new DevonAssembler,
+      tokenMarshaller = new TokenMarshallerImpl(EscapeStringProcessor)))
 }

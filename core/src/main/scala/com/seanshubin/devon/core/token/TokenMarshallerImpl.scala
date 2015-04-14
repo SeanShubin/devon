@@ -1,10 +1,10 @@
 package com.seanshubin.devon.core.token
 
-import com.seanshubin.devon.core.ParserIterator
+import com.seanshubin.devon.core.{ParserIterator, StringProcessor}
 
-class TokenMarshallerImpl extends TokenMarshaller {
+class TokenMarshallerImpl(stringProcessor: StringProcessor) extends TokenMarshaller {
   private val ruleLookup = new TokenRuleLookup()
-  private val assembler = new TokenAssembler()
+  private val assembler = new TokenAssembler(stringProcessor)
 
   override def charsToIterator(charIterator: Iterator[Char]): Iterator[Token] = {
     val tokenIterator = new ParserIterator[Char, Token](

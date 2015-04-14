@@ -1,8 +1,9 @@
 package com.seanshubin.devon.core.devon
 
+import com.seanshubin.devon.core.StringProcessor
 import com.seanshubin.devon.core.token.TokenCharacters
 
-class PrettyDevonFormatterImpl extends PrettyDevonFormatter {
+class PrettyDevonFormatterImpl(stringProcessor: StringProcessor) extends PrettyDevonFormatter {
   def format(devon: Devon): Seq[String] = {
     prettyDevon(devon).lines
   }
@@ -18,10 +19,11 @@ class PrettyDevonFormatterImpl extends PrettyDevonFormatter {
   }
 
   private def prettyString(devon: DevonString): PrettyFragment = {
-    if (devon.string.exists(x => TokenCharacters.structuralAndWhitespace.contains(x)) || devon.string.isEmpty) {
-      prettyQuotedString(devon)
+    val string = stringProcessor.rawToProcessed(devon.string)
+    if (string.exists(x => TokenCharacters.structuralAndWhitespace.contains(x)) || string.isEmpty) {
+      prettyQuotedString(string)
     } else {
-      prettyUnquotedString(devon)
+      prettyUnquotedString(string)
     }
   }
 
@@ -37,7 +39,7 @@ class PrettyDevonFormatterImpl extends PrettyDevonFormatter {
   private def prettyArray(devon: DevonArray): PrettyFragment = {
     if (devon.array.size == 0) PrettyFragment(Seq("[]"))
     else {
-      val fragments: Seq[PrettyFragment] = devon.array.map(prettyDevon).toSeq
+      val fragments: Seq[PrettyFragment] = devon.array.map(prettyDevon)
       val combined: PrettyFragment = fragments.reduceLeft(PrettyFragment.combine)
       PrettyFragment(Seq("[") ++ combined.lines.map(indent) ++ Seq("]"))
     }
@@ -56,14 +58,14 @@ class PrettyDevonFormatterImpl extends PrettyDevonFormatter {
     }
   }
 
-  private def prettyQuotedString(devon: DevonString): PrettyFragment = {
-    val escaped = devon.string.replaceAll("\'", "\'\'")
+  private def prettyQuotedString(string: String): PrettyFragment = {
+    val escaped = string.replaceAll("\'", "\'\'")
     val wrapped = "\'" + escaped + "\'"
     val split = wrapped.split("\r\n|\r|\n").toSeq
     PrettyFragment(split)
   }
 
-  private def prettyUnquotedString(devon: DevonString): PrettyFragment = PrettyFragment(Seq(devon.string))
+  private def prettyUnquotedString(string: String): PrettyFragment = PrettyFragment(Seq(string))
 
   private def indent(line: String): String = s"  $line"
 

@@ -1,8 +1,9 @@
 package com.seanshubin.devon.core.devon
 
+import com.seanshubin.devon.core.StringProcessor
 import com.seanshubin.devon.core.token.TokenCharacters
 
-class CompactDevonFormatterImpl extends CompactDevonFormatter {
+class CompactDevonFormatterImpl(stringProcessor: StringProcessor) extends CompactDevonFormatter {
 
   import CompactFragment._
 
@@ -24,11 +25,12 @@ class CompactDevonFormatterImpl extends CompactDevonFormatter {
     }
   }
 
-  private def compactDevonString(string: String): CompactFragment = {
-    if (string.exists(x => TokenCharacters.structuralAndWhitespace.contains(x)) || string.isEmpty) {
-      compactQuotedString(string)
+  private def compactDevonString(unprocessedString: String): CompactFragment = {
+    val processedString = stringProcessor.rawToProcessed(unprocessedString)
+    if (processedString.exists(x => TokenCharacters.structuralAndWhitespace.contains(x)) || processedString.isEmpty) {
+      compactQuotedString(processedString)
     } else {
-      compactUnquotedString(string)
+      compactUnquotedString(processedString)
     }
   }
 
