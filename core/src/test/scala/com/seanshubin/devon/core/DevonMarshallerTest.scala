@@ -7,12 +7,12 @@ import org.scalatest.FunSuite
 
 class DevonMarshallerTest extends FunSuite {
   test("elements") {
-    val parsed = DefaultDevonMarshaller.stringToIterator("a b c").toSeq
+    val parsed = DevonMarshallerWiring.Default.stringToIterator("a b c").toSeq
     assert(parsed === Seq(DevonString("a"), DevonString("b"), DevonString("c")))
   }
 
   test("map") {
-    val element = DefaultDevonMarshaller.fromString("{a b c d}")
+    val element = DevonMarshallerWiring.Default.fromString("{a b c d}")
     assert(element === DevonMap(Map(
       DevonString("a") -> DevonString("b"),
       DevonString("c") -> DevonString("d")
@@ -20,7 +20,7 @@ class DevonMarshallerTest extends FunSuite {
   }
 
   test("array") {
-    val element = DefaultDevonMarshaller.fromString("[a b c]")
+    val element = DevonMarshallerWiring.Default.fromString("[a b c]")
     assert(element === DevonArray(Seq(
       DevonString("a"),
       DevonString("b"),
@@ -28,28 +28,28 @@ class DevonMarshallerTest extends FunSuite {
   }
 
   test("string") {
-    val element = DefaultDevonMarshaller.fromString("abc")
+    val element = DevonMarshallerWiring.Default.fromString("abc")
     assert(element === DevonString("abc"))
   }
 
   test("string with spaces") {
-    val element = DefaultDevonMarshaller.fromString("'a b'")
+    val element = DevonMarshallerWiring.Default.fromString("'a b'")
     assert(element === DevonString("a b"))
   }
 
   test("string with single quotes") {
-    val element = DefaultDevonMarshaller.fromString("'a''b'")
+    val element = DevonMarshallerWiring.Default.fromString("'a''b'")
     assert(element === DevonString("a'b"))
   }
 
   test("null") {
-    val element = DefaultDevonMarshaller.fromString("()")
+    val element = DevonMarshallerWiring.Default.fromString("()")
     assert(element === DevonNull)
   }
 
   test("text to iterator") {
     val text = "a {b c} () [d]"
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val iterator = devonMarshaller.stringToIterator(text)
     val values = iterator.toSeq
     assert(values.size === 4)
@@ -61,21 +61,21 @@ class DevonMarshallerTest extends FunSuite {
 
   test("text to abstract syntax tree") {
     val text = "{a b}"
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val devon = devonMarshaller.fromString(text)
     assert(devon === DevonMap(Map(DevonString("a") -> DevonString("b"))))
   }
 
   test("to compact") {
     val devon = DevonMap(Map(DevonString("a") -> DevonString("b")))
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val compact = devonMarshaller.toCompact(devon)
     assert(compact === "{a b}")
   }
 
   test("map to pretty") {
     val devon = DevonMap(Map(DevonString("a") -> DevonString("b")))
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val prettyLines = devonMarshaller.toPretty(devon)
     assert(prettyLines.size === 3)
     assert(prettyLines(0) === "{")
@@ -85,7 +85,7 @@ class DevonMarshallerTest extends FunSuite {
 
   test("array to pretty") {
     val devon = DevonArray(Seq(DevonString("a"), DevonString("b")))
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val prettyLines = devonMarshaller.toPretty(devon)
     assert(prettyLines.size === 4)
     assert(prettyLines(0) === "[")
@@ -98,7 +98,7 @@ class DevonMarshallerTest extends FunSuite {
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
     val rectangle = Rectangle(topLeft, bottomRight)
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val devon = devonMarshaller.fromValue(rectangle)
     val compact = devonMarshaller.toCompact(devon)
     assert(compact === "{topLeft{x 1 y 2}bottomRight{x 3 y 4}}")
@@ -109,7 +109,7 @@ class DevonMarshallerTest extends FunSuite {
     val bottomRight = Point(3, 4)
     val expectedRectangle = Rectangle(topLeft, bottomRight)
     val compact = "{topLeft{x 1 y 2}bottomRight{x 3 y 4}}"
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val devon = devonMarshaller.fromString(compact)
     val actualRectangle = devonMarshaller.toValue(devon, classOf[Rectangle])
     assert(actualRectangle === expectedRectangle)
@@ -117,7 +117,7 @@ class DevonMarshallerTest extends FunSuite {
 
   test("composite from value") {
     val composite = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2, 3)))
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val devon = devonMarshaller.fromValue(composite)
     val compact = devonMarshaller.toCompact(devon)
     assert(compact === "{sampleMap{1 a}sampleSeq[{x 2 y 3}]}")
@@ -126,14 +126,14 @@ class DevonMarshallerTest extends FunSuite {
   test("composite to value") {
     val expected = SampleWithCompositeTypes(Map(1 -> "a"), Seq(Point(2, 3)))
     val compact = "{sampleMap{1 a}sampleSeq[{x 2 y 3}]}"
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val devon = devonMarshaller.fromString(compact)
     val actual = devonMarshaller.toValue(devon, classOf[SampleWithCompositeTypes])
     assert(actual === expected)
   }
 
   test("preserve order") {
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val value = PreserveOrder(1, 2, 3, 4, 5)
     val devon = devonMarshaller.fromValue(value)
     val compact = devonMarshaller.toCompact(devon)

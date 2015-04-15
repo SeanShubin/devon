@@ -1,18 +1,18 @@
 package com.seanshubin.devon.core
 
-import com.seanshubin.devon.core.devon.{DefaultDevonMarshaller, DevonString}
+import com.seanshubin.devon.core.devon.{DevonMarshallerWiring, DevonString}
 import org.scalatest.FunSuite
 
 class DevonIteratorTest extends FunSuite {
   test("empty") {
     val text = ""
-    val iterator = DefaultDevonMarshaller.charsToIterator(text.iterator)
+    val iterator = DevonMarshallerWiring.Default.charsToIterator(text.iterator)
     assert(!iterator.hasNext)
   }
 
   test("one thing") {
     val text = "foo"
-    val iterator = DefaultDevonMarshaller.charsToIterator(text.iterator)
+    val iterator = DevonMarshallerWiring.Default.charsToIterator(text.iterator)
     assert(iterator.hasNext)
     assert(iterator.next === DevonString("foo"))
     assert(!iterator.hasNext)
@@ -20,7 +20,7 @@ class DevonIteratorTest extends FunSuite {
 
   test("two things") {
     val text = "foo bar"
-    val iterator = DefaultDevonMarshaller.charsToIterator(text.iterator)
+    val iterator = DevonMarshallerWiring.Default.charsToIterator(text.iterator)
     assert(iterator.hasNext)
     assert(iterator.next === DevonString("foo"))
     assert(iterator.hasNext)
@@ -30,7 +30,7 @@ class DevonIteratorTest extends FunSuite {
 
   test("invalid") {
     val text = "{"
-    val iterator = DefaultDevonMarshaller.charsToIterator(text.iterator)
+    val iterator = DevonMarshallerWiring.Default.charsToIterator(text.iterator)
     val exception = intercept[RuntimeException] {
       iterator.hasNext
     }
@@ -39,7 +39,7 @@ class DevonIteratorTest extends FunSuite {
 
   test("one thing then invalid") {
     val text = "foo {"
-    val iterator = DefaultDevonMarshaller.charsToIterator(text.iterator)
+    val iterator = DevonMarshallerWiring.Default.charsToIterator(text.iterator)
     assert(iterator.hasNext)
     assert(iterator.next === DevonString("foo"))
     val exception = intercept[RuntimeException] {

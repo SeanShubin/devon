@@ -1,12 +1,12 @@
 package com.seanshubin.devon.core
 
-import com.seanshubin.devon.core.devon.DefaultDevonMarshaller
+import com.seanshubin.devon.core.devon.DevonMarshallerWiring
 import org.scalatest.FunSuite
 
 class MalformedTest extends FunSuite {
   test("open brace only") {
     val text = "{"
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val exception = intercept[RuntimeException] {
       devonMarshaller.fromString(text)
     }

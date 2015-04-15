@@ -55,7 +55,7 @@ class DevonReflectionTest extends FunSuite {
   }
 
   def testReflection[T: universe.TypeTag](value: T, devon: Devon, theClass: Class[T]): Unit = {
-    val devonReflection = new DefaultDevonReflection
+    val devonReflection = new DevonMarshallerWiring {}.devonReflection
     val actualDevon: Devon = devonReflection.fromValue(value)
     assert(actualDevon === devon)
     val actualValue: T = devonReflection.toValue(devon, theClass)
