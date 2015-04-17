@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core
 
-import com.seanshubin.devon.core.devon.{Devon, DevonMarshallerWiring}
+import com.seanshubin.devon.core.devon.{DevonMarshallerWiring, DevonUtil}
 import org.scalatest.FunSuite
 
 class DevonTest extends FunSuite {
@@ -23,7 +23,7 @@ class DevonTest extends FunSuite {
     val devonMarshaller = DevonMarshallerWiring.Default
     val leftDevon = devonMarshaller.fromString(left)
     val rightDevon = devonMarshaller.fromString(right)
-    val mergedDevon = Devon.merge(leftDevon, rightDevon)
+    val mergedDevon = DevonUtil.merge(leftDevon, rightDevon)
     val actual = devonMarshaller.toCompact(mergedDevon)
     assert(actual === expected)
   }
