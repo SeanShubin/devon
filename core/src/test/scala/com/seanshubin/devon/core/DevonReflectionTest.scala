@@ -54,6 +54,18 @@ class DevonReflectionTest extends FunSuite {
     testReflection(value, devon, classOf[SampleWithCompositeTypes])
   }
 
+  test("sequence") {
+    val value = Seq(1,2,3)
+    val devon = DevonArray(Seq(DevonString("1"),DevonString("2"),DevonString("3")))
+    testReflection(value, devon, classOf[Seq[Int]])
+  }
+
+  test("list") {
+    val value = List(1,2,3)
+    val devon = DevonArray(Seq(DevonString("1"),DevonString("2"),DevonString("3")))
+    testReflection(value, devon, classOf[List[Int]])
+  }
+
   def testReflection[T: universe.TypeTag](value: T, devon: Devon, theClass: Class[T]): Unit = {
     val devonReflection = new DevonMarshallerWiring {}.devonReflection
     val actualDevon: Devon = devonReflection.fromValue(value)
