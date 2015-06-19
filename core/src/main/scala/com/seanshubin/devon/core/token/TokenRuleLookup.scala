@@ -1,8 +1,8 @@
 
 package com.seanshubin.devon.core.token
 
-import com.seanshubin.devon.core.rules._
-import com.seanshubin.devon.core.{Rule, RuleLookup}
+import com.seanshubin.devon.parser.{Rule, RuleLookup}
+import com.seanshubin.devon.rules._
 
 class TokenRuleLookup extends RuleLookup[Char] {
 

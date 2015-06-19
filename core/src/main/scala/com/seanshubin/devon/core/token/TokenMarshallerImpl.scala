@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core.token
 
-import com.seanshubin.devon.core.{ParserIterator, StringProcessor}
+import com.seanshubin.devon.parser.{ParserIterator, StringProcessor}
 
 class TokenMarshallerImpl(stringProcessor: StringProcessor) extends TokenMarshaller {
   private val ruleLookup = new TokenRuleLookup()

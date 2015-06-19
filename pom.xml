@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><project>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.seanshubin</groupId>
     <artifactId>devon</artifactId>
@@ -10,6 +11,7 @@
     </properties>
     <modules>
         <module>core</module>
+        <module>parser</module>
     </modules>
     <repositories>
         <repository>
@@ -26,6 +28,11 @@
             <dependency>
                 <groupId>com.seanshubin</groupId>
                 <artifactId>utility-reflection</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.seanshubin</groupId>
+                <artifactId>devon-parser</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>

@@ -1,7 +1,7 @@
 package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token.{Token, TokenMarshaller, TokenWhitespace}
-import com.seanshubin.devon.core.{Assembler, ParserIterator, RuleLookup}
+import com.seanshubin.devon.parser.{Assembler, ParserIterator, RuleLookup}
 
 class DevonIteratorFactoryImpl(ruleLookup: RuleLookup[Token],
                                assembler: Assembler[Token, Devon],

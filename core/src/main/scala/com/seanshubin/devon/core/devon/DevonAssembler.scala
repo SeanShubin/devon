@@ -1,7 +1,7 @@
 package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token.{Token, TokenNull, TokenString}
-import com.seanshubin.devon.core.{Assembler, ParseTree, ParseTreeBranch, ParseTreeLeaf}
+import com.seanshubin.devon.parser.{Assembler, ParseTree, ParseTreeBranch, ParseTreeLeaf}
 
 import scala.collection.immutable.ListMap
 

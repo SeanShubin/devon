@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core.token
 
-import com.seanshubin.devon.core._
+import com.seanshubin.devon.parser._
 
 class TokenAssembler(stringProcessor: StringProcessor) extends Assembler[Char, Token] {
   override def assembleFromParseTree(parseTree: ParseTree[Char]): Token = {

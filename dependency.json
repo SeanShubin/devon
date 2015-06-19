@@ -7,14 +7,20 @@
     ]
   ],
   "scrubGroupingPattern": "com/seanshubin/([^/]+).*",
-  "styleSheet": ["dependency.css"],
+  "styleSheet": [
+    "dependency.css"
+  ],
   "relevantDependencyPattern": {
-    "includeRegex": ["com/seanshubin/devon/.*"],
+    "includeRegex": [
+      "com/seanshubin/devon/.*"
+    ],
     "excludeRegex": []
   },
   "trimRegex": "^com/seanshubin/devon/",
   "classFileNamePattern": {
-    "includeRegex": [".*\\.class"],
+    "includeRegex": [
+      ".*\\.class"
+    ],
     "excludeRegex": []
   },
   "zipFileNamePattern": {

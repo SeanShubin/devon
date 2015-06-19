@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core.token
 
-import com.seanshubin.devon.core.StringUtil
+import com.seanshubin.devon.parser.StringUtil
 
 sealed trait Token
 

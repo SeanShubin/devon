@@ -1,7 +1,7 @@
 package com.seanshubin.devon.core.devon
 
-import com.seanshubin.devon.core.StringProcessor
 import com.seanshubin.devon.core.token.TokenCharacters
+import com.seanshubin.devon.parser.StringProcessor
 
 class CompactDevonFormatterImpl(stringProcessor: StringProcessor) extends CompactDevonFormatter {
 
