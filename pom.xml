@@ -11,39 +11,19 @@
     <modules>
         <module>core</module>
         <module>parser</module>
+        <module>reflection</module>
     </modules>
-    <repositories>
-        <repository>
-            <id>sean</id>
-            <name>sean</name>
-            <url>http://thoughtfulcraftsmanship.com/nexus/content/repositories/sean-snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.seanshubin</groupId>
-                <artifactId>utility-reflection</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.seanshubin</groupId>
-                <artifactId>devon-parser</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
             <dependency>
                 <groupId>org.scala-lang</groupId>
                 <artifactId>scala-library</artifactId>
                 <version>2.11.7</version>
             </dependency>
             <dependency>
-                <groupId>org.easymock</groupId>
-                <artifactId>easymock</artifactId>
-                <version>3.3.1</version>
-                <scope>test</scope>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-reflect</artifactId>
+                <version>2.11.7</version>
             </dependency>
             <dependency>
                 <groupId>org.scalatest</groupId>
@@ -85,7 +65,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>2.4</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -101,7 +81,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.18.1</version>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>

@@ -5,8 +5,14 @@
         <artifactId>devon</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>devon-parser</artifactId>
-    <name>devon-parser</name>
+    <artifactId>devon-reflection</artifactId>
+    <name>devon-reflection</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-reflect</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>
         <testSourceDirectory>src/test/scala</testSourceDirectory>

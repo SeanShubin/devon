@@ -10,23 +10,21 @@
     <dependencies>
         <dependency>
             <groupId>com.seanshubin</groupId>
-            <artifactId>utility-reflection</artifactId>
+            <artifactId>devon-reflection</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.seanshubin</groupId>
             <artifactId>devon-parser</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-reflect</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -40,7 +38,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>1.4.0</version>
                 <executions>
                     <execution>
                         <id>dependency analysis</id>

@@ -1,6 +1,6 @@
 package com.seanshubin.devon.core.devon
 
-import com.seanshubin.utility.reflection.Reflection
+import com.seanshubin.devon.reflection.Reflection
 
 import scala.collection.immutable.ListMap
 import scala.reflect.runtime.universe

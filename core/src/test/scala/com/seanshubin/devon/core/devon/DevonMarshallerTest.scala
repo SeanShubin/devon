@@ -2,7 +2,7 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token.TokenMarshallerImpl
 import com.seanshubin.devon.parser.EscapeStringProcessor
-import com.seanshubin.utility.reflection.{ReflectionImpl, SimpleTypeConversion}
+import com.seanshubin.devon.reflection.{ReflectionImpl, SimpleTypeConversion}
 import org.scalatest.FunSuite
 
 class DevonMarshallerTest extends FunSuite {

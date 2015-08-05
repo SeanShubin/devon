@@ -2,7 +2,7 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token.{Token, TokenMarshaller, TokenMarshallerImpl}
 import com.seanshubin.devon.parser.{Assembler, NoOperationStringProcessor, RuleLookup, StringProcessor}
-import com.seanshubin.utility.reflection.{Reflection, ReflectionImpl, SimpleTypeConversion}
+import com.seanshubin.devon.reflection.{ReflectionImpl, Reflection, SimpleTypeConversion}
 
 trait DevonMarshallerWiring {
   lazy val stringProcessor: StringProcessor = NoOperationStringProcessor
