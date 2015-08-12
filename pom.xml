@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><project>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.seanshubin</groupId>
-    <artifactId>devon</artifactId>
-    <name>devon</name>
+    <groupId>com.seanshubin.devon</groupId>
+    <artifactId>devon-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A simple, language neutral notation for representing structured values</description>
+    <url>https://github.com/SeanShubin/developers-value-notation</url>
+    <licenses>
+        <license>
+            <name>Unlicense</name>
+            <url>http://unlicense.org/</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Sean Shubin</name>
+            <organization>Sean Shubin</organization>
+            <organizationUrl>http://seanshubin.com/</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</connection>
+        <developerConnection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</developerConnection>
+        <url>https://github.com/SeanShubin/developers-value-notation</url>
+    </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

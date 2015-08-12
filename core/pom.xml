@@ -1,20 +1,20 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.seanshubin</groupId>
-        <artifactId>devon</artifactId>
+        <groupId>com.seanshubin.devon</groupId>
+        <artifactId>devon-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>devon-core</artifactId>
-    <name>devon-core</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <dependencies>
         <dependency>
-            <groupId>com.seanshubin</groupId>
+            <groupId>com.seanshubin.devon</groupId>
             <artifactId>devon-reflection</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.seanshubin</groupId>
+            <groupId>com.seanshubin.devon</groupId>
             <artifactId>devon-parser</artifactId>
             <version>${project.version}</version>
         </dependency>

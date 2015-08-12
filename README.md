@@ -160,7 +160,7 @@ Maven
     </repository>
 
     <dependency>
-      <groupId>com.seanshubin</groupId>
+      <groupId>com.seanshubin.devon</groupId>
       <artifactId>devon-core</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
