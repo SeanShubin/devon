@@ -3,7 +3,7 @@ package com.seanshubin.devon.core.devon
 
 import com.seanshubin.devon.core.token._
 import com.seanshubin.devon.parser.{Rule, RuleLookup}
-import com.seanshubin.devon.rules._
+import com.seanshubin.devon.parser.rules._
 
 class DevonRuleLookup extends RuleLookup[Token] {
   override def lookupRuleByName(name: String): Rule[Token] = rulesMap(name)

@@ -1,4 +1,4 @@
-package com.seanshubin.devon.rules
+package com.seanshubin.devon.parser.rules
 
 import com.seanshubin.devon.parser._
 
