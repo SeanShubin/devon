@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.seanshubin.devon</groupId>
         <artifactId>devon-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <artifactId>devon-parser</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
