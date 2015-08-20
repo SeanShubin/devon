@@ -160,10 +160,4 @@
             </plugins>
         </pluginManagement>
     </build>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sean</id>
-            <url>http://thoughtfulcraftsmanship.com/nexus/content/repositories/sean-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
