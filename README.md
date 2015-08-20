@@ -150,19 +150,10 @@ Entry Points
 Maven
 ===
 
-    <repository>
-        <id>sean</id>
-        <name>sean</name>
-        <url>http://thoughtfulcraftsmanship.com/nexus/content/repositories/sean-snapshots</url>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-
     <dependency>
       <groupId>com.seanshubin.devon</groupId>
       <artifactId>devon-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0</version>
     </dependency>
 
 Specification
