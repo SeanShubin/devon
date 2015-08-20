@@ -3,7 +3,8 @@ package com.seanshubin.devon.reflection
 import scala.collection.immutable.ListMap
 import scala.reflect.runtime._
 
-class ReflectionImpl(simpleTypeConversions: Map[String, SimpleTypeConversion]) extends Reflection {
+class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extends Reflection {
+  private val simpleTypeConversions: Map[String, SimpleTypeConversion] = SimpleTypeConversion.toMap(simpleTypeConversionsSeq)
   private val mirror: universe.Mirror = universe.runtimeMirror(getClass.getClassLoader)
 
   override def pieceTogether[T: universe.TypeTag](dynamicValue: Any, staticClass: Class[T]): T = {
