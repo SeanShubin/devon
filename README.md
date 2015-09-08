@@ -97,10 +97,18 @@ Features
 
 Intentionally not features
 ===
-- no support for primitives other than strings (not the business of a notation to know about data types)
-- no escaping (nothing stops you from assigning meaning to your own escape characters in a string)
-- no comments (you build comments into your data structure, and have your consumer ignore them)
-- no references (you can designate a value as an id, and refer to it from another value)
+- no support for primitives other than strings
+    - not the business of a notation to know about data types
+    - instead, have the implementation marshall to and from strings
+- no escaping
+    - the notation maximizes the types of strings that can be naturally represented
+    - implementations can marshall strings with an escaping policy in mind
+- no comments
+    - for simplicity, there is no separate set of rules for representing comments
+    - you can build comments into your data structure, and have your consumer ignore them
+    - if you do represent a comment this way, it can benefits from the same structural expressiveness
+- no references
+    - you can designate a value as an id, and refer to it from another value
 
 Overview
 ===
