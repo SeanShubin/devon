@@ -106,7 +106,7 @@ Intentionally not features
 - no comments
     - for simplicity, there is no separate set of rules for representing comments
     - you can build comments into your data structure, and have your consumer ignore them
-    - if you do represent a comment this way, it can benefits from the same structural expressiveness
+    - if you do represent a comment this way, it benefits from the same structural expressiveness
 - no references
     - you can designate a value as an id, and refer to it from another value
 
