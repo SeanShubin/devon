@@ -30,7 +30,17 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
   private def pieceTogetherCaseClass(valueMap: Map[String, Any], tpe: universe.Type): Any = {
     val constructor: universe.MethodSymbol = tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
     val constructorParameters: Seq[universe.TermSymbol] = constructor.typeSignature.paramLists.head.map(_.asTerm)
-    val parameterList: Seq[Any] = createParameterList(constructorParameters, valueMap)
+    val parameterList: Seq[Any] = createParameterListFromMap(constructorParameters, valueMap)
+    val typeClass: universe.ClassSymbol = tpe.typeSymbol.asClass
+    val classMirror: universe.ClassMirror = mirror.reflectClass(typeClass)
+    val constructorMethod: universe.MethodMirror = classMirror.reflectConstructor(constructor)
+    val constructed: Any = constructorMethod(parameterList: _*)
+    constructed
+  }
+
+  private def pieceTogetherTuple(valueSeq: Seq[Any], tpe: universe.Type): Any = {
+    val constructor: universe.MethodSymbol = tpe.decl(universe.termNames.CONSTRUCTOR).asMethod
+    val parameterList: Seq[Any] = createParameterListFromSeq(tpe.typeArgs, valueSeq)
     val typeClass: universe.ClassSymbol = tpe.typeSymbol.asClass
     val classMirror: universe.ClassMirror = mirror.reflectClass(typeClass)
     val constructorMethod: universe.MethodMirror = classMirror.reflectConstructor(constructor)
@@ -67,7 +77,7 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
     staticMap
   }
 
-  private def createParameterList(constructorParameters: Seq[universe.TermSymbol], valueMap: Map[String, Any]): Seq[Any] = {
+  private def createParameterListFromMap(constructorParameters: Seq[universe.TermSymbol], valueMap: Map[String, Any]): Seq[Any] = {
     def lookupValue(term: universe.TermSymbol): Any = {
       val parameterName = symbolName(term)
       val parameterType: universe.Type = term.info
@@ -84,6 +94,17 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
       parameterValue
     }
     val parameterList = constructorParameters.map(lookupValue)
+    parameterList
+  }
+
+  private def createParameterListFromSeq(constructorParameters: Seq[universe.Type], valueSeq: Seq[Any]): Seq[Any] = {
+    def lookupValue(termAndValue: (universe.Type, Any)): Any = {
+      val (parameterType, value) = termAndValue
+      val parameterValue = pieceTogetherAny(value, parameterType)
+      parameterValue
+    }
+    val termsAndValues = constructorParameters zip valueSeq
+    val parameterList = termsAndValues.map(lookupValue)
     parameterList
   }
 
@@ -128,6 +149,22 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
     map
   }
 
+  private def pullApartTuple(value: Any, tpe: universe.Type): Seq[Any] = {
+    val fields: Iterable[universe.TermSymbol] = tpe.decls.map(_.asTerm).filter(_.isGetter)
+    val types = tpe.typeArgs
+    val instanceMirror: universe.InstanceMirror = mirror.reflect(value)
+    def createEntry(fieldAndType: (universe.TermSymbol, universe.Type)): Any = {
+      val (field, theType) = fieldAndType
+      val fieldMirror: universe.FieldMirror = instanceMirror.reflectField(field)
+      val staticFieldValue = fieldMirror.get
+      val dynamicFieldValue = pullApartAny(staticFieldValue, theType)
+      dynamicFieldValue
+    }
+    val fieldsAndTypes = fields zip types
+    val entries: Iterable[Any] = fieldsAndTypes.map(createEntry)
+    entries.toSeq
+  }
+
   private def pullApartOption(value: Option[Any], tpe: universe.Type): Any = {
     val optionContents = value match {
       case Some(x) =>
@@ -167,6 +204,7 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
     else if (fullNames.contains("scala.collection.immutable.Map")) ComplexMap
     else if (fullNames.contains("scala.collection.Seq")) ComplexSeq
     else if (fullNames.contains("scala.collection.Set")) ComplexSet
+    else if (fullNames.contains("scala.Tuple2")) ComplexTuple
     else if (fullNames.contains("scala.Product")) ComplexCaseClass
     else throw new RuntimeException(s"Unsupported type: $theType")
     result
@@ -199,6 +237,22 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
         null
       } else {
         pieceTogetherCaseClass(dynamicValue.asInstanceOf[Map[String, Any]], tpe)
+      }
+  }
+
+  private object ComplexTuple extends Complex {
+    override def pullApartAny(staticValue: Any, tpe: universe.Type): Any =
+      if (staticValue == null) {
+        null
+      } else {
+        pullApartTuple(staticValue, tpe)
+      }
+
+    override def pieceTogetherAny(dynamicValue: Any, tpe: universe.Type): Any =
+      if (dynamicValue == null) {
+        null
+      } else {
+        pieceTogetherTuple(dynamicValue.asInstanceOf[Seq[String]], tpe)
       }
   }
 
@@ -250,5 +304,4 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
         pieceTogetherMap(dynamicValue.asInstanceOf[Map[Any, Any]], tpe)
       }
   }
-
 }
