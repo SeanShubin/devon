@@ -1,38 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><project>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- The Basics -->
     <groupId>com.seanshubin.devon</groupId>
     <artifactId>devon-parent</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
-    <name>${project.groupId}:${project.artifactId}</name>
-    <description>A simple, language neutral notation for representing structured values</description>
-    <url>https://github.com/SeanShubin/developers-value-notation</url>
-    <licenses>
-        <license>
-            <name>Unlicense</name>
-            <url>http://unlicense.org/</url>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <name>Sean Shubin</name>
-            <organization>Sean Shubin</organization>
-            <organizationUrl>http://seanshubin.com/</organizationUrl>
-        </developer>
-    </developers>
-    <scm>
-        <connection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</connection>
-        <developerConnection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</developerConnection>
-        <url>https://github.com/SeanShubin/developers-value-notation</url>
-    </scm>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    <modules>
-        <module>core</module>
-        <module>parser</module>
-        <module>reflection</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.11</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <!--<parent>...</parent>-->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -53,13 +37,16 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>core</module>
+        <module>parser</module>
+        <module>reflection</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- Build Settings -->
     <build>
         <plugins>
             <plugin>
@@ -159,10 +146,46 @@
             </plugins>
         </pluginManagement>
     </build>
+    <!--<reporting>...</reporting>-->
+
+    <!-- More Project Information -->
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A simple, language neutral notation for representing structured values</description>
+    <url>https://github.com/SeanShubin/developers-value-notation</url>
+    <!--<inceptionYear>...</inceptionYear>-->
+    <licenses>
+        <license>
+            <name>Unlicense</name>
+            <url>http://unlicense.org/</url>
+        </license>
+    </licenses>
+    <!--<organization>...</organization>-->
+    <developers>
+        <developer>
+            <name>Sean Shubin</name>
+            <organization>Sean Shubin</organization>
+            <organizationUrl>http://seanshubin.com/</organizationUrl>
+        </developer>
+    </developers>
+    <!--<contributors>...</contributors>-->
+
+    <!-- Environment Settings -->
+    <!--<issueManagement>...</issueManagement>-->
+    <!--<ciManagement>...</ciManagement>-->
+    <!--<mailingLists>...</mailingLists>-->
+    <scm>
+        <connection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</connection>
+        <developerConnection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</developerConnection>
+        <url>https://github.com/SeanShubin/developers-value-notation</url>
+    </scm>
+    <!--<prerequisites>...</prerequisites>-->
+    <!--<repositories>...</repositories>-->
+    <!--<pluginRepositories>...</pluginRepositories>-->
     <distributionManagement>
         <repository>
-            <id>maven staging</id>
+            <id>maven-staging</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
     </distributionManagement>
+    <!--<profiles>...</profiles>-->
 </project>
