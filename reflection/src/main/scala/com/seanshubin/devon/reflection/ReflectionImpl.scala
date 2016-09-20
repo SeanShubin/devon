@@ -6,6 +6,7 @@ import scala.reflect.runtime._
 class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extends Reflection {
   private val simpleTypeConversions: Map[String, SimpleTypeConversion] = SimpleTypeConversion.toMap(simpleTypeConversionsSeq)
   private val mirror: universe.Mirror = universe.runtimeMirror(getClass.getClassLoader)
+  private val TupleNameRegex = """scala\.Tuple\d+""".r
 
   override def pieceTogether[T: universe.TypeTag](dynamicValue: Any, staticClass: Class[T]): T = {
     val tpe: universe.Type = universe.typeOf[T]
@@ -204,10 +205,14 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
     else if (fullNames.contains("scala.collection.immutable.Map")) ComplexMap
     else if (fullNames.contains("scala.collection.Seq")) ComplexSeq
     else if (fullNames.contains("scala.collection.Set")) ComplexSet
-    else if (fullNames.contains("scala.Tuple2")) ComplexTuple
+    else if (fullNames.exists(isTupleName)) ComplexTuple
     else if (fullNames.contains("scala.Product")) ComplexCaseClass
     else throw new RuntimeException(s"Unsupported type: $theType")
     result
+  }
+
+  private def isTupleName(name: String): Boolean = {
+    TupleNameRegex.pattern.matcher(name).matches()
   }
 
   private sealed trait Complex {
@@ -304,4 +309,5 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
         pieceTogetherMap(dynamicValue.asInstanceOf[Map[Any, Any]], tpe)
       }
   }
+
 }

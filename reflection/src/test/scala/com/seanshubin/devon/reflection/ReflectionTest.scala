@@ -124,6 +124,12 @@ class ReflectionTest extends FunSuite {
     testReflection(staticallyTyped, classOf[(Int, String)], dynamicallyTyped)
   }
 
+  test("tuple 3") {
+    val staticallyTyped: (Int, String, Double) = (1, "a", 2.3)
+    val dynamicallyTyped = Seq("1", "a", "2.3")
+    testReflection(staticallyTyped, classOf[(Int, String, Double)], dynamicallyTyped)
+  }
+
   test("nested case class") {
     val topLeft = Point(1, 2)
     val bottomRight = Point(3, 4)
