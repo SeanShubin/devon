@@ -6,7 +6,7 @@
         <server>
             <id>maven-staging</id>
             <username>SeanShubin</username>
-            <password>***</password>
+            <password>${env.MAVEN_STAGING_PASSWORD}</password>
         </server>
     </servers>
     <mirrors>
