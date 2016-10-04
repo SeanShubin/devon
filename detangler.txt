@@ -2,7 +2,7 @@
   reportDir generated/detangled
   searchPaths
   [
-    ./core/target/devon-core-1.0.jar
+    ./core/target/devon-core-1.1.jar
   ]
   level 2
   startsWith
