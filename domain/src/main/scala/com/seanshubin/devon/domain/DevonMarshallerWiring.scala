@@ -1,8 +1,7 @@
 package com.seanshubin.devon.domain
 
-import com.seanshubin.devon.tokenrules.{Token, TokenMarshaller, TokenMarshallerImpl}
+import com.seanshubin.devon.tokenizer.{Token, TokenMarshaller, TokenMarshallerImpl}
 import com.seanshubin.devon.parser.{Assembler, NoOperationStringProcessor, RuleLookup, StringProcessor}
-import com.seanshubin.devon.parserules._
 import com.seanshubin.devon.reflection.{Reflection, ReflectionImpl, SimpleTypeConversion}
 
 trait DevonMarshallerWiring {

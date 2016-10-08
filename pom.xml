@@ -39,8 +39,7 @@
     </dependencyManagement>
     <modules>
         <module>domain</module>
-        <module>parserules</module>
-        <module>tokenrules</module>
+        <module>tokenizer</module>
         <module>rules</module>
         <module>parser</module>
         <module>reflection</module>

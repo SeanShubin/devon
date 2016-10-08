@@ -1,7 +1,5 @@
 package com.seanshubin.devon.domain
 
-import com.seanshubin.devon.parserules.{Devon, DevonMap}
-
 object DevonUtil {
   def merge(left: Devon, right: Devon): Devon = {
     (left, right) match {

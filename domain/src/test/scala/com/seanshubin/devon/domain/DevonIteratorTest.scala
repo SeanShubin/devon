@@ -1,6 +1,5 @@
 package com.seanshubin.devon.domain
 
-import com.seanshubin.devon.parserules.DevonString
 import org.scalatest.FunSuite
 
 class DevonIteratorTest extends FunSuite {

@@ -12,7 +12,12 @@
     <dependencies>
         <dependency>
             <groupId>com.seanshubin.devon</groupId>
-            <artifactId>devon-parserules</artifactId>
+            <artifactId>devon-tokenizer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.seanshubin.devon</groupId>
+            <artifactId>devon-reflection</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

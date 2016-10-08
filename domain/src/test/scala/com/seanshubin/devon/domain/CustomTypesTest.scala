@@ -1,6 +1,5 @@
 package com.seanshubin.devon.domain
 
-import com.seanshubin.devon.parserules.DevonMarshaller
 import org.scalatest.FunSuite
 
 class CustomTypesTest extends FunSuite {

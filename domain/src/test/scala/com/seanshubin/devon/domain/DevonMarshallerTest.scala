@@ -1,8 +1,7 @@
 package com.seanshubin.devon.domain
 
-import com.seanshubin.devon.tokenrules.TokenMarshallerImpl
+import com.seanshubin.devon.tokenizer.TokenMarshallerImpl
 import com.seanshubin.devon.parser.EscapeStringProcessor
-import com.seanshubin.devon.parserules._
 import com.seanshubin.devon.reflection.{ReflectionImpl, SimpleTypeConversion}
 import org.scalatest.FunSuite
 

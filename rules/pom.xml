@@ -15,11 +15,6 @@
             <artifactId>devon-parser</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.seanshubin.devon</groupId>
-            <artifactId>devon-parser</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
     <parent>
         <groupId>com.seanshubin.devon</groupId>

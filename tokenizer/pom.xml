@@ -6,10 +6,16 @@
 
     <!-- The Basics -->
     <!--<groupId>...</groupId>-->
-    <artifactId>devon-parser</artifactId>
+    <artifactId>devon-tokenizer</artifactId>
     <!--<version>...</version>-->
     <!--<packaging>...</packaging>-->
-    <!--<dependencies>...</dependencies>-->
+    <dependencies>
+        <dependency>
+            <groupId>com.seanshubin.devon</groupId>
+            <artifactId>devon-rules</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
     <parent>
         <groupId>com.seanshubin.devon</groupId>
         <artifactId>devon-parent</artifactId>
