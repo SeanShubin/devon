@@ -1,8 +1,12 @@
 {
-  reportDir generated/detangled
+  reportDir target/detangled
   searchPaths
   [
-    ./core/target/devon-core-1.1.jar
+    ./domain/target/devon-domain-1.1.jar
+    ./parser/target/devon-parser-1.1.jar
+    ./parserules/target/devon-parserules-1.1.jar
+    ./reflection/target/devon-reflection-1.1.jar
+    ./tokenrules/target/devon-tokenrules-1.1.jar
   ]
   level 2
   startsWith

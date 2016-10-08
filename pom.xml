@@ -38,7 +38,10 @@
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>core</module>
+        <module>domain</module>
+        <module>parserules</module>
+        <module>tokenrules</module>
+        <module>rules</module>
         <module>parser</module>
         <module>reflection</module>
     </modules>
