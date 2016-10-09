@@ -1,8 +1,8 @@
 package com.seanshubin.devon.domain
 
-import com.seanshubin.devon.tokenizer.{Token, TokenMarshaller, TokenMarshallerImpl}
-import com.seanshubin.devon.parser.{Assembler, NoOperationStringProcessor, RuleLookup, StringProcessor}
+import com.seanshubin.devon.parser.{Assembler, RuleLookup, StringProcessor}
 import com.seanshubin.devon.reflection.{Reflection, ReflectionImpl, SimpleTypeConversion}
+import com.seanshubin.devon.tokenizer.{Token, TokenMarshaller, TokenMarshallerImpl}
 
 trait DevonMarshallerWiring {
   def stringProcessor: StringProcessor

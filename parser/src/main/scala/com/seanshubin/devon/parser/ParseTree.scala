@@ -1,5 +1,7 @@
 package com.seanshubin.devon.parser
 
+import com.seanshubin.devon.string.StringUtil
+
 sealed trait ParseTree[A] {
   def name: String
 }

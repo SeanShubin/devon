@@ -1,14 +1,10 @@
 package com.seanshubin.devon.tokenizer
 
-import com.seanshubin.devon.parser.StringUtil
-
 sealed trait Token
 
 case class TokenString(word: String) extends Token
 
-case class TokenWhitespace(whitespace: String) extends Token {
-  override def toString: String = s"TokenWhitespaceBlock(${StringUtil.escape(whitespace)})"
-}
+case class TokenWhitespace(whitespace: String) extends Token
 
 case object TokenOpenBrace extends Token
 

@@ -35,8 +35,8 @@ class DevonReflectionImpl(reflection: Reflection) extends DevonReflection {
       devonKey = makeDevon(key)
       devonValue = makeDevon(value)
     } yield {
-        (devonKey, devonValue)
-      }
+      (devonKey, devonValue)
+    }
     DevonMap(ListMap(entries.toSeq: _*))
   }
 
@@ -65,8 +65,8 @@ class DevonReflectionImpl(reflection: Reflection) extends DevonReflection {
       dynamicKey = makeDynamic(key)
       dynamicValue = makeDynamic(value)
     } yield {
-        (dynamicKey, dynamicValue)
-      }
+      (dynamicKey, dynamicValue)
+    }
     entries.toMap
   }
 }

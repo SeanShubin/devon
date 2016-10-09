@@ -1,4 +1,6 @@
-package com.seanshubin.devon.parser
+package com.seanshubin.devon.domain
+
+import com.seanshubin.devon.parser.StringProcessor
 
 object NoOperationStringProcessor extends StringProcessor {
   override def processedToRaw(s: String): String = s

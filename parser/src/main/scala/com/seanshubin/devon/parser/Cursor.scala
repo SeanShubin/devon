@@ -1,5 +1,7 @@
 package com.seanshubin.devon.parser
 
+import com.seanshubin.devon.string.StringUtil
+
 trait Cursor[T] {
   def next: Cursor[T]
 
