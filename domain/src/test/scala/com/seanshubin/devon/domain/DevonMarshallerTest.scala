@@ -65,32 +65,70 @@ class DevonMarshallerTest extends FunSuite {
     assert(devon === DevonMap(Map(DevonString("a") -> DevonString("b"))))
   }
 
-  test("to compact") {
-    val devon = DevonMap(Map(DevonString("a") -> DevonString("b")))
-    val devonMarshaller = DevonMarshallerWiring.Default
-    val compact = devonMarshaller.toCompact(devon)
-    assert(compact === "{a b}")
+  test("compact") {
+    val arrayOfArray: Seq[Seq[String]] = Seq(Seq("a"), Seq("b c"))
+    val arrayOfMap: Seq[Map[String, String]] = Seq(Map("a" -> "b c"))
+    val mapOfArray: Map[Seq[String], Seq[String]] = Map(Seq("a", "b c") -> Seq("d e", "f"))
+    val mapOfMap: Map[Map[String, String], Map[String, String]] = Map(Map("a" -> "b c") -> Map("d e" -> "f"))
+    val strings: Seq[String] = Seq("a", "b c", "d e", "f", "g")
+    val marshaller = DevonMarshallerWiring.Default
+    assert(marshaller.valueToCompact(arrayOfArray) === "[[a]['b c']]")
+    assert(marshaller.valueToCompact(arrayOfMap) === "[{a'b c'}]")
+    assert(marshaller.valueToCompact(mapOfArray) === "{[a'b c']['d e'f]}")
+    assert(marshaller.valueToCompact(mapOfMap) === "{{a'b c'}{'d e'f}}")
+    assert(marshaller.valueToCompact(strings) === "[a'b c' 'd e'f g]")
   }
 
-  test("map to pretty") {
-    val devon = DevonMap(Map(DevonString("a") -> DevonString("b")))
-    val devonMarshaller = DevonMarshallerWiring.Default
-    val prettyLines = devonMarshaller.toPretty(devon)
-    assert(prettyLines.size === 3)
-    assert(prettyLines(0) === "{")
-    assert(prettyLines(1) === "  a b")
-    assert(prettyLines(2) === "}")
-  }
-
-  test("array to pretty") {
-    val devon = DevonArray(Seq(DevonString("a"), DevonString("b")))
-    val devonMarshaller = DevonMarshallerWiring.Default
-    val prettyLines = devonMarshaller.toPretty(devon)
-    assert(prettyLines.size === 4)
-    assert(prettyLines(0) === "[")
-    assert(prettyLines(1) === "  a")
-    assert(prettyLines(2) === "  b")
-    assert(prettyLines(3) === "]")
+  test("pretty") {
+    val arrayOfArray: Seq[Seq[String]] = Seq(Seq("a"), Seq("b c"))
+    val arrayOfMap: Seq[Map[String, String]] = Seq(Map("a" -> "b c"))
+    val mapOfArray: Map[Seq[String], Seq[String]] = Map(Seq("a", "b c") -> Seq("d e", "f"))
+    val mapOfMap: Map[Map[String, String], Map[String, String]] = Map(Map("a" -> "b c") -> Map("d e" -> "f"))
+    val strings: Seq[String] = Seq("a", "b c", "d e", "f", "g")
+    val marshaller = DevonMarshallerWiring.Default
+    linesEqual(marshaller.valueToPretty(arrayOfArray),
+      """[
+        |  [
+        |    a
+        |  ]
+        |  [
+        |    'b c'
+        |  ]
+        |]""".stripMargin)
+    linesEqual(marshaller.valueToPretty(arrayOfMap),
+      """[
+        |  {
+        |    a 'b c'
+        |  }
+        |]""".stripMargin)
+    linesEqual(marshaller.valueToPretty(mapOfArray),
+      """{
+        |  [
+        |    a
+        |    'b c'
+        |  ]
+        |  [
+        |    'd e'
+        |    f
+        |  ]
+        |}""".stripMargin)
+    linesEqual(marshaller.valueToPretty(mapOfMap),
+      """{
+        |  {
+        |    a 'b c'
+        |  }
+        |  {
+        |    'd e' f
+        |  }
+        |}""".stripMargin)
+    linesEqual(marshaller.valueToPretty(strings),
+      """[
+        |  a
+        |  'b c'
+        |  'd e'
+        |  f
+        |  g
+        |]""".stripMargin)
   }
 
   test("from value") {
@@ -158,6 +196,12 @@ class DevonMarshallerTest extends FunSuite {
     val expected = Seq( """aa\nbb""")
     val actual = escapingDevonMarshaller.toPretty(devonWithEscapedNewline)
     assert(actual === expected)
+  }
+
+  def linesEqual(actual: Seq[String], expectedAsOneString: String): Unit = {
+    val expected = expectedAsOneString.split("\n").toSeq
+    val result = SeqDifference.diff(actual, expected)
+    assert(result.isSame, result.messageLines.mkString("\n"))
   }
 
   val escapingDevonMarshaller = new DevonMarshallerImpl(
