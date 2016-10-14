@@ -88,7 +88,8 @@ class CompactDevonFormatterImpl(stringProcessor: StringProcessor) extends Compac
           CompactFragment(left.left, left.text + " " + right.text, right.right)
         case (Quoted, Quoted) =>
           CompactFragment(left.left, left.text + " " + right.text, right.right)
-        case _ => CompactFragment(left.left, left.text + right.text, right.right)
+        case _ =>
+          CompactFragment(left.left, left.text + right.text, right.right)
       }
     }
   }
