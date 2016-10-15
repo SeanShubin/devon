@@ -199,7 +199,7 @@ class DevonMarshallerTest extends FunSuite {
   }
 
   def linesEqual(actual: Seq[String], expectedAsOneString: String): Unit = {
-    val expected = expectedAsOneString.split("\n").toSeq
+    val expected = expectedAsOneString.split("\r\n|\r|\n").toSeq
     val result = SeqDifference.diff(actual, expected)
     assert(result.isSame, result.messageLines.mkString("\n"))
   }
