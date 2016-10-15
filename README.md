@@ -152,8 +152,9 @@ map
 
 Entry Points
 ===
-- If you want to use default settings [DevonMarshallerWiring.Default](domain/src/main/scala/com/seanshubin/devon/domain/devon/DevonMarshallerWiring.scala)
-- If you want full control over configuration [DevonMarshallerImpl](domain/src/main/scala/com/seanshubin/devon/domain/devon/DevonMarshallerImpl.scala)
+
+- If you want to use default settings [DevonMarshallerWiring.Default](domain/src/main/scala/com/seanshubin/devon/domain/DevonMarshallerWiring.scala)
+- If you want full control over configuration [DevonMarshallerImpl](domain/src/main/scala/com/seanshubin/devon/domain/DevonMarshallerImpl.scala)
 
 Maven
 ===
