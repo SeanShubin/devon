@@ -1,0 +1,38 @@
+{
+  prefix [com seanshubin]
+  name [devon]
+  description 'A simple, language neutral notation for representing structured values'
+  version 1.1.1
+  developer {
+    name 'Sean Shubin'
+    githubName SeanShubin
+    organization 'Sean Shubin'
+    url http://seanshubin.com/
+  }
+  dependencies {
+    scala-library {
+        group org.scala-lang
+        artifact scala-library
+        version 2.12.4
+    }
+    scala-reflect {
+      group org.scala-lang
+      artifact scala-reflect
+      version 2.12.4
+    }
+    scala-test {
+      group org.scalatest
+      artifact scalatest_2.12
+      version 3.0.4
+      scope test
+    }
+  }
+  modules {
+    domain     [tokenizer reflection]
+    tokenizer  [rules]
+    reflection [scala-reflect]
+    rules      [parser]
+    parser     [string]
+    string     []
+  }
+}
