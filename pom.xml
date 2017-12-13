@@ -148,8 +148,8 @@
     <!--<ciManagement>...</ciManagement>-->
     <!--<mailingLists>...</mailingLists>-->
     <scm>
-        <connection>scm:git:git@github.com:SeanShubin/devon.git</connection>
-        <developerConnection>scm:git:git@github.com:SeanShubin/devon.git</developerConnection>
+        <connection>git@github.com:SeanShubin/devon.git</connection>
+        <developerConnection>git@github.com:SeanShubin/devon.git</developerConnection>
         <url>https://github.com/SeanShubin/devon</url>
     </scm>
     <!--<prerequisites>...</prerequisites>-->
