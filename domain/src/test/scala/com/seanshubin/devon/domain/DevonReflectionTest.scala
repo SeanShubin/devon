@@ -4,6 +4,7 @@ import java.time.{LocalDate, LocalTime, ZoneId, ZonedDateTime}
 
 import org.scalatest.FunSuite
 
+import scala.collection.immutable.ListMap
 import scala.reflect.runtime.universe
 
 class DevonReflectionTest extends FunSuite {
@@ -63,6 +64,36 @@ class DevonReflectionTest extends FunSuite {
     val value = List(1, 2, 3)
     val devon = DevonArray(Seq(DevonString("1"), DevonString("2"), DevonString("3")))
     testReflection(value, devon, classOf[List[Int]])
+  }
+
+  test("map") {
+    val value = Map(1 -> "a", 2 -> "b", 3 -> "c", 4 -> "d", 5 -> "e")
+    val devon = DevonMap(Map(
+      DevonString("1") -> DevonString("a"),
+      DevonString("2") -> DevonString("b"),
+      DevonString("3") -> DevonString("c"),
+      DevonString("4") -> DevonString("d"),
+      DevonString("5") -> DevonString("e")))
+    testReflection(value, devon, classOf[Map[Int, String]])
+  }
+
+  test("list map") {
+    val value = ListMap(1 -> "a", 2 -> "b", 3 -> "c", 4 -> "d", 5 -> "e")
+    val devon = DevonMap(Map(
+      DevonString("1") -> DevonString("a"),
+      DevonString("2") -> DevonString("b"),
+      DevonString("3") -> DevonString("c"),
+      DevonString("4") -> DevonString("d"),
+      DevonString("5") -> DevonString("e")))
+    testReflection(value, devon, classOf[ListMap[Int, String]])
+  }
+
+  test("map preserves order") {
+    val original = ListMap(1 -> "a", 2 -> "b", 3 -> "c", 4 -> "d", 5 -> "e")
+    val devonReflection = DevonMarshallerWiring.builder().buildWiring().devonReflection
+    val devon = devonReflection.fromValue(original)
+    val actual = devonReflection.toValue(devon, classOf[ListMap[Int, String]])
+    assert(actual.keys === original.keys)
   }
 
   def testReflection[T: universe.TypeTag](value: T, devon: Devon, theClass: Class[T]): Unit = {

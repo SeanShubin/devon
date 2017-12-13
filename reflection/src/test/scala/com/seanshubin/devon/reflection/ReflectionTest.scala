@@ -185,13 +185,22 @@ class ReflectionTest extends FunSuite {
     assert(pulledApartInOrder === expected)
   }
 
-  test("list maps preserve order") {
+  test("list maps preserve order on output") {
     val sample = ListMap("a" -> "1", "b" -> "2", "c" -> "3", "d" -> "4", "e" -> "5")
     val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
     val pulledApart = reflection.pullApart(sample)
     val pulledApartInOrder = pulledApart.asInstanceOf[Map[String, Int]].toSeq
     val expected = Seq("a" -> "1", "b" -> "2", "c" -> "3", "d" -> "4", "e" -> "5")
     assert(pulledApartInOrder === expected)
+  }
+
+  test("list maps preserve order on input") {
+    val dynamicallyTyped = ListMap("a" -> "1", "b" -> "2", "c" -> "3", "d" -> "4", "e" -> "5")
+    val reflection = new ReflectionImpl(SimpleTypeConversion.defaultConversions)
+    val piecedTogether = reflection.pieceTogether(dynamicallyTyped, classOf[ListMap[String, String]])
+    val piecedTogetherInOrder = piecedTogether.toSeq
+    val expected = Seq("a" -> "1", "b" -> "2", "c" -> "3", "d" -> "4", "e" -> "5")
+    assert(piecedTogetherInOrder === expected)
   }
 
   test("support sets") {

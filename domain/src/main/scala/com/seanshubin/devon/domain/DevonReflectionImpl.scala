@@ -67,6 +67,6 @@ class DevonReflectionImpl(reflection: Reflection) extends DevonReflection {
     } yield {
       (dynamicKey, dynamicValue)
     }
-    entries.toMap
+    ListMap[Any, Any](entries.toSeq: _*)
   }
 }

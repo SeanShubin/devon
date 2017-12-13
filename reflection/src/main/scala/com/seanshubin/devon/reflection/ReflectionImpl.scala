@@ -74,7 +74,13 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
       val staticValue = pieceTogetherAny(dynamicValue, valueElementType)
       (staticKey, staticValue)
     }
-    val staticMap = dynamicMap.map(pieceTogetherEntry)
+
+    val staticMap = dynamicMap match {
+      case x: ListMap[Any, Any] =>
+        // preserve order if we are a list map
+        x.map(pieceTogetherEntry)
+      case _ => dynamicMap.map(pieceTogetherEntry)
+    }
     staticMap
   }
 
@@ -195,6 +201,8 @@ class ReflectionImpl(simpleTypeConversionsSeq: Seq[SimpleTypeConversion]) extend
       val dynamicValue = pullApartAny(staticValue, valueElementType)
       (dynamicKey, dynamicValue)
     }
+
+    // in case we have an ordered map, make sure that order is preserved
     val dynamicMap = ListMap(staticMap.toSeq.map(pullApartEntry): _*)
     dynamicMap
   }
