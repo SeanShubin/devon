@@ -11,9 +11,9 @@
   }
   dependencies {
     scala-library {
-        group org.scala-lang
-        artifact scala-library
-        version 2.12.4
+      group org.scala-lang
+      artifact scala-library
+      version 2.12.4
     }
     scala-reflect {
       group org.scala-lang
