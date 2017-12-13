@@ -127,7 +127,7 @@
     <!--<reporting>...</reporting>-->
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A simple, language neutral notation for representing structured values</description>
-    <url>https://github.com/SeanShubin/developers-value-notation</url>
+    <url>https://github.com/SeanShubin/devon</url>
     <!--<inceptionYear>...</inceptionYear>-->
     <licenses>
         <license>
@@ -148,9 +148,9 @@
     <!--<ciManagement>...</ciManagement>-->
     <!--<mailingLists>...</mailingLists>-->
     <scm>
-        <connection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</connection>
-        <developerConnection>scm:git:git@github.com:SeanShubin/developers-value-notation.git</developerConnection>
-        <url>https://github.com/SeanShubin/developers-value-notation</url>
+        <connection>scm:git:git@github.com:SeanShubin/devon.git</connection>
+        <developerConnection>scm:git:git@github.com:SeanShubin/devon.git</developerConnection>
+        <url>https://github.com/SeanShubin/devon</url>
     </scm>
     <!--<prerequisites>...</prerequisites>-->
     <!--<repositories>...</repositories>-->
