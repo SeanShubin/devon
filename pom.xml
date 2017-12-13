@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <!-- The Basics -->
     <groupId>com.seanshubin.devon</groupId>
     <artifactId>devon-parent</artifactId>
     <version>1.1.1</version>
@@ -42,16 +40,14 @@
     <modules>
         <module>domain</module>
         <module>tokenizer</module>
+      <module>reflection</module>
         <module>rules</module>
         <module>parser</module>
-        <module>reflection</module>
         <module>string</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <!-- Build Settings -->
     <build>
         <plugins>
             <plugin>
@@ -137,8 +133,6 @@
         </pluginManagement>
     </build>
     <!--<reporting>...</reporting>-->
-
-    <!-- More Project Information -->
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A simple, language neutral notation for representing structured values</description>
     <url>https://github.com/SeanShubin/developers-value-notation</url>
@@ -158,8 +152,6 @@
         </developer>
     </developers>
     <!--<contributors>...</contributors>-->
-
-    <!-- Environment Settings -->
     <!--<issueManagement>...</issueManagement>-->
     <!--<ciManagement>...</ciManagement>-->
     <!--<mailingLists>...</mailingLists>-->
