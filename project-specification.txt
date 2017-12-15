@@ -1,4 +1,5 @@
 {
+  type hierarchical-library
   prefix [com seanshubin]
   name [devon]
   description 'A simple, language neutral notation for representing structured values'
@@ -35,4 +36,5 @@
     parser     [string]
     string     []
   }
+  primaryModule domain
 }
