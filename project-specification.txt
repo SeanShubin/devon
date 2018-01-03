@@ -36,5 +36,5 @@
     parser     [string]
     string     []
   }
-  primaryModule domain
+  detangler [domain]
 }
