@@ -36,6 +36,4 @@
     string     []
   }
   detangler [domain]
-  consoleEntryPoint {}
-  mavenPlugin []
 }
