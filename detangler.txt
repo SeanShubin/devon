@@ -3,6 +3,11 @@
   searchPaths
   [
     ./domain/target/devon-domain-1.1.2.jar
+    ./tokenizer/target/devon-tokenizer-1.1.2.jar
+    ./reflection/target/devon-reflection-1.1.2.jar
+    ./rules/target/devon-rules-1.1.2.jar
+    ./parser/target/devon-parser-1.1.2.jar
+    ./string/target/devon-string-1.1.2.jar
   ]
   level 2
   startsWith
