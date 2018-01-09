@@ -14,17 +14,14 @@
     scala-library {
       group org.scala-lang
       artifact scala-library
-      version 2.12.4
     }
     scala-reflect {
       group org.scala-lang
       artifact scala-reflect
-      version 2.12.4
     }
     scala-test {
       group org.scalatest
       artifact scalatest_2.12
-      version 3.0.4
       scope test
     }
   }
