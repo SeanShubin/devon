@@ -1,5 +1,5 @@
 {
-  reportDir target/detangled
+  reportDir domain/target/detangled
   searchPaths
   [
     ./domain/target/devon-domain-1.1.2.jar
@@ -32,5 +32,5 @@
   }
   ignoreFiles []
   canFailBuild true
-  allowedInCycle detangler-allowed-in-cycle.txt
+  allowedInCycle domain/detangler-allowed-in-cycle.txt
 }
