@@ -32,5 +32,5 @@
   }
   ignoreFiles []
   canFailBuild true
-  allowedInCycle []
+  allowedInCycle detangler-allowed-in-cycle.txt
 }
