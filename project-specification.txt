@@ -25,6 +25,7 @@
       scope test
     }
   }
+  global [scala-library scala-test]
   modules {
     domain     [tokenizer reflection]
     tokenizer  [rules]
@@ -33,5 +34,6 @@
     parser     [string]
     string     []
   }
+  primary   domain
   detangler [domain]
 }
