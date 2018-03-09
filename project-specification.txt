@@ -3,30 +3,40 @@
   name [devon]
   description 'A simple, language neutral notation for representing structured values'
   version 1.1.2
-  developer {
+  developer
+  {
     name 'Sean Shubin'
     githubName SeanShubin
     mavenUserName SeanShubin
     organization 'Sean Shubin'
     url http://seanshubin.com/
   }
-  dependencies {
-    scala-library {
+  dependencies
+  {
+    scala-library
+    {
       group org.scala-lang
       artifact scala-library
     }
-    scala-reflect {
+    scala-reflect
+    {
       group org.scala-lang
       artifact scala-reflect
     }
-    scala-test {
+    scala-test
+    {
       group org.scalatest
       artifact scalatest_2.12
       scope test
     }
   }
-  global [scala-library scala-test]
-  modules {
+  global
+  [
+    scala-library
+    scala-test
+  ]
+  modules
+  {
     domain     [tokenizer reflection]
     tokenizer  [rules]
     reflection [scala-reflect]
@@ -34,6 +44,6 @@
     parser     [string]
     string     []
   }
-  primary   domain
   detangler [domain]
+  primary domain
 }
